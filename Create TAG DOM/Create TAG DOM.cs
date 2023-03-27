@@ -157,7 +157,7 @@ namespace Script
 
 			var sectionLink = new SectionDefinitionLink(configSectionDefinition.GetID())
 			{
-				AllowMultipleSections = true,
+				AllowMultipleSections = false,
 			};
 
 			var nameDefinition = new ModuleSettingsOverrides
@@ -1004,6 +1004,7 @@ namespace Script
 										RequiredForStatus = true,
 									},
 								},
+								AllowMultipleSections = true,
 							};
 							break;
 
@@ -1113,6 +1114,7 @@ namespace Script
 										RequiredForStatus = true,
 									},
 								},
+								AllowMultipleSections = true,
 							};
 							break;
 
@@ -1205,6 +1207,7 @@ namespace Script
 										RequiredForStatus = false,
 									},
 								},
+								AllowMultipleSections = true,
 							};
 							break;
 
@@ -1298,6 +1301,7 @@ namespace Script
 										RequiredForStatus = false,
 									},
 								},
+								AllowMultipleSections = true,
 							};
 							break;
 
