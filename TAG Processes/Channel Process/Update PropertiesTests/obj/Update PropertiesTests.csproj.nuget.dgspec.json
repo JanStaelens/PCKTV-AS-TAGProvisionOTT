@@ -1,0 +1,148 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\GIT\\Automation\\Customers\\NBC Sports\\Event Manager Scripts\\TAG Processes\\Channel Process\\Update PropertiesTests\\Update PropertiesTests.csproj": {}
+  },
+  "projects": {
+    "C:\\GIT\\Automation\\Customers\\NBC Sports\\Event Manager Scripts\\TAG Processes\\Channel Process\\Update PropertiesTests\\Update PropertiesTests.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\GIT\\Automation\\Customers\\NBC Sports\\Event Manager Scripts\\TAG Processes\\Channel Process\\Update PropertiesTests\\Update PropertiesTests.csproj",
+        "projectName": "Update PropertiesTests",
+        "projectPath": "C:\\GIT\\Automation\\Customers\\NBC Sports\\Event Manager Scripts\\TAG Processes\\Channel Process\\Update PropertiesTests\\Update PropertiesTests.csproj",
+        "packagesPath": "C:\\Users\\BlakeSM\\.nuget\\packages\\",
+        "outputPath": "C:\\GIT\\Automation\\Customers\\NBC Sports\\Event Manager Scripts\\TAG Processes\\Channel Process\\Update PropertiesTests\\obj\\",
+        "projectStyle": "PackageReference",
+        "skipContentFileWrite": true,
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\BlakeSM\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net462"
+        ],
+        "sources": {
+          "http://devcore3:81/nuget": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net462": {
+            "projectReferences": {
+              "C:\\GIT\\Automation\\Customers\\NBC Sports\\Event Manager Scripts\\TAG Processes\\Channel Process\\Update Properties\\Update Properties.csproj": {
+                "projectPath": "C:\\GIT\\Automation\\Customers\\NBC Sports\\Event Manager Scripts\\TAG Processes\\Channel Process\\Update Properties\\Update Properties.csproj"
+              }
+            }
+          }
+        }
+      },
+      "frameworks": {
+        "net462": {
+          "dependencies": {
+            "MSTest.TestAdapter": {
+              "target": "Package",
+              "version": "[2.2.7, )"
+            },
+            "MSTest.TestFramework": {
+              "target": "Package",
+              "version": "[2.2.7, )"
+            },
+            "Moq": {
+              "target": "Package",
+              "version": "[4.18.4, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )"
+            },
+            "Skyline.DataMiner.Core.DataMinerSystem.Automation": {
+              "target": "Package",
+              "version": "[1.1.0.1, )"
+            }
+          }
+        }
+      },
+      "runtimes": {
+        "win": {
+          "#import": []
+        },
+        "win-x64": {
+          "#import": []
+        },
+        "win-x86": {
+          "#import": []
+        }
+      }
+    },
+    "C:\\GIT\\Automation\\Customers\\NBC Sports\\Event Manager Scripts\\TAG Processes\\Channel Process\\Update Properties\\Update Properties.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\GIT\\Automation\\Customers\\NBC Sports\\Event Manager Scripts\\TAG Processes\\Channel Process\\Update Properties\\Update Properties.csproj",
+        "projectName": "Clear Layout",
+        "projectPath": "C:\\GIT\\Automation\\Customers\\NBC Sports\\Event Manager Scripts\\TAG Processes\\Channel Process\\Update Properties\\Update Properties.csproj",
+        "packagesPath": "C:\\Users\\BlakeSM\\.nuget\\packages\\",
+        "outputPath": "C:\\GIT\\Automation\\Customers\\NBC Sports\\Event Manager Scripts\\TAG Processes\\Channel Process\\Update Properties\\obj\\",
+        "projectStyle": "PackageReference",
+        "skipContentFileWrite": true,
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\BlakeSM\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net462"
+        ],
+        "sources": {
+          "http://devcore3:81/nuget": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net462": {
+            "projectReferences": {}
+          }
+        }
+      },
+      "frameworks": {
+        "net462": {
+          "dependencies": {
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )"
+            },
+            "Skyline.DataMiner.Core.DataMinerSystem.Automation": {
+              "target": "Package",
+              "version": "[1.1.0.1, )"
+            },
+            "Skyline.DataMiner.Dev.Automation": {
+              "target": "Package",
+              "version": "[10.3.3, )"
+            },
+            "StyleCop.Analyzers": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[1.2.0-beta.435, )"
+            }
+          }
+        }
+      },
+      "runtimes": {
+        "win": {
+          "#import": []
+        },
+        "win-x64": {
+          "#import": []
+        },
+        "win-x86": {
+          "#import": []
+        }
+      }
+    }
+  }
+}

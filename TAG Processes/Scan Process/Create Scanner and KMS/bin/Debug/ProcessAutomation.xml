@@ -1,0 +1,2065 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ProcessAutomation</name>
+    </assembly>
+    <members>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Common.Objects.Exceptions.PaProcessNotFoundException">
+            <summary>
+            Represents the error that occurs when a PaProcess could not be found.
+            </summary>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Common.Objects.Exceptions.PaProcessNotFoundException.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Common.Objects.Exceptions.PaProcessNotFoundException"/> class.
+            </summary>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Common.Objects.Exceptions.PaProcessNotFoundException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Common.Objects.Exceptions.PaProcessNotFoundException"/> class.
+            </summary>
+            <param name="message">The error message that explains the reason for the exception.</param>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Common.Objects.Exceptions.PaProcessNotFoundException.#ctor(System.String,System.Exception)" -->
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Common.Objects.Exceptions.PaProcessNotFoundException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Common.Objects.Exceptions.PaProcessNotFoundException"/> class with serialized data.
+            </summary>
+            <param name="info">The object that holds the serialized object data.</param>
+            <param name="context">The contextual information about the source or destination.</param>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Common.Objects.Exceptions.PaProcessStartEventTypeNotFoundException">
+            <summary>
+            Represents the error that occurs when a PaProcessStartEventType cannot be found.
+            </summary>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Common.Objects.Exceptions.PaProcessStartEventTypeNotFoundException.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Common.Objects.Exceptions.PaProcessStartEventTypeNotFoundException"/> class.
+            </summary>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Common.Objects.Exceptions.PaProcessStartEventTypeNotFoundException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Common.Objects.Exceptions.PaProcessStartEventTypeNotFoundException"/> class.
+            </summary>
+            <param name="message">The message to be shown.</param>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Common.Objects.Exceptions.PaProcessStartEventTypeNotFoundException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Common.Objects.Exceptions.PaProcessStartEventTypeNotFoundException"/> class.
+            </summary>
+            <param name="message">The message to be shown.</param>
+            <param name="innerException">The inner exception.</param>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Common.Objects.Exceptions.PaProcessStartEventTypeNotFoundException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Common.Objects.Exceptions.PaProcessStartEventTypeNotFoundException"/> class.
+            </summary>
+            <param name="info">The serialization info.</param>
+            <param name="context">The streaming context.</param>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Common.Objects.Exceptions.PaTokenNotFoundException">
+            <summary>
+            Represents the error that occurs when a PaToken could not be found.
+            </summary>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Common.Objects.Exceptions.PaTokenNotFoundException.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Common.Objects.Exceptions.PaTokenNotFoundException"/> class.
+            </summary>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Common.Objects.Exceptions.PaTokenNotFoundException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Common.Objects.Exceptions.PaTokenNotFoundException"/> class.
+            </summary>
+            <param name="message">The error message that explains the reason for the exception.</param>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Common.Objects.Exceptions.PaTokenNotFoundException.#ctor(System.Guid)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Common.Objects.Exceptions.PaTokenNotFoundException"/> class.
+            </summary>
+            <param name="tokenId">id of the PaToken that was not found.</param>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Common.Objects.Exceptions.PaTokenNotFoundException.#ctor(System.Guid,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Common.Objects.Exceptions.PaTokenNotFoundException"/> class.
+            </summary>
+            <param name="tokenId">id of the PaToken that was not found.</param>
+            <param name="inner">
+            The exception that is the cause of the current exception.
+            If the innerException parameter is not a null reference, the current exception is raised in a catch block that handles the inner exception.
+            </param>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Common.Objects.Exceptions.PaTokenNotFoundException.#ctor(System.String,System.Exception)" -->
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Common.Objects.Exceptions.PaTokenNotFoundException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Common.Objects.Exceptions.PaTokenNotFoundException"/> class with serialized data.
+            </summary>
+            <param name="info">The object that holds the serialized object data.</param>
+            <param name="context">The contextual information about the source or destination.</param>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.CrudHelper.DomDefinitionCrudHelperExtensionMethods">
+            <summary>
+            Contains the <see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomDefinitionCrudHelperComponent"/> class extensions.
+            </summary>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.CrudHelper.DomDefinitionCrudHelperExtensionMethods.GetDomDefinitionById(Skyline.DataMiner.Net.ManagerStore.ICrudHelperComponent{Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomDefinition},Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomDefinitionId)">
+            <summary>
+            Gets a DomDefinition by its <see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomDefinitionId"/>.
+            </summary>
+            <param name="crudHelperComponent"> <see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomDefinitionCrudHelperComponent"/> object to interact with DataMiner DomDefinitions.</param>
+            <param name="domDefinitionId"><see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomDefinitionId"/> to look for.</param>
+            <returns>The DomDefinition.</returns>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="crudHelperComponent"/> or <paramref name="domDefinitionId"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">If <see cref="P:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomDefinitionId.Id"/> is <see cref="F:System.Guid.Empty"/>.</exception>
+            <exception cref="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Common.Objects.Exceptions.DomDefinitionNotFoundException">If there is no DomDefinition with the given id.</exception>
+            <exception cref="T:System.InvalidOperationException">If there are multiple DomDefinitions with the given id.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.CrudHelper.DomDefinitionCrudHelperExtensionMethods.GetDomDefinitionById(Skyline.DataMiner.Net.ManagerStore.ICrudHelperComponent{Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomDefinition},System.Guid)">
+            <summary>
+            Gets a DomDefinition by its Id.
+            </summary>
+            <param name="crudHelperComponent"> <see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomDefinitionCrudHelperComponent"/> object to interact with DataMiner DomDefinitions.</param>
+            <param name="id">Id to look for.</param>
+            <returns>The DomDefinition.</returns>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="crudHelperComponent"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">If <paramref name="id"/> is <see cref="F:System.Guid.Empty"/>.</exception>
+            <exception cref="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Common.Objects.Exceptions.DomDefinitionNotFoundException">If there is no DomDefinition with the given id.</exception>
+            <exception cref="T:System.InvalidOperationException">If there are multiple DomDefinitions with the given id.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.CrudHelper.DomDefinitionCrudHelperExtensionMethods.GetDomDefinitionsById(Skyline.DataMiner.Net.ManagerStore.ICrudHelperComponent{Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomDefinition},System.Collections.Generic.IEnumerable{System.Guid})">
+            <summary>
+            Gets the DomDefinitions for the given ids.
+            </summary>
+            <param name="crudHelperComponent"><see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomDefinitionCrudHelperComponent"/> object to interact with DataMiner DomDefinitions.</param>
+            <param name="ids">The list of Ids to look for.</param>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomDefinition"/>.</returns>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="ids"/> is null.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.CrudHelper.DomDefinitionCrudHelperExtensionMethods.GetDomDefinitionsById(Skyline.DataMiner.Net.ManagerStore.ICrudHelperComponent{Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomDefinition},System.Collections.Generic.IEnumerable{Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomDefinitionId})">
+            <summary>
+            Gets the DomDefinitions for the given ids.
+            </summary>
+            <param name="crudHelperComponent"><see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomDefinitionCrudHelperComponent"/> object to interact with DataMiner DomDefinitions.</param>
+            <param name="ids">The list of <see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomDefinitionId"/> to look for.</param>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomDefinition"/>.</returns>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="ids"/> is null.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.CrudHelper.DomDefinitionCrudHelperExtensionMethods.GetDomDefinitionsById(Skyline.DataMiner.Net.ManagerStore.ICrudHelperComponent{Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomDefinition},Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomDefinitionId[])">
+            <summary>
+            Gets the DomDefinitions for the given ids.
+            </summary>
+            <param name="crudHelperComponent"><see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomDefinitionCrudHelperComponent"/> object to interact with DataMiner DomDefinitions.</param>
+            <param name="ids">The list of <see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomDefinitionId"/> to look for.</param>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomDefinition"/>.</returns>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="ids"/> is null.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.CrudHelper.DomDefinitionCrudHelperExtensionMethods.GetDomDefinitionsById(Skyline.DataMiner.Net.ManagerStore.ICrudHelperComponent{Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomDefinition},System.Guid[])">
+            <summary>
+            Gets the DomDefinitions for the given ids.
+            </summary>
+            <param name="crudHelperComponent"><see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomDefinitionCrudHelperComponent"/> object to interact with DataMiner DomDefinitions.</param>
+            <param name="ids">The list of Ids to look for.</param>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomDefinition"/>.</returns>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="ids"/> is null.</exception>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.CrudHelper.DomInstanceCrudHelperExtensionMethods">
+            <summary>
+            Contains the <see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomInstanceCrudHelperComponent"/> class extensions.
+            </summary>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.CrudHelper.DomInstanceCrudHelperExtensionMethods.GetDomInstanceById(Skyline.DataMiner.Net.ManagerStore.ICrudHelperComponent{Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomInstance},Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomInstanceId)">
+            <summary>
+            Gets a DomInstance by its <see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomInstanceId"/>.
+            </summary>
+            <param name="crudHelperComponent"> <see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomInstanceCrudHelperComponent"/> object to interact with DataMiner DomInstances.</param>
+            <param name="domInstanceId"><see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomInstanceId"/> to look for.</param>
+            <returns>The DomInstance.</returns>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="crudHelperComponent"/> or <paramref name="domInstanceId"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">If <see cref="P:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomInstanceId.Id"/> is <see cref="F:System.Guid.Empty"/>.</exception>
+            <exception cref="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Common.Objects.Exceptions.DomInstanceNotFoundException">If there is no DomInstance with the given id.</exception>
+            <exception cref="T:System.InvalidOperationException">If there are multiple DomInstances with the given id.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.CrudHelper.DomInstanceCrudHelperExtensionMethods.GetDomInstanceById(Skyline.DataMiner.Net.ManagerStore.ICrudHelperComponent{Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomInstance},System.Guid)">
+            <summary>
+            Gets a DomInstance by its id.
+            </summary>
+            <param name="crudHelperComponent"> <see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomInstanceCrudHelperComponent"/> object to interact with DataMiner DomInstances.</param>
+            <param name="id">Id of the DomInstance to look for.</param>
+            <returns>The DomInstance.</returns>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="crudHelperComponent"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">If <paramref name="id"/> is <see cref="F:System.Guid.Empty"/>.</exception>
+            <exception cref="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Common.Objects.Exceptions.DomInstanceNotFoundException">If there is no DomInstance with the given id.</exception>
+            <exception cref="T:System.InvalidOperationException">If there are multiple DomInstances with the given id.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.CrudHelper.DomInstanceCrudHelperExtensionMethods.GetDomInstancesById(Skyline.DataMiner.Net.ManagerStore.ICrudHelperComponent{Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomInstance},System.Collections.Generic.IEnumerable{System.Guid})">
+            <summary>
+            Gets the DomInstances for the given ids.
+            </summary>
+            <param name="crudHelperComponent"><see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomInstanceCrudHelperComponent"/> object to interact with DataMiner DomInstances.</param>
+            <param name="ids">The list of Ids to look for.</param>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomInstance"/>.</returns>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="ids"/> is null.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.CrudHelper.DomInstanceCrudHelperExtensionMethods.GetDomInstancesById(Skyline.DataMiner.Net.ManagerStore.ICrudHelperComponent{Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomInstance},System.Collections.Generic.IEnumerable{Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomInstanceId})">
+            <summary>
+            Gets the DomInstances for the given ids.
+            </summary>
+            <param name="crudHelperComponent"><see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomInstanceCrudHelperComponent"/> object to interact with DataMiner DomInstances.</param>
+            <param name="ids">The list of <see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomDefinitionId"/> to look for.</param>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomInstance"/>.</returns>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="ids"/> is null.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.CrudHelper.DomInstanceCrudHelperExtensionMethods.GetDomInstancesById(Skyline.DataMiner.Net.ManagerStore.ICrudHelperComponent{Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomInstance},Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomInstanceId[])">
+            <summary>
+            Gets the DomInstances for the given ids.
+            </summary>
+            <param name="crudHelperComponent"><see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomInstanceCrudHelperComponent"/> object to interact with DataMiner DomInstances.</param>
+            <param name="ids">The list of <see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomInstanceId"/> to look for.</param>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomInstance"/>.</returns>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="ids"/> is null.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.CrudHelper.DomInstanceCrudHelperExtensionMethods.GetDomInstancesById(Skyline.DataMiner.Net.ManagerStore.ICrudHelperComponent{Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomInstance},System.Guid[])">
+            <summary>
+            Gets the DomInstances for the given ids.
+            </summary>
+            <param name="crudHelperComponent"><see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomInstanceCrudHelperComponent"/> object to interact with DataMiner DomInstances.</param>
+            <param name="ids">The list of Ids to look for.</param>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomInstance"/>.</returns>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="ids"/> is null.</exception>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.CrudHelper.SectionDefinitionCrudHelperExtensionMethods">
+            <summary>
+            Contains the <see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.SectionDefinitionCrudHelperComponent"/> class extensions.
+            </summary>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.CrudHelper.SectionDefinitionCrudHelperExtensionMethods.GetSectionDefinitionById(Skyline.DataMiner.Net.ManagerStore.ICrudHelperComponent{Skyline.DataMiner.Net.Sections.SectionDefinition},Skyline.DataMiner.Net.Sections.SectionDefinitionID)">
+            <summary>
+            Gets a SectionDefinition by its <see cref="T:Skyline.DataMiner.Net.Sections.SectionDefinitionID"/>.
+            </summary>
+            <param name="crudHelperComponent"> <see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.SectionDefinitionCrudHelperComponent"/> object to interact with DataMiner SectionDefinitions.</param>
+            <param name="sectionDefinitionId"><see cref="T:Skyline.DataMiner.Net.Sections.SectionDefinitionID"/> to look for.</param>
+            <returns>The SectionDefinition.</returns>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="crudHelperComponent"/> or <paramref name="sectionDefinitionId"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">If <see cref="P:Skyline.DataMiner.Net.Sections.SectionDefinitionID.Id"/> is <see cref="F:System.Guid.Empty"/>.</exception>
+            <exception cref="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Common.Objects.Exceptions.SectionDefinitionNotFoundException">If there is no SectionDefinition with the given id.</exception>
+            <exception cref="T:System.InvalidOperationException">If there are multiple SectionDefinition with the given id.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.CrudHelper.SectionDefinitionCrudHelperExtensionMethods.GetSectionDefinitionById(Skyline.DataMiner.Net.ManagerStore.ICrudHelperComponent{Skyline.DataMiner.Net.Sections.SectionDefinition},System.Guid)">
+            <summary>
+            Gets a SectionDefinition by its Id.
+            </summary>
+            <param name="crudHelperComponent"> <see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.SectionDefinitionCrudHelperComponent"/> object to interact with DataMiner SectionDefinitions.</param>
+            <param name="id">Id to look for.</param>
+            <returns>The SectionDefinition.</returns>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="crudHelperComponent"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">If <paramref name="id"/> is <see cref="F:System.Guid.Empty"/>.</exception>
+            <exception cref="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Common.Objects.Exceptions.SectionDefinitionNotFoundException">If there is no SectionDefinition with the given id.</exception>
+            <exception cref="T:System.InvalidOperationException">If there are multiple SectionDefinition with the given id.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.CrudHelper.SectionDefinitionCrudHelperExtensionMethods.GetSectionDefinitionsById(Skyline.DataMiner.Net.ManagerStore.ICrudHelperComponent{Skyline.DataMiner.Net.Sections.SectionDefinition},System.Collections.Generic.IEnumerable{System.Guid})">
+            <summary>
+            Gets the SectionDefinitions for the given ids.
+            </summary>
+            <param name="crudHelperComponent"><see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.SectionDefinitionCrudHelperComponent"/> object to interact with DataMiner SectionDefinitions.</param>
+            <param name="ids">The list of Ids to look for.</param>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Skyline.DataMiner.Net.Sections.SectionDefinition"/>.</returns>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="ids"/> is null.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.CrudHelper.SectionDefinitionCrudHelperExtensionMethods.GetSectionDefinitionsById(Skyline.DataMiner.Net.ManagerStore.ICrudHelperComponent{Skyline.DataMiner.Net.Sections.SectionDefinition},System.Collections.Generic.IEnumerable{Skyline.DataMiner.Net.Sections.SectionDefinitionID})">
+            <summary>
+            Gets the SectionDefinitions for the given ids.
+            </summary>
+            <param name="crudHelperComponent"><see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.SectionDefinitionCrudHelperComponent"/> object to interact with DataMiner SectionDefinitions.</param>
+            <param name="ids">The list of <see cref="T:Skyline.DataMiner.Net.Sections.SectionDefinitionID"/> to look for.</param>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Skyline.DataMiner.Net.Sections.SectionDefinition"/>.</returns>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="ids"/> is null.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.CrudHelper.SectionDefinitionCrudHelperExtensionMethods.GetSectionDefinitionsById(Skyline.DataMiner.Net.ManagerStore.ICrudHelperComponent{Skyline.DataMiner.Net.Sections.SectionDefinition},Skyline.DataMiner.Net.Sections.SectionDefinitionID[])">
+            <summary>
+            Gets the SectionDefinitions for the given ids.
+            </summary>
+            <param name="crudHelperComponent"><see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.SectionDefinitionCrudHelperComponent"/> object to interact with DataMiner SectionDefinitions.</param>
+            <param name="ids">The list of <see cref="T:Skyline.DataMiner.Net.Sections.SectionDefinitionID"/> to look for.</param>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Skyline.DataMiner.Net.Sections.SectionDefinition"/>.</returns>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="ids"/> is null.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.CrudHelper.SectionDefinitionCrudHelperExtensionMethods.GetSectionDefinitionsById(Skyline.DataMiner.Net.ManagerStore.ICrudHelperComponent{Skyline.DataMiner.Net.Sections.SectionDefinition},System.Guid[])">
+            <summary>
+            Gets the SectionDefinitions for the given ids.
+            </summary>
+            <param name="crudHelperComponent"><see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.SectionDefinitionCrudHelperComponent"/> object to interact with DataMiner SectionDefinitions.</param>
+            <param name="ids">The list of Ids to look for.</param>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Skyline.DataMiner.Net.Sections.SectionDefinition"/>.</returns>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="ids"/> is null.</exception>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.CrudHelper.PaProcessCrudHelperExtensionMethods">
+            <summary>
+            Contains the <see cref="T:Skyline.DataMiner.Net.ProcessAutomation.PaProcessCrudHelperComponent"/> class extensions.
+            </summary>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.CrudHelper.PaProcessCrudHelperExtensionMethods.GetPaProcessById(Skyline.DataMiner.Net.ManagerStore.ICrudHelperComponent{Skyline.DataMiner.Net.Messages.SLDataGateway.PaProcess},System.String)">
+            <summary>
+            Gets a PaProcess by its id.
+            </summary>
+            <param name="paProcessCrudHelper"><see cref="T:Skyline.DataMiner.Net.ProcessAutomation.PaProcessCrudHelperComponent"/> object to interact with DataMiner PaProcesses.</param>
+            <param name="paProcessId">Id of the PaProcess to look for.</param>
+            <returns>The PaProcess.</returns>
+            <exception cref="T:System.ArgumentException">If <paramref name="paTokenId"/> is <see cref="M:System.String.IsNullOrWhiteSpace(System.String)"/>.</exception>
+            <exception cref="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Common.Objects.Exceptions.PaProcessNotFoundException">If there is no PaProcess with the given id.</exception>
+            <exception cref="T:System.InvalidOperationException">If there are multiple PaProcesses with the given id.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.CrudHelper.PaProcessCrudHelperExtensionMethods.GetPaProcessByName(Skyline.DataMiner.Net.ManagerStore.ICrudHelperComponent{Skyline.DataMiner.Net.Messages.SLDataGateway.PaProcess},System.String)">
+            <summary>
+            Gets a PaProcess by its name.
+            </summary>
+            <param name="paProcessCrudHelper"><see cref="T:Skyline.DataMiner.Net.ProcessAutomation.PaProcessCrudHelperComponent"/> object to interact with DataMiner PaProcesses.</param>
+            <param name="paProcessName">The name of the PaProcess to look for.</param>
+            <returns>The PaProcess.</returns>
+            <exception cref="T:System.ArgumentException">If <paramref name="paProcessName"/> is <see cref="M:System.String.IsNullOrWhiteSpace(System.String)"/>.</exception>
+            <exception cref="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Common.Objects.Exceptions.PaProcessNotFoundException">If there is no PaProcess with the given name.</exception>
+            <exception cref="T:System.InvalidOperationException">If there are multiple PaProcesses with the given name.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.CrudHelper.PaProcessCrudHelperExtensionMethods.GetPaProcessesById(Skyline.DataMiner.Net.ManagerStore.ICrudHelperComponent{Skyline.DataMiner.Net.Messages.SLDataGateway.PaProcess},System.String[])">
+            <summary>
+            Gets the PaProcesses for the given ids.
+            </summary>
+            <param name="paProcessCrudHelper"><see cref="T:Skyline.DataMiner.Net.ProcessAutomation.PaProcessCrudHelperComponent"/> object to interact with DataMiner PaProcesses.</param>
+            <param name="ids">The list of Ids to look for.</param>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Skyline.DataMiner.Net.Messages.SLDataGateway.PaProcess"/>.</returns>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="ids"/> is null.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.CrudHelper.PaProcessCrudHelperExtensionMethods.GetPaProcessesById(Skyline.DataMiner.Net.ManagerStore.ICrudHelperComponent{Skyline.DataMiner.Net.Messages.SLDataGateway.PaProcess},System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Gets the PaProcesses for the given ids.
+            </summary>
+            <param name="paProcessCrudHelper"><see cref="T:Skyline.DataMiner.Net.ProcessAutomation.PaProcessCrudHelperComponent"/> object to interact with DataMiner PaProcesses.</param>
+            <param name="ids">The list of Ids to look for.</param>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Skyline.DataMiner.Net.Messages.SLDataGateway.PaProcess"/>.</returns>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="ids"/> is null.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.CrudHelper.PaProcessCrudHelperExtensionMethods.GetPaProcessesByName(Skyline.DataMiner.Net.ManagerStore.ICrudHelperComponent{Skyline.DataMiner.Net.Messages.SLDataGateway.PaProcess},System.String[])">
+            <summary>
+            Gets the PaProcesses for the given names.
+            </summary>
+            <param name="paProcessCrudHelper"><see cref="T:Skyline.DataMiner.Net.ProcessAutomation.PaProcessCrudHelperComponent"/> object to interact with DataMiner PaProcesses.</param>
+            <param name="names">The list of names to look for.</param>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Skyline.DataMiner.Net.Messages.SLDataGateway.PaProcess"/>.</returns>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="names"/> is null.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.CrudHelper.PaProcessCrudHelperExtensionMethods.GetPaProcessesByName(Skyline.DataMiner.Net.ManagerStore.ICrudHelperComponent{Skyline.DataMiner.Net.Messages.SLDataGateway.PaProcess},System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Gets the PaProcesses for the given names.
+            </summary>
+            <param name="paProcessCrudHelper"><see cref="T:Skyline.DataMiner.Net.ProcessAutomation.PaProcessCrudHelperComponent"/> object to interact with DataMiner PaProcesses.</param>
+            <param name="names">The list of names to look for.</param>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Skyline.DataMiner.Net.Messages.SLDataGateway.PaProcess"/>.</returns>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="names"/> is null.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.CrudHelper.PaProcessCrudHelperExtensionMethods.ReadAll(Skyline.DataMiner.Net.ManagerStore.ICrudHelperComponent{Skyline.DataMiner.Net.Messages.SLDataGateway.PaProcess})">
+            <summary>
+            Gets all PaProcesses where the id is not <see cref="F:System.String.Empty"/>.
+            </summary>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Skyline.DataMiner.Net.Messages.SLDataGateway.PaProcess"/>.</returns>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.CrudHelper.PaProcessCrudHelperExtensionMethods.RemoveAll(Skyline.DataMiner.Net.ManagerStore.ICrudHelperComponent{Skyline.DataMiner.Net.Messages.SLDataGateway.PaProcess})">
+            <summary>
+            Removes all PaProcesses where the id is not <see cref="F:System.String.Empty"/>.
+            </summary>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.CrudHelper.PaTokenCrudHelperExtensionMethods">
+            <summary>
+            Contains the <see cref="T:Skyline.DataMiner.Net.ProcessAutomation.PaTokenCrudHelperComponent"/> class extensions.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.CrudHelper.PaTokenCrudHelperExtensionMethods.NotCompletedTokensFilter">
+            <summary>
+            Gets the filter for PaTokens that are not yet completed.
+            Tokens in InQueue/PreProcessing/Processing PaTokenStatus and with PaTokenErrorState OK.
+            </summary>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.CrudHelper.PaTokenCrudHelperExtensionMethods.CompletePaToken(Skyline.DataMiner.Net.ManagerStore.ICrudHelperComponent{Skyline.DataMiner.Net.Messages.SLDataGateway.PaToken},Skyline.DataMiner.Net.Messages.SLDataGateway.PaToken,System.Boolean)">
+            <summary>
+            Sets the <paramref name="paToken"/> into <see cref="F:Skyline.DataMiner.Net.Messages.SLDataGateway.PaTokenStatus.Completed"/>.
+            </summary>
+            <param name="paTokenCrudHelper"><see cref="T:Skyline.DataMiner.Net.ProcessAutomation.PaProcessCrudHelperComponent"/> object to interact with DataMiner PaTokens.</param>
+            <param name="paToken">The token to complete.</param>
+            <param name="verifyProcessCompletion">Indicates if other tokens should be verified to see whether the process has been completed.</param>
+            <exception cref="T:System.ArgumentNullException">In case <paramref name="paTokenCrudHelper"/> or <paramref name="paToken"/> are null.</exception>
+            <exception cref="T:System.InvalidOperationException">In case <paramref name="paToken"/> status is <see cref="F:Skyline.DataMiner.Net.Messages.SLDataGateway.PaTokenStatus.Cancelled"/>, <see cref="F:Skyline.DataMiner.Net.Messages.SLDataGateway.PaTokenStatus.Completed"/> or <see cref="F:Skyline.DataMiner.Net.Messages.SLDataGateway.PaTokenStatus.Error"/>.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.CrudHelper.PaTokenCrudHelperExtensionMethods.CompletePaTokens(Skyline.DataMiner.Net.ManagerStore.ICrudHelperComponent{Skyline.DataMiner.Net.Messages.SLDataGateway.PaToken},System.Collections.Generic.IEnumerable{Skyline.DataMiner.Net.Messages.SLDataGateway.PaToken},System.Boolean)">
+            <summary>
+            Sets the given <paramref name="paTokens"/> that aren't in state <see cref="F:Skyline.DataMiner.Net.Messages.SLDataGateway.PaTokenStatus.Cancelled"/>, <see cref="F:Skyline.DataMiner.Net.Messages.SLDataGateway.PaTokenStatus.Completed"/>
+            or <see cref="F:Skyline.DataMiner.Net.Messages.SLDataGateway.PaTokenStatus.Error"/> into <see cref="F:Skyline.DataMiner.Net.Messages.SLDataGateway.PaTokenStatus.Completed"/>.
+            </summary>
+            <param name="paTokenCrudHelper"><see cref="T:Skyline.DataMiner.Net.ProcessAutomation.PaProcessCrudHelperComponent"/> object to interact with DataMiner PaTokens.</param>
+            <param name="paTokens">The tokens to complete.</param>
+            <param name="verifyProcessCompletion">Indicates if other tokens should be verified to see whether the process has been completed.</param>
+            <exception cref="T:System.ArgumentNullException">In case <paramref name="paTokenCrudHelper"/> or <paramref name="paToken"/> are null.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.CrudHelper.PaTokenCrudHelperExtensionMethods.GetNotCompletedPaTokensByProcessId(Skyline.DataMiner.Net.ManagerStore.ICrudHelperComponent{Skyline.DataMiner.Net.Messages.SLDataGateway.PaToken},System.String)">
+            <summary>
+            Gets the PaTokens that were not yet completed for the given process Id.
+            </summary>
+            <param name="paTokenCrudHelper"> <see cref="T:Skyline.DataMiner.Net.ProcessAutomation.PaProcessCrudHelperComponent"/> object to interact with DataMiner PaTokens.</param>
+            <param name="processId">Id of the Process to look for.</param>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Skyline.DataMiner.Net.Messages.SLDataGateway.PaToken"/>.</returns>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="paTokenCrudHelper"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">If <paramref name="processId"/> is <see cref="M:System.String.IsNullOrWhiteSpace(System.String)"/>.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.CrudHelper.PaTokenCrudHelperExtensionMethods.GetPaTokenById(Skyline.DataMiner.Net.ManagerStore.ICrudHelperComponent{Skyline.DataMiner.Net.Messages.SLDataGateway.PaToken},System.Guid)">
+            <summary>
+            Gets a PaToken by its id.
+            </summary>
+            <param name="paTokenCrudHelper"> <see cref="T:Skyline.DataMiner.Net.ProcessAutomation.PaTokenCrudHelperComponent"/> object to interact with DataMiner PaTokens.</param>
+            <param name="paTokenId">Id of the PaToken to look for.</param>
+            <returns>The PaToken.</returns>
+            <exception cref="T:System.ArgumentException">If <paramref name="paTokenId"/> is <see cref="F:System.Guid.Empty"/>.</exception>
+            <exception cref="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Common.Objects.Exceptions.PaTokenNotFoundException">If there is no PaToken with the given id.</exception>
+            <exception cref="T:System.InvalidOperationException">If there are multiple PaTokens with the given id.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.CrudHelper.PaTokenCrudHelperExtensionMethods.GetPaTokensById(Skyline.DataMiner.Net.ManagerStore.ICrudHelperComponent{Skyline.DataMiner.Net.Messages.SLDataGateway.PaToken},System.Guid[])">
+            <summary>
+            Gets the PaTokens for the given ids.
+            </summary>
+            <param name="paTokenCrudHelper"><see cref="T:Skyline.DataMiner.Net.ProcessAutomation.PaTokenCrudHelperComponent"/> object to interact with DataMiner PaTokens.</param>
+            <param name="ids">The list of Ids to look for.</param>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Skyline.DataMiner.Net.Messages.SLDataGateway.PaToken"/>.</returns>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="ids"/> is null.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.CrudHelper.PaTokenCrudHelperExtensionMethods.GetPaTokensById(Skyline.DataMiner.Net.ManagerStore.ICrudHelperComponent{Skyline.DataMiner.Net.Messages.SLDataGateway.PaToken},System.Collections.Generic.IEnumerable{System.Guid})">
+            <summary>
+            Gets the PaTokens for the given ids.
+            </summary>
+            <param name="paTokenCrudHelper"><see cref="T:Skyline.DataMiner.Net.ProcessAutomation.PaTokenCrudHelperComponent"/> object to interact with DataMiner PaTokens.</param>
+            <param name="ids">The list of Ids to look for.</param>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Skyline.DataMiner.Net.Messages.SLDataGateway.PaToken"/>.</returns>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="ids"/> is null.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.CrudHelper.PaTokenCrudHelperExtensionMethods.GetPaTokensByProcessId(Skyline.DataMiner.Net.ManagerStore.ICrudHelperComponent{Skyline.DataMiner.Net.Messages.SLDataGateway.PaToken},System.String)">
+            <summary>
+            Gets the PaTokens for the given process Id.
+            </summary>
+            <param name="paTokenCrudHelper"> <see cref="T:Skyline.DataMiner.Net.ProcessAutomation.PaProcessCrudHelperComponent"/> object to interact with DataMiner PaTokens.</param>
+            <param name="processId">Id of the Process to look for.</param>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Skyline.DataMiner.Net.Messages.SLDataGateway.PaToken"/>.</returns>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="paTokenCrudHelper"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">If <paramref name="processId"/> is <see cref="M:System.String.IsNullOrWhiteSpace(System.String)"/>.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.CrudHelper.PaTokenCrudHelperExtensionMethods.GetPaTokensByReservationId(Skyline.DataMiner.Net.ManagerStore.ICrudHelperComponent{Skyline.DataMiner.Net.Messages.SLDataGateway.PaToken},System.Guid)">
+            <summary>
+            Gets the PaTokens for the given reservation Id.
+            </summary>
+            <param name="paTokenCrudHelper"> <see cref="T:Skyline.DataMiner.Net.ProcessAutomation.PaProcessCrudHelperComponent"/> object to interact with DataMiner PaTokens.</param>
+            <param name="reservationId">Id of the reservation to look for.</param>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Skyline.DataMiner.Net.Messages.SLDataGateway.PaToken"/>.</returns>
+            <exception cref="T:System.ArgumentException">If <paramref name="reservationId"/> is <see cref="F:System.Guid.Empty"/>.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.CrudHelper.PaTokenCrudHelperExtensionMethods.GetPaTokensByResourcePoolId(Skyline.DataMiner.Net.ManagerStore.ICrudHelperComponent{Skyline.DataMiner.Net.Messages.SLDataGateway.PaToken},System.Guid)">
+            <summary>
+            Gets the PaTokens for the given resource pool Id.
+            </summary>
+            <param name="paTokenCrudHelper"> <see cref="T:Skyline.DataMiner.Net.ProcessAutomation.PaProcessCrudHelperComponent"/> object to interact with DataMiner PaTokens.</param>
+            <param name="resourcePoolId">Id of the resource pool to look for.</param>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Skyline.DataMiner.Net.Messages.SLDataGateway.PaToken"/>.</returns>
+            <exception cref="T:System.ArgumentException">If <paramref name="resourcePoolId"/> is <see cref="F:System.Guid.Empty"/>.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.CrudHelper.PaTokenCrudHelperExtensionMethods.ReadAll(Skyline.DataMiner.Net.ManagerStore.ICrudHelperComponent{Skyline.DataMiner.Net.Messages.SLDataGateway.PaToken})">
+            <summary>
+            Gets all PaTokens where the id is not <see cref="F:System.Guid.Empty"/>.
+            </summary>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Skyline.DataMiner.Net.Messages.SLDataGateway.PaToken"/>.</returns>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.CrudHelper.PaTokenCrudHelperExtensionMethods.RemoveAll(Skyline.DataMiner.Net.ManagerStore.ICrudHelperComponent{Skyline.DataMiner.Net.Messages.SLDataGateway.PaToken})">
+            <summary>
+            Removes all PaTokens where the id is not <see cref="F:System.Guid.Empty"/>.
+            </summary>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.CrudHelper.PaTokenCrudHelperExtensionMethods.SetPaTokenErrorState(Skyline.DataMiner.Net.ManagerStore.ICrudHelperComponent{Skyline.DataMiner.Net.Messages.SLDataGateway.PaToken},Skyline.DataMiner.Net.Messages.SLDataGateway.PaToken,Skyline.DataMiner.Net.Messages.SLDataGateway.PaTokenErrorState)">
+            <summary>
+            Sets the <paramref name="paToken"/> into <see cref="F:Skyline.DataMiner.Net.Messages.SLDataGateway.PaTokenStatus.Error"/> and <paramref name="paTokenErrorState"/> <see cref="T:Skyline.DataMiner.Net.Messages.SLDataGateway.PaTokenErrorState"/>.
+            </summary>
+            <param name="paTokenCrudHelper"><see cref="T:Skyline.DataMiner.Net.ProcessAutomation.PaProcessCrudHelperComponent"/> object to interact with DataMiner PaTokens.</param>
+            <param name="paToken">The token to set into <see cref="F:Skyline.DataMiner.Net.Messages.SLDataGateway.PaTokenStatus.Error"/>.</param>
+            <param name="paTokenErrorState">The <see cref="T:Skyline.DataMiner.Net.Messages.SLDataGateway.PaTokenErrorState"/> to set.</param>
+            <exception cref="T:System.ArgumentNullException">In case <paramref name="paTokenCrudHelper"/> or <paramref name="paToken"/> are null.</exception>
+            <exception cref="T:System.InvalidOperationException">In case <paramref name="paTokenErrorState"/> is <see cref="F:Skyline.DataMiner.Net.Messages.SLDataGateway.PaTokenErrorState.Ok"/>
+            or <paramref name="paToken"/> status is <see cref="F:Skyline.DataMiner.Net.Messages.SLDataGateway.PaTokenStatus.Cancelled"/>, <see cref="F:Skyline.DataMiner.Net.Messages.SLDataGateway.PaTokenStatus.Completed"/> or <see cref="F:Skyline.DataMiner.Net.Messages.SLDataGateway.PaTokenStatus.Error"/>.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.CrudHelper.PaTokenCrudHelperExtensionMethods.SetPaTokensErrorState(Skyline.DataMiner.Net.ManagerStore.ICrudHelperComponent{Skyline.DataMiner.Net.Messages.SLDataGateway.PaToken},System.Collections.Generic.IEnumerable{Skyline.DataMiner.Net.Messages.SLDataGateway.PaToken},Skyline.DataMiner.Net.Messages.SLDataGateway.PaTokenErrorState)">
+            <summary>
+            Sets the given <paramref name="paTokens"/> that aren't in state <see cref="F:Skyline.DataMiner.Net.Messages.SLDataGateway.PaTokenStatus.Cancelled"/>, <see cref="F:Skyline.DataMiner.Net.Messages.SLDataGateway.PaTokenStatus.Completed"/>
+            or <see cref="F:Skyline.DataMiner.Net.Messages.SLDataGateway.PaTokenStatus.Error"/> into <see cref="F:Skyline.DataMiner.Net.Messages.SLDataGateway.PaTokenStatus.Error"/> and <paramref name="paTokenErrorState"/> <see cref="T:Skyline.DataMiner.Net.Messages.SLDataGateway.PaTokenErrorState"/>.
+            </summary>
+            <param name="paTokenCrudHelper"><see cref="T:Skyline.DataMiner.Net.ProcessAutomation.PaProcessCrudHelperComponent"/> object to interact with DataMiner PaTokens.</param>
+            <param name="paTokens">The tokens to set into <see cref="F:Skyline.DataMiner.Net.Messages.SLDataGateway.PaTokenStatus.Error"/>.</param>
+            <param name="paTokenErrorState">The <see cref="T:Skyline.DataMiner.Net.Messages.SLDataGateway.PaTokenErrorState"/> to set.</param>
+            <exception cref="T:System.ArgumentNullException">In case <paramref name="paTokenCrudHelper"/> or <paramref name="paTokens"/> are null.</exception>
+            <exception cref="T:System.InvalidOperationException">In case <paramref name="paTokenErrorState"/> is <see cref="F:Skyline.DataMiner.Net.Messages.SLDataGateway.PaTokenErrorState.Ok"/>.</exception>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Extensions.PaTokenExtensionMethods">
+            <summary>
+            Contains the <see cref="T:Skyline.DataMiner.Net.Messages.SLDataGateway.PaToken"/> class extensions.
+            </summary>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Extensions.PaTokenExtensionMethods.GetLogger(Skyline.DataMiner.Net.Messages.SLDataGateway.PaToken)">
+            <summary>
+            Gets the logger for <paramref name="token"/>.
+            </summary>
+            <param name="token">The token to log for.</param>
+            <returns>The logger that will handle the logging.</returns>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Extensions.ProfileInstanceExtensionMethods">
+            <summary>
+            Contains the <see cref="T:Skyline.DataMiner.Net.ServiceManager.Objects.ServiceDefinition"/> class extensions.
+            </summary>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Extensions.ProfileInstanceExtensionMethods.IsMatchingDomDefinition(Skyline.DataMiner.Net.Profiles.ProfileInstance,Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomDefinition)">
+            <summary>
+            Check if all values of <paramref name="profileInstance"/> with a DOM reference value have a Field Descriptor matching <paramref name="domDefinition"/>.
+            </summary>
+            <param name="profileInstance">Profile instance to check value references of.</param>
+            <param name="domDefinition">The <see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomDefinition"/> to match.</param>
+            <returns><see langword="true"/> if all <paramref name="profileInstance"/> values don't have a DOM value or if their DOM value has a matching Field Descriptor, otherwise <see langword="false"/>.</returns>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="profileInstance"/> or <paramref name="domDefinition"/> are <see langword="false"/>.</exception>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Extensions.ServiceDefinitionExtensionMethods">
+            <summary>
+            Contains the <see cref="T:Skyline.DataMiner.Net.ServiceManager.Objects.ServiceDefinition"/> class extensions.
+            </summary>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Extensions.ServiceDefinitionExtensionMethods.GetProcessDomDefinitionReference(Skyline.DataMiner.Net.ServiceManager.Objects.ServiceDefinition)">
+            <summary>
+            Gets the process DOM definition reference from a service definition.
+            </summary>
+            <param name="serviceDefinition">Service definition to get the process DOM definition reference from.</param>
+            <returns>A <see cref="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ProcessDefinitionConfiguration.ProcessDomDefinitionReference"/> object.</returns>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="serviceDefinition"/> is null.</exception>
+            <exception cref="T:Skyline.DataMiner.Library.Exceptions.PropertyNotFoundException"> If <paramref name="serviceDefinition"/> doesn't contain a property with name <see cref="F:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Objects.KnownProperties.ServiceDefinition.ProcessDomDefinition"/>. </exception>
+            <exception cref="T:Skyline.DataMiner.Library.Exceptions.InvalidServiceDefinitionException">If the value in the property is not a valid <see cref="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ProcessDefinitionConfiguration.ProcessDomDefinitionReference"/> object.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Extensions.ServiceDefinitionExtensionMethods.GetProcessStartEventNode(Skyline.DataMiner.Net.ServiceManager.Objects.ServiceDefinition)">
+            <summary>
+            Gets the process start event node from the service definition based on its functions.
+            </summary>
+            <param name="serviceDefinition">Service definition object to look for <see cref="T:Skyline.DataMiner.Net.Messages.SLDataGateway.PaProcessStartEventType"/>.</param>
+            <returns>The process start event node defined in the service definition.</returns>
+            <exception cref="T:System.ArgumentException">If <paramref name="serviceDefinition"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">If there are multiple entry point functions in the given service definition.</exception>
+            <exception cref="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Common.Objects.Exceptions.PaProcessStartEventTypeNotFoundException">If there is no StartEvent function in the given service definition.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Extensions.ServiceDefinitionExtensionMethods.GetProcessStartEventType(Skyline.DataMiner.Net.ServiceManager.Objects.ServiceDefinition)">
+            <summary>
+            Gets the service definition PaProcessStartEventType based on its functions.
+            </summary>
+            <param name="serviceDefinition">Service definition object to look for <see cref="T:Skyline.DataMiner.Net.Messages.SLDataGateway.PaProcessStartEventType"/>.</param>
+            <returns>The PaProcessStartEventType defined in the service definition.</returns>
+            <exception cref="T:System.ArgumentException">If <paramref name="serviceDefinition"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">If there are multiple entry point functions in the given service definition.</exception>
+            <exception cref="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Common.Objects.Exceptions.PaProcessStartEventTypeNotFoundException">If there is no StartEvent function in the given service definition.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Extensions.ServiceDefinitionExtensionMethods.TryGetProcessDomDefinitionReference(Skyline.DataMiner.Net.ServiceManager.Objects.ServiceDefinition,Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ProcessDefinitionConfiguration.ProcessDomDefinitionReference@)">
+            <summary>
+            Tries to get the process DOM definition reference from a service definition.
+            </summary>
+            <param name="serviceDefinition">Service definition to get the process DOM definition reference from.</param>
+            <param name="processDomDefinitionReference">A <see cref="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ProcessDefinitionConfiguration.ProcessDomDefinitionReference"/> if existent.</param>
+            <returns>True if the process DOM definition reference is found;otherwise false.</returns>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Extensions.ServiceDefinitionExtensionMethods.TryGetProcessStartEventNode(Skyline.DataMiner.Net.ServiceManager.Objects.ServiceDefinition,Skyline.DataMiner.Net.ServiceManager.Objects.Node@)">
+            <summary>
+            Tries to get the process start event node from a service definition.
+            </summary>
+            <param name="serviceDefinition">Service definition object to look for the process start event node.</param>
+            <param name="node">The process start event node defined in the service definition.</param>
+            <returns>True if the process start event node is found;otherwise false.</returns>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Extensions.ServiceDefinitionExtensionMethods.TryGetProcessStartEventType(Skyline.DataMiner.Net.ServiceManager.Objects.ServiceDefinition,Skyline.DataMiner.Net.Messages.SLDataGateway.PaProcessStartEventType@)">
+            <summary>
+            Tries to get the PaProcessStartEventType from a service definition.
+            </summary>
+            <param name="serviceDefinition">Service definition object to look for <see cref="T:Skyline.DataMiner.Net.Messages.SLDataGateway.PaProcessStartEventType"/>.</param>
+            <param name="startEventType">PaProcessStartEventType defined in the service definition.</param>
+            <returns>True if PaProcessStartEventType is found;otherwise false.</returns>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.Logging.Formatting.DebugHtmlFormatter">
+            <summary>
+            An <see cref="T:Serilog.Formatting.ITextFormatter"/> that writes events in a HTML format.
+            </summary>
+        </member>
+        <member name="F:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.Logging.Formatting.DebugHtmlFormatter.TokenIdLogEventProperty">
+            <summary>
+            Name of the log event property that holds the Token ID it is logged for.
+            </summary>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.Logging.Formatting.DebugHtmlFormatter.#ctor(System.Guid,System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.Logging.Formatting.DebugHtmlFormatter"/> class.
+            </summary>
+            <param name="businessId">Token Business ID to associate with the logger.</param>
+            <param name="logFileLocation">Path to put the log files in.</param>
+            <param name="dateTimeFormat">Date time format of each log message.</param>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.Logging.Formatting.DebugHtmlFormatter.Format(Serilog.Events.LogEvent,System.IO.TextWriter)">
+            <summary>
+            Format the log event into the output. Subsequent events will be newline-delimited.
+            </summary>
+            <param name="logEvent">The event to format.</param>
+            <param name="output">The output.</param>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.Logging.Formatting.DebugHtmlFormatter.FormatEvent(Serilog.Events.LogEvent,System.IO.TextWriter)">
+            <summary>
+            Format the log event into the output.
+            </summary>
+            <param name="logEvent">The event to format.</param>
+            <param name="output">The output.</param>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.Logging.IPaLogger.Log(System.String,Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.Logging.PaLogLevel)">
+            <summary>
+            Logs the <paramref name="message"/>.
+            </summary>
+            <param name="message">Message to log.</param>
+            <param name="level">Specifies the meaning and relative importance of a log event.</param>
+        </member>
+        <member name="F:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.Logging.PaLogLevel.Debug">
+            <summary>
+            Internal system events that aren't necessarily observable from the outside.
+            </summary>
+        </member>
+        <member name="F:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.Logging.PaLogLevel.Information">
+            <summary>
+            The lifeblood of operational intelligence - things happen.
+            </summary>
+        </member>
+        <member name="F:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.Logging.PaLogLevel.Warning">
+            <summary>
+            Service is degraded or endangered.
+            </summary>
+        </member>
+        <member name="F:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.Logging.PaLogLevel.Error">
+            <summary>
+            Functionality is unavailable, invariants are broken or data is lost.
+            </summary>
+        </member>
+        <member name="F:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.Logging.PaLogLevel.Fatal">
+            <summary>
+            If you have a pager, it goes off when one of these occurs.
+            </summary>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.Logging.LoggerFactory">
+            <summary>
+            Provides access to <see cref="T:Serilog.ILogger"/> objects.
+            </summary>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.Logging.LoggerFactory.GetOrAddByBusinessId(System.Guid,System.String,System.Guid)">
+            <summary>
+            Gets or adds the Logger object used for writing log events.
+            </summary>
+            <param name="businessId">Business ID to associate with the logger.</param>
+            <param name="tokenProcessId">Process ID to associate with the logger.</param>
+            <param name="reservationId">Reservation ID to associate with the logger.</param>
+            <returns><see cref="T:Serilog.ILogger"/> object.</returns>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.Logging.PaTokenLogHandler.#ctor(System.Guid,System.String,System.Guid,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.Logging.PaTokenLogHandler"/> class.
+            </summary>
+            <param name="businessId">Business ID to associate with the logger.</param>
+            <param name="tokenProcessId">Process ID to associate with the logger.</param>
+            <param name="reservationId">Reservation ID to associate with the logger.</param>
+            /// <param name="tokenId">ID of the token to log for.</param>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.PaProcessCrudHelperComponentExtended.Create(Skyline.DataMiner.Net.Messages.SLDataGateway.PaProcess)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.PaProcessCrudHelperComponentExtended.Delete(Skyline.DataMiner.Net.Messages.SLDataGateway.PaProcess)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.PaProcessCrudHelperComponentExtended.GetTraceDataLastCall">
+            <inheritdoc/>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.PaProcessCrudHelperComponentExtended.PreparePaging(Skyline.DataMiner.Net.Messages.SLDataGateway.FilterElement{Skyline.DataMiner.Net.Messages.SLDataGateway.PaProcess},System.Int64)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.PaProcessCrudHelperComponentExtended.PreparePaging(Skyline.DataMiner.Net.Messages.SLDataGateway.FilterElement{Skyline.DataMiner.Net.Messages.SLDataGateway.PaProcess})">
+            <inheritdoc/>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.PaProcessCrudHelperComponentExtended.PreparePaging(SLDataGateway.API.Types.Querying.IQuery{Skyline.DataMiner.Net.Messages.SLDataGateway.PaProcess},System.Int64)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.PaProcessCrudHelperComponentExtended.PreparePaging(SLDataGateway.API.Types.Querying.IQuery{Skyline.DataMiner.Net.Messages.SLDataGateway.PaProcess})">
+            <inheritdoc/>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.PaProcessCrudHelperComponentExtended.Read(Skyline.DataMiner.Net.Messages.SLDataGateway.FilterElement{Skyline.DataMiner.Net.Messages.SLDataGateway.PaProcess})">
+            <inheritdoc/>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.PaProcessCrudHelperComponentExtended.Read(SLDataGateway.API.Types.Querying.IQuery{Skyline.DataMiner.Net.Messages.SLDataGateway.PaProcess})">
+            <inheritdoc/>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.PaProcessCrudHelperComponentExtended.Update(Skyline.DataMiner.Net.Messages.SLDataGateway.PaProcess)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.PaTokenCrudHelperComponentExtended.Create(Skyline.DataMiner.Net.Messages.SLDataGateway.PaToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.PaTokenCrudHelperComponentExtended.Delete(Skyline.DataMiner.Net.Messages.SLDataGateway.PaToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.PaTokenCrudHelperComponentExtended.GetTraceDataLastCall">
+            <inheritdoc/>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.PaTokenCrudHelperComponentExtended.PreparePaging(Skyline.DataMiner.Net.Messages.SLDataGateway.FilterElement{Skyline.DataMiner.Net.Messages.SLDataGateway.PaToken},System.Int64)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.PaTokenCrudHelperComponentExtended.PreparePaging(Skyline.DataMiner.Net.Messages.SLDataGateway.FilterElement{Skyline.DataMiner.Net.Messages.SLDataGateway.PaToken})">
+            <inheritdoc/>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.PaTokenCrudHelperComponentExtended.PreparePaging(SLDataGateway.API.Types.Querying.IQuery{Skyline.DataMiner.Net.Messages.SLDataGateway.PaToken},System.Int64)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.PaTokenCrudHelperComponentExtended.PreparePaging(SLDataGateway.API.Types.Querying.IQuery{Skyline.DataMiner.Net.Messages.SLDataGateway.PaToken})">
+            <inheritdoc/>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.PaTokenCrudHelperComponentExtended.Read(Skyline.DataMiner.Net.Messages.SLDataGateway.FilterElement{Skyline.DataMiner.Net.Messages.SLDataGateway.PaToken})">
+            <inheritdoc/>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.PaTokenCrudHelperComponentExtended.Read(SLDataGateway.API.Types.Querying.IQuery{Skyline.DataMiner.Net.Messages.SLDataGateway.PaToken})">
+            <inheritdoc/>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.PaTokenCrudHelperComponentExtended.Update(Skyline.DataMiner.Net.Messages.SLDataGateway.PaToken)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.ProcessAutomationHelperExtended">
+            <summary>
+            Adds logging to <see cref="T:Skyline.DataMiner.Net.ProcessAutomation.ProcessAutomationHelper"/>.
+            </summary>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.ProcessAutomationHelperExtended.#ctor(System.Func{Skyline.DataMiner.Net.Messages.DMSMessage[],Skyline.DataMiner.Net.Messages.DMSMessage[]})">
+            <inheritdoc/>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.PaManagers.PaUserTaskDomHelper">
+            <summary>
+            Gets a <see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomHelper"/> for PA User Task instance.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.PaManagers.ProcessAutomationHelper">
+            <summary>
+            Gets a <see cref="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.PaManagers.ProcessAutomationHelper"/> instance.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.PaManagers.Instance.PaUserTaskDomHelper">
+            <summary>
+            Gets a <see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomHelper"/> for PA User Task instance.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.PaManagers.Instance.ProcessAutomationHelper">
+            <summary>
+            Gets a <see cref="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.PaManagers.Instance.ProcessAutomationHelper"/> instance.
+            </summary>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.PaProfileLoadDomHelper">
+            <summary>
+            The profile-load script helper class used to retrieve the data provided and to interact with the framework in context of a profile-load script execution when having <see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomInstance"/>.
+            </summary>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.PaProfileLoadDomHelper.#ctor(Skyline.DataMiner.Automation.IEngine)">
+            <summary>
+            Creates a new instance of the <see cref="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.PaProfileLoadDomHelper"/> class.
+            </summary>
+            <param name="engine">Link with Skyline DataMiner.</param>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.PaProfileLoadDomHelper.GetParameterValue``1(System.String)">
+            <summary>
+            Gets the value of the parameter.
+            If <see cref="P:Skyline.DataMiner.Net.Profiles.ProfileParameterEntry.ReferenceValue"/> is null the value will be taken from the <see cref="T:Skyline.DataMiner.Net.Profiles.ProfileInstance"/>;
+            otherwise the value will be taken from the <see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomInstance"/>.
+            <para>
+            	In case the value is taken from the <see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomInstance"/> and it's compatible with the requested type, it will be returned as is.
+            	If it's not and its type and <typeparamref name="T"/> are both <see cref="T:System.IConvertible"/>, the value will be converted.
+            	Otherwise getting the value will fail.
+            </para>
+            <para>
+            	In case the value is taken from the <see cref="T:Skyline.DataMiner.Net.Profiles.ProfileInstance"/> and <typeparamref name="T"/> is <see cref="T:System.IConvertible"/>, the value will be converted.
+            	If it's not, the value on the <see cref="T:Skyline.DataMiner.Net.Profiles.ProfileInstance"/> will be interpreted as a JSON of type <typeparamref name="T"/> and fail if it's not.
+            </para>
+            </summary>
+            <typeparam name="T">Type of the parameter.</typeparam>
+            <param name="parameterName">Name of the parameter.</param>
+            <returns>The value of the parameter.</returns>
+            <exception cref="T:System.InvalidOperationException">When the value can't be converted.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.PaProfileLoadDomHelper.ReturnSuccess">
+            <summary>
+            If the PFL was executed successfully will send the token to the next queue.
+            </summary>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.PaProfileLoadDomHelper.TransitionState(System.String)">
+            <summary>
+            Transition the related Process DOM Instance from one status to another.
+            When fields have been updated, those changes will be applied prior to transitioning.
+            </summary>
+            <param name="transitionId">The ID of the Status Transition to apply.</param>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.PaProfileLoadDomHelper.TryGetParameterValue``1(System.String,``0@)">
+            <summary>
+            Tries to get the value of the parameter.
+            If <see cref="P:Skyline.DataMiner.Net.Profiles.ProfileParameterEntry.ReferenceValue"/> is null the value will be taken from the <see cref="T:Skyline.DataMiner.Net.Profiles.ProfileInstance"/>;
+            otherwise the value will be taken from the <see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomInstance"/>.
+            <para>
+            	In case the value is taken from the <see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomInstance"/> and it's compatible with the requested type, it will be returned as is.
+            	If it's not and its type and <typeparamref name="T"/> are both <see cref="T:System.IConvertible"/>, the value will be converted.
+            	Otherwise getting the value will fail.
+            </para>
+            <para>
+            	In case the value is taken from the <see cref="T:Skyline.DataMiner.Net.Profiles.ProfileInstance"/> and <typeparamref name="T"/> is <see cref="T:System.IConvertible"/>, the value will be converted.
+            	If it's not, the value on the <see cref="T:Skyline.DataMiner.Net.Profiles.ProfileInstance"/> will be interpreted as a JSON of type <typeparamref name="T"/> and fail if it's not.
+            </para>
+            </summary>
+            <typeparam name="T">Type of the parameter.</typeparam>
+            <param name="parameterName">Name of the parameter.</param>
+            <param name="value">Out variable that will hold the parameter value.</param>
+            <returns>True if the value exists;otherwise false.</returns>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.PaProfileLoadDomHelper.UpdateField``1(System.String,``0)">
+            <summary>
+            Updates the <paramref name="parameterName"/> with the given <paramref name="value"/>.
+            </summary>
+            <typeparam name="T">Type of the value.</typeparam>
+            <param name="parameterName">Name of the parameter.</param>
+            <param name="value">Value to update.</param>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.PaProfileLoadDomHelper.UpdateDomInstance">
+            <summary>
+            Update the current DOM Instance when <see cref="F:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.PaProfileLoadDomHelper.domHasChanged"/>.
+            </summary>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.PaProfileLoadHelper">
+            <summary>
+            The profile-load script helper class used to retrieve the data provided and to interact with the framework in context of a profile-load script execution.
+            </summary>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.PaProfileLoadHelper.#ctor(Skyline.DataMiner.Automation.IEngine)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.PaProfileLoadHelper"/> class.
+            </summary>
+            <param name="engine">The engine reference.</param>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="engine"/> is null.</exception>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.PaProfileLoadHelper.InputData">
+            <summary>
+            Gets the input data provided to a profile-load script.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.PaProfileLoadHelper.InputInterfaceProfileInstance">
+            <summary>
+            Gets the input interface profile instance that is selected during the creation of the booking.
+            </summary>
+            <exception cref="T:Skyline.DataMiner.Library.Exceptions.ProfileNotFoundException">If the profile instance was not found.</exception>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.PaProfileLoadHelper.NodeProfileInstance">
+            <summary>
+            Gets the node profile instance that is selected during the creation of the booking.
+            </summary>
+            <exception cref="T:Skyline.DataMiner.Library.Exceptions.ProfileNotFoundException">If the profile instance was not found.</exception>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.PaProfileLoadHelper.OutgoingProfileDefinitions">
+            <summary>
+            Gets the list of profile definitions defining the output interfaces of the current function.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.PaProfileLoadHelper.ProcessProfileInstances">
+            <summary>
+            Gets the list of existing process profile instances.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.PaProfileLoadHelper.VolatileProfileInstances">
+            <summary>
+            Gets the list of volatile (temporary) process profile instance objects that get generated by the consumer.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.PaProfileLoadHelper.ProcessAutomationManager">
+            <summary>
+            Gets the manager that can be used to interact with a queue.
+            </summary>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.PaProfileLoadHelper.AddOrUpdateActivityMetadata(System.String,System.String)">
+            <summary>
+            Adds or updates an activity metadata entry on the collection of activity metadata already generated in the profile-load script.
+            </summary>
+            <param name="key">Key of the activity metadata.</param>
+            <param name="value">Value of the activity metadata.</param>
+            <exception cref="T:System.ArgumentException">If <paramref name="key"/> or <paramref name="value"/> are <see cref="M:System.String.IsNullOrWhiteSpace(System.String)"/>.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.PaProfileLoadHelper.AddOrUpdateActivityMetadata(System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Adds or updates the given <paramref name="activityMetadata"/> on the collection of activity metadata already generated in the profile-load script.
+            </summary>
+            <param name="activityMetadata">The activity metadata to add or update.</param>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="activityMetadata"/> is null.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.PaProfileLoadHelper.AddOrUpdateGatewayKey(System.String,System.String)">
+            <summary>
+            Adds or updates a gateway key entry on the collection of gateway keys already generated in the profile-load script.
+            </summary>
+            <param name="key">Key of the gateway key.</param>
+            <param name="value">Value of the gateway Key.</param>
+            <exception cref="T:System.ArgumentException">If <paramref name="key"/> or <paramref name="value"/> are <see cref="M:System.String.IsNullOrWhiteSpace(System.String)"/>.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.PaProfileLoadHelper.AddOrUpdateGatewayKeys(System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Adds or updates the given <paramref name="gatewayKeys"/> on the collection of gateway keys already generated in the profile-load script.
+            </summary>
+            <param name="gatewayKeys">The Gateway Keys to add or to update.</param>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="gatewayKeys"/> is null.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.PaProfileLoadHelper.CreateCallBackScriptInfo(Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.TokenHandler.MessageType,System.String)">
+            <summary>
+            Creates a <see cref="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ScriptInfo"/> object to prepare the callback operation.
+            </summary>
+            <param name="messageType">Message type to define when executing the callback operation.</param>
+            <param name="data">The data returned by a consumer upon the execution of the callback operation.</param>
+            <returns>The data that is needed in order to perform the callback operation.</returns>
+            <exception cref="T:System.ArgumentException">If <paramref name="data"/> is <see cref="M:System.String.IsNullOrWhiteSpace(System.String)"/>.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.PaProfileLoadHelper.CreateProfileInstance(System.String,Skyline.DataMiner.Net.Profiles.ProfileDefinition)">
+            <summary>
+            Creates a <see cref="T:Skyline.DataMiner.Net.Profiles.ProfileInstance"/> object for a given <paramref name="profileDefinition"/> providing an entry for each parameter defined in the <paramref name="profileDefinition"/>.
+            </summary>
+            <param name="name">Profile Instance name.</param>
+            <param name="profileDefinition">Profile Definition for which the profile instance should be applied.</param>
+            <returns>An <see cref="T:Skyline.DataMiner.Net.Profiles.ProfileInstance"/> object.</returns>
+            <exception cref="T:System.ArgumentException">If <paramref name="name"/> is <see cref="M:System.String.IsNullOrWhiteSpace(System.String)"/>.</exception>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="profileDefinition"/> is null.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.PaProfileLoadHelper.SendErrorMessageToTokenHandler">
+            <summary>
+            Sends error message to Token Handler.
+            </summary>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.PaProfileLoadHelper.SendFinishMessageToTokenHandler">
+            <summary>
+            Sends finish message to Token Handler.
+            </summary>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.PaProfileLoadHelper.SendMessageToTokenHandler(Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.TokenHandler.MessageType,Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ProcessProfileInstances)">
+            <summary>
+            Sends <paramref name="messageType"/> to token handler providing <see cref="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.PaProfileLoadHelper.ProcessProfileInstances"/> and using the gateway keys and activity metadata previously defined.
+            </summary>
+            <param name="messageType">Indicates the type of the message that is exchanged between the framework and profile-load script.</param>
+            <param name="processProfileInstances">List of process profile instances (volatile and non volatile).</param>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="processProfileInstances"/> is null.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.PaProfileLoadHelper.SendMessageToTokenHandler(Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.TokenHandler.MessageType,System.Boolean)">
+            <summary>
+            Sends <paramref name="messageType"/> to token handler without new process profile instances and using the gateway keys and activity metadata previously defined.
+            </summary>
+            <param name="messageType">Indicates the type of the message that is exchanged between the framework and profile-load script.</param>
+            <param name="generateNewData">If true message will be sent generating new Data. If false message will be sent keeping Activity Metadata, GatewayKeys and ProcessProfileInstances unchanged.</param>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.QueueAdminState">
+            <summary>
+            Queue Admin State values [Pid 112]
+            </summary>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.QueueEngineInfo">
+            <summary>
+            Queue Admin State values [Pid 226]
+            </summary>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.QueueOperationalStatus">
+            <summary>
+            Queue Operational Status values [Pid 225]
+            </summary>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.QueueState">
+            <summary>
+            Queue Error State values [Pid 206].
+            </summary>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.QueueType">
+            <summary>
+            Queue Type values [Pid 114]
+            </summary>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.QueueManager.GetQueue(Skyline.DataMiner.Net.IConnection,System.Int32,System.Int32)">
+            <summary>
+            Gets a queue by its <paramref name="dmaId"/> and <paramref name="elementId"/>.
+            </summary>
+            <param name="slnet">Connection to SLNet process.</param>
+            <param name="dmaId">Id of the DataMiner Agent.</param>
+            <param name="elementId">Id of the Element.</param>
+            <returns><see cref="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.Queue"/> object with the queue info.</returns>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.QueueManager.GetQueue(Skyline.DataMiner.Net.IConnection,System.Guid)">
+            <summary>
+            Gets a queue by its <paramref name="resourcePoolId"/>.
+            </summary>
+            <param name="slnet">Connection to SLNet process.</param>
+            <param name="resourcePoolId">Id of the resource pool associated with the queue.</param>
+            <returns><see cref="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.Queue"/> object with the queue info.</returns>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.QueueManager.GetQueue(Skyline.DataMiner.Net.IConnection,System.Guid,System.Boolean)">
+            <summary>
+            Gets a queue by its <paramref name="resourcePoolId"/>.
+            </summary>
+            <param name="slnet">Connection to SLNet process.</param>
+            <param name="resourcePoolId">Id of the resource pool associated with the queue.</param>
+            <param name="useCache">Defines whether cache should be used.</param>
+            <returns><see cref="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.Queue"/> object with the queue info.</returns>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.QueueManager.GetQueues(Skyline.DataMiner.Net.IConnection)">
+            <summary>
+            Gets all active elements making use of protocol <seealso cref="F:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.Queue.ProtocolName"/>.
+            </summary>
+            <param name="slnet">Connection to SLNet process.</param>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.Queue"/>.</returns>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.QueueManager.GetQueues(Skyline.DataMiner.Net.IConnection,System.Boolean)">
+            <summary>
+            Gets all active elements making use of protocol <seealso cref="F:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.Queue.ProtocolName"/>.
+            </summary>
+            <param name="slnet">Connection to SLNet process.</param>
+            <param name="useCache">Defines whether cache should be used.</param>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.Queue"/>.</returns>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.ProcessAutomationManager">
+            <summary>
+            Represents the manager that will interact with a queue in context of a profile-load script execution.
+            </summary>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.ProcessAutomationManager.#ctor(Skyline.DataMiner.Automation.Engine,Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ScriptInfo)">
+            <summary>
+            Initializes a new instance of <see cref="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.ProcessAutomationManager"/> class.
+            </summary>
+            <param name="engine">Link with SLScripting process.</param>
+            <param name="scriptInfo">The data that is needed in order to perform the callback operation.</param>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="engine"/> or <paramref name="scriptInfo"/> are null.</exception>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.ProcessAutomationManager.PaToken">
+            <summary>
+            Gets or sets the PaToken being processed.
+            </summary>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.ProcessAutomationManager.ExecuteTokenHandler(Skyline.DataMiner.Automation.Engine,Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ScriptInfo,Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.TokenHandler.MessageType,System.Boolean)">
+            <summary>
+            Executes token handler action for given <paramref name="messageType"/> without new process profile instances, gateway keys, and activity metadata.
+            </summary>
+            <param name="engine">Link with SLScripting process.</param>
+            <param name="scriptInfo">The data that is needed in order to perform the callback operation.</param>
+            <param name="messageType">Indicates the type of the message that is exchanged between the queue element and profile load script.</param>
+            <param name="generateNewData">If true message will be sent generating new Data. If false message will be sent keeping Activity Metadata, GatewayKeys and ProcessProfileInstances unchanged.</param>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.ProcessAutomationManager.ExecuteTokenHandler(Skyline.DataMiner.Automation.Engine,Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ScriptInfo,Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.TokenHandler.MessageType,Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ProcessProfileInstances,System.Collections.Generic.Dictionary{System.String,System.String},System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Executes token handler action for given <paramref name="messageType"/>
+            using new <paramref name="processProfileInstances"/>, <paramref name="gatewayKeys"/> and <paramref name="activityMetadata"/>.
+            </summary>
+            <param name="engine">Link with SLScripting process.</param>
+            <param name="scriptInfo">The data that is needed in order to perform the callback operation.</param>
+            <param name="messageType">Indicates the type of the message that is exchanged between the queue element and profile load script.</param>
+            <param name="processProfileInstances">The process profile instances of the new token.</param>
+            <param name="activityMetadata">The activity metadata to be attached to the new token.</param>
+            <param name="gatewayKeys">The gateway keys of the new token.</param>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.ProcessAutomationManager.ExecuteTokenHandler(Skyline.DataMiner.Automation.Engine,Skyline.DataMiner.Net.Messages.SLDataGateway.PaToken,Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.TokenHandler.MessageType)">
+            <summary>
+            Executes token handler action for given <paramref name="messageType"/> without new process profile instances, gateway keys, and activity metadata.
+            </summary>
+            <param name="engine">Engine reference.</param>
+            <param name="paToken">The token being processed.</param>
+            <param name="messageType">Indicates the type of the message to perform.</param>
+            <exception cref="T:System.ArgumentNullException">In case <paramref name="engine"/> or <paramref name="paToken"/> is null.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.ProcessAutomationManager.ExecuteTokenHandler(Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.TokenHandler.MessageType,System.Boolean)">
+            <summary>
+            Executes token handler action for given <paramref name="messageType"/> without new process profile instances, gateway keys, and activity metadata.
+            </summary>
+            <param name="messageType">Indicates the type of the message that is exchanged between the queue element and profile load script.</param>
+            <param name="generateNewData">If true message will be sent generating new Data. If false message will be sent keeping Activity Metadata, GatewayKeys and ProcessProfileInstances unchanged.</param>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.ProcessAutomationManager.ExecuteTokenHandler(Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.TokenHandler.MessageType,Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ProcessProfileInstances,System.Collections.Generic.Dictionary{System.String,System.String},System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Executes token handler action for given <paramref name="messageType"/>
+            using new <paramref name="processProfileInstances"/>, <paramref name="gatewayKeys"/> and <paramref name="activityMetadata"/>.
+            </summary>
+            <param name="messageType">Indicates the type of the message that is exchanged between the queue element and profile load script.</param>
+            <param name="processProfileInstances">The process profile instances of the new token.</param>
+            <param name="activityMetadata">The activity metadata to be attached to the new token.</param>
+            <param name="gatewayKeys">The gateway keys of the new token.</param>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="processProfileInstances"/> or <paramref name="activityMetadata"/> or <paramref name="gatewayKeys"/> are null.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.ProcessAutomationManager.CompleteToken(Skyline.DataMiner.Automation.Engine,Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.Queue,Skyline.DataMiner.Net.Messages.SLDataGateway.PaToken,System.Boolean)">
+            <summary>
+            Sets the token into Completed.
+            Tries to swap a regular function resource with the original pool resource that was reserved during the creation of the booking.
+            </summary>
+            <param name="engine">Engine reference.</param>
+            <param name="queue">Queue element reference.</param>
+            <param name="paToken">The token being processed.</param>
+            <param name="verifyProcessCompletion">Indicates if other tokens should be verified to see whether the process has been completed.</param>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.ProcessAutomationManager.GenerateToken(Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.Queue,Skyline.DataMiner.Net.Messages.SLDataGateway.PaToken,Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ProcessProfileInstances,System.Collections.Generic.Dictionary{System.String,System.String},System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.HashSet{System.String}})">
+            <summary>
+            Generates a new token upon the retrieval of valid process profile instances or volatile process profile instance objects.
+            </summary>
+            <param name="queue">Queue element reference.</param>
+            <param name="paToken">The token being processed.</param>
+            <param name="processProfileInstances">The process profile instances of the new token.</param>
+            <param name="activityMetadata">The activity metadata to be attached to the new token.</param>
+            <param name="gatewayKeys">The gateway keys of the new token.</param>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.ProcessAutomationManager.LaunchPoolResourceHandlerScript(Skyline.DataMiner.Automation.Engine,Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.Queue,Skyline.DataMiner.Net.Messages.SLDataGateway.PaToken,Skyline.DataMiner.Net.ResourceManager.Objects.ReservationInstance,System.Guid)">
+            <summary>
+            Executes PA_PoolResourceHandler script to swap the resource assigned to the token.
+            </summary>
+            <param name="engine">Engine reference.</param>
+            <param name="queue">Queue element reference.</param>
+            <param name="paToken">The token being processed.</param>
+            <param name="reservation">The reservation assigned to the token.</param>
+            <param name="poolResourceGuid">The pool resource Id.</param>
+            <returns>Returns the resource Id assigned to the reservation;otherwise <see cref="F:System.Guid.Empty"/></returns>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.ProcessAutomationManager.LoadInputData(System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Loads the data that is provided to token handler.
+            </summary>
+            <param name="scriptParams">The script parameters data that is needed in order to perform the callback operation.</param>
+            <returns>The input data of token handler.</returns>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="scriptParams"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">If the data provided in <paramref name="scriptParams"/> is not valid.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.ProcessAutomationManager.ReleaseResourceAction(Skyline.DataMiner.Automation.Engine,Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.Queue,Skyline.DataMiner.Net.Messages.SLDataGateway.PaToken)">
+            <summary>
+            Release resource action swaps a regular function resource with the original pool resource that was reserved during the creation of the booking.
+            </summary>
+            <param name="engine">Engine reference.</param>
+            <param name="queue">Queue element reference.</param>
+            <param name="paToken">The token being processed.</param>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.ProcessAutomationManager.RunTokenHandlerActions(Skyline.DataMiner.Automation.Engine,Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.Queue,Skyline.DataMiner.Net.Messages.SLDataGateway.PaToken,Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.Logging.IPaLogger,Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.TokenHandler.MessageType,Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ProcessProfileInstances,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.HashSet{System.String}},System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Runs the message type corresponding action provided in the <paramref name="messageType"/>.
+            </summary>
+            <param name="engine">Engine reference.</param>
+            <param name="queue">Queue element reference.</param>
+            <param name="paToken">The token being processed.</param>
+            <param name="logger">Logger reference.</param>
+            <param name="messageType">Indicates the type of the message that is exchanged between the queue element and profile load script.</param>
+            <param name="processProfileInstances">The process profile instances of the new token.</param>
+            <param name="gatewayKeys">The gateway keys of the new token.</param>
+            <param name="activityMetadata">The activity metadata to be attached to the new token.</param>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.MessageHandler.PaTimerStartEventRecurringPattern">
+            <summary>
+            Defines the recurring pattern of a PA Timer Start Event.
+            </summary>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.MessageHandler.PaTimerStartEventRecurringPattern.StartEventFrequencyType">
+            <summary>
+            How frequently an event runs.
+            </summary>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.MessageHandler.PaTimerStartEventRecurringPattern.StartEventMonthlyRelativeFrequencyInterval">
+            <summary>
+            When Frequency Type is Monthly relative, frequency interval is one of the following:
+            </summary>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.MessageHandler.PaTimerStartEventRecurringPattern.StartEventRelativeInterval">
+            <summary>
+            When Frequency Interval is monthly relative or yearly.
+            </summary>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.MessageHandler.PaTimerStartEventRecurringPattern.StartEventSubdayType">
+            <summary>
+            Units for Subday Interval.
+            </summary>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.MessageHandler.PaTimerStartEventRecurringPattern.StartEventSubyearInterval">
+            <summary>
+            Frequency Interval is one of the following:
+            </summary>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.MessageHandler.PaTimerStartEventRecurringPattern.StartEventWeeklyFrequencyInterval">
+            <summary>
+            When Frequency Type is Monthly relative, frequency interval is one or more of the following:
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.MessageHandler.PaTimerStartEventRecurringPattern.ActiveEndDate">
+            <summary>
+            Date and Time on which execution of an event can stop.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.MessageHandler.PaTimerStartEventRecurringPattern.ActiveStartDate">
+            <summary>
+            Date and Time on which execution of an event can begin.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.MessageHandler.PaTimerStartEventRecurringPattern.FrequencyInterval">
+            <summary>
+            Days that the event is executed. Depends on the value of Frequency Type.
+            1 (once) - Frequency Interval is unused(0);
+            4 (daily) - Every Frequency Interval days;
+            8 (weekly) - Frequency Interval is one or more of the following:
+            1 = Sunday
+            2 = Monday
+            4 = Tuesday
+            8 = Wednesday
+            16 = Thursday
+            32 = Friday
+            64 = Saturday
+            16 (monthly) - On the Frequency Interval day of the month;
+            32 (monthly, relative) - Frequency Interval is one of the following:
+            1 = Sunday
+            2 = Monday
+            3 = Tuesday
+            4 = Wednesday
+            5 = Thursday
+            6 = Friday
+            7 = Saturday
+            8 = Day
+            9 = Weekday
+            10 = Weekend day
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.MessageHandler.PaTimerStartEventRecurringPattern.FrequencyType">
+            <summary>
+            How frequently an event runs.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.MessageHandler.PaTimerStartEventRecurringPattern.MonthlyRelativeFrequencyInterval">
+            <summary>
+            When FrequencyType is monthly relative.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.MessageHandler.PaTimerStartEventRecurringPattern.Occurrences">
+            <summary>
+            Number of times an event should occur.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.MessageHandler.PaTimerStartEventRecurringPattern.RecurrenceFactor">
+            <summary>
+            Number of weeks or months between the scheduled execution of an event.
+            Is used only if Frequency Type is weekly, monthly, monthly relative or yearly.
+            If value is 0, Recurrence factor is unused.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.MessageHandler.PaTimerStartEventRecurringPattern.RelativeInterval">
+            <summary>
+            When Frequency Interval is monthly relative or yearly.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.MessageHandler.PaTimerStartEventRecurringPattern.SubdayInterval">
+            <summary>
+            Number of Subday Type periods to occur between each execution of an event.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.MessageHandler.PaTimerStartEventRecurringPattern.SubdayType">
+            <summary>
+            Units for the Subday Interval.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.MessageHandler.PaTimerStartEventRecurringPattern.SubyearInterval">
+            <summary>
+            When the Frequency Type is of type Yearly.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.MessageHandler.PaTimerStartEventRecurringPattern.WeeklyFrequencyInterval">
+            <summary>
+            When Frequency Type is weekly.
+            </summary>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.MessageHandler.ProcessHelper">
+            <summary>
+            Supports interaction with the Process Automation element to be used by LSO script.
+            </summary>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.MessageHandler.ProcessHelper.Notify(Skyline.DataMiner.Library.Solutions.SRM.LifecycleServiceOrchestration.SrmBookingConfiguration)">
+            <summary>
+            Sends a notification to Process Automation element.
+            </summary>
+            <param name="srmBookingConfiguration">The booking configuration.</param>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.MessageHandler.ProcessHelper.Notify(Skyline.DataMiner.Library.Solutions.SRM.LifecycleServiceOrchestration.SrmBookingConfiguration,Skyline.DataMiner.Library.Solutions.SRM.LifecycleServiceOrchestration.SrmResourceConfiguration,Skyline.DataMiner.Library.Solutions.SRM.LifecycleServiceOrchestration.SrmResourceConfiguration,Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.Queue,Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.MessageHandler.PaTimerStartEventRecurringPattern,Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomInstanceId)">
+            <summary>
+            Sends a notification to Process Automation element.
+            </summary>
+            <param name="srmBookingConfiguration">The booking configuration.</param>
+            <param name="entryPointResource">The entry point resource (token or start event).</param>
+            <param name="firstResourceAfterEntryPoint">The first resource after the entry point resource (token or start event).</param>
+            <param name="destinationQueue">The queue where the token should be pushed to.</param>
+            <param name="recurringPattern">The recurring pattern to apply when the entry point is of type PA Timer Start Event.</param>
+            <param name="domInstanceId">The Dom Instance ID.</param>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.MessageHandler.ProcessHelper.PushToken(System.String,System.String)">
+            <summary>
+            Pushes a token into process <paramref name="paProcessName"/> providing a business key <paramref name="businessKey"/>.
+            </summary>
+            <param name="paProcessName">The process name.</param>
+            <param name="businessKey">Human readable identifier of a token pushed into a process and all its associated subprocesses.</param>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.MessageHandler.ProcessHelper.PushToken(System.String,System.String,Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomInstanceId)">
+            <summary>
+            Pushes a token into process <paramref name="paProcessName"/> providing a business key <paramref name="businessKey"/> and a Dom Instance.
+            </summary>
+            <param name="paProcessName">The process name.</param>
+            <param name="businessKey">Human readable identifier of a token pushed into a process and all its associated subprocesses.</param>
+            <param name="domInstanceId">Dom Instance Id.</param>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.CreateActivationWindow.OriginData">
+            <summary>
+            Represents the origin data of script 'PA_CreateActivationWindow'.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.CreateActivationWindow.OriginData.ServiceDefinitionId">
+            <summary>
+            Gets or sets the Service Definition Id.
+            </summary>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.PoolResourceHandler.InputData">
+            <summary>
+                Represents the input data of script 'PA_PoolResourceHandler'.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.PoolResourceHandler.InputData.BookingManagerInfo">
+            <summary>
+                Gets or sets the booking manager information.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.PoolResourceHandler.InputData.NodeId">
+            <summary>
+                Gets or sets the service definition node id.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.PoolResourceHandler.InputData.QueueElement">
+            <summary>
+                Gets or sets the <see cref="T:Skyline.DataMiner.Library.ElementID"/> representation of the queue element.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.PoolResourceHandler.InputData.TokenGuid">
+            <summary>
+                Gets or sets the token identifier (guid).
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.PoolResourceHandler.InputData.PoolResourceGuid">
+            <summary>
+                Gets or sets the pool resource identifier (guid).
+            </summary>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.PoolResourceHandler.InputData.Validate(System.String@)">
+            <summary>
+                Checks if the data present in the current instance is valid.
+            </summary>
+            <param name="error">
+                If the data is not valid this will hold the errors;otherwise will be filled with
+                <see cref="F:System.String.Empty" />.
+            </param>
+            <returns>True if the data present in the current instance is valid. Otherwise, it returns false.</returns>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ProcessDefinitionAction.CreateProcessDefinitionInputData">
+            <summary>
+            Represents the input data of PA_ProcessDefinitionAction script with <see cref="F:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ProcessDefinitionAction.KnownActions.CreateProcessDefinition"/>.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ProcessDefinitionAction.CreateProcessDefinitionInputData.CreatedServiceDefinitionIdVariableName">
+            <summary>
+            Gets or sets the variable name to set with <see cref="!:ServiceDefinition.ID"/> of the created Process Definition.
+            Optional, will be ignored when <see langword="null"/> or whitespace.
+            </summary>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ProcessDefinitionAction.DeleteProcessDefinitionInputData">
+            <summary>
+            Represents the input data of PA_ProcessDefinitionAction script with <see cref="F:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ProcessDefinitionAction.KnownActions.DeleteProcessDefinition"/>.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ProcessDefinitionAction.DeleteProcessDefinitionInputData.ServiceDefinitionId">
+            <summary>
+            Gets or sets the Service Definition ID.
+            </summary>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ProcessDefinitionAction.KnownActions">
+            <summary>
+            The possible actions for the PA_ProcessDefinitionAction script.
+            </summary>
+        </member>
+        <member name="F:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ProcessDefinitionAction.KnownActions.CreateProcessDefinition">
+            <summary>
+            Action to create a new Process Definition.
+            </summary>
+        </member>
+        <member name="F:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ProcessDefinitionAction.KnownActions.DeleteProcessDefinition">
+            <summary>
+            Action to delete a Process Definition.
+            </summary>
+        </member>
+        <member name="F:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ProcessDefinitionAction.KnownActions.EditActivityLabel">
+            <summary>
+            Action to edit the label of an Activity.
+            </summary>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ProcessDefinitionAction.EditActivityLabelInputData">
+            <summary>
+            Represents the input data of PA_ProcessDefinitionAction script with <see cref="F:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ProcessDefinitionAction.KnownActions.EditActivityLabel"/>.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ProcessDefinitionAction.EditActivityLabelInputData.SelectedNodeIds">
+            <summary>
+            Gets or sets a semicolon-separated list of Node IDs.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ProcessDefinitionAction.EditActivityLabelInputData.ServiceDefinitionId">
+            <summary>
+            Gets or sets the Service Definition ID.
+            </summary>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ProcessDefinitionConfiguration.InputData">
+            <summary>
+            Represents the input data of PA_ProcessDefinitionConfiguration script.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ProcessDefinitionConfiguration.InputData.ServiceDefinitionId">
+            <summary>
+            Gets or sets the Service Definition Id.
+            </summary>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ProcessDefinitionConfiguration.ProcessDomDefinitionReference">
+            <summary>
+            Represents a Process DOM definition reference.
+            </summary>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ProcessDefinitionConfiguration.ProcessDomDefinitionReference.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ProcessDefinitionConfiguration.ProcessDomDefinitionReference" /> class.
+            </summary>
+            <param name="moduleId">Id of the module.</param>
+            <param name="domDefinitionName">Name of the DOM definition.</param>
+            <exception cref="T:System.ArgumentException">If <paramref name="moduleId"/> or <paramref name="domDefinitionName"/> is null or white-space.</exception>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ProcessDefinitionConfiguration.ProcessDomDefinitionReference.DomDefinitionName">
+            <summary>
+            Gets or sets the DOM Definition Name.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ProcessDefinitionConfiguration.ProcessDomDefinitionReference.ModuleId">
+            <summary>
+            Gets or sets the Module Id.
+            </summary>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ProcessDefinitionConfiguration.ProcessDomDefinitionReference.Parse(System.String)">
+            <summary>
+            Converts a string with format ModuleId/DomDefinitionName to an ProcessDomDefinitionReference object.
+            </summary>
+            <param name="source">String with format ModuleId/DomDefinitionName.</param>
+            <returns>An ProcessDomDefinitionReference object with the parsed data.</returns>
+            <exception cref="T:System.ArgumentException"> When the input string does not follow the format ModuleId/DomDefinitionName. </exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ProcessDefinitionConfiguration.ProcessDomDefinitionReference.ToString">
+            <summary>
+            Converts the value of this instance to its equivalent string representation.
+            </summary>
+            <returns>The string representation of the value of this instance.</returns>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.Evaluation">
+            <summary>
+            Defines the evaluation to be made on a <see cref="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.RoutingRule"/>.
+            </summary>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.Operation">
+            <summary>
+            Defines the operation to be made on a rule condition.
+            </summary>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.IncomingDomField">
+            <summary>
+            Represents the Dom Field used on <see cref="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.RoutingCondition"/>.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.IncomingDomField.FieldDescriptorId">
+            <summary>
+            Gets or sets the field Id of the DOM Field.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.IncomingDomField.SectionDefinitionId">
+            <summary>
+            Gets or sets the section Id of the DOM Field.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.IncomingDomField.UserDomInstance">
+            <summary>
+            Gets or sets the label of the service definition node that generated a User Dom Instance. Optional.
+            </summary>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.RoutingCondition">
+            <summary>
+            Represents the routing condition used on <see cref="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.Rule"/>.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.RoutingCondition.DomField">
+            <summary>
+            Gets or sets the DOM field of the rule condition.
+            If set, the <seealso cref="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.RoutingCondition.IncomingGatewayKeyName"/> will not be used.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.RoutingCondition.IncomingGatewayKeyName">
+            <summary>
+            Gets or sets the gateway key of the rule condition.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.RoutingCondition.IncomingInterfaceId">
+            <summary>
+            Gets or sets the incoming interface id of the rule condition.
+            -1 for everything.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.RoutingCondition.Operation">
+            <summary>
+            Gets or sets the operator of rule condition. It only supports 'equal' and 'any'.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.RoutingCondition.Value">
+            <summary>
+            Gets or sets the gateway value or the Dom field value of the rule condition.
+            </summary>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.RoutingCondition.ValidateCondition(System.Collections.Generic.List{Skyline.DataMiner.Net.Messages.SLDataGateway.PaToken},Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.DomInstanceCacheProvider,System.Collections.Generic.List{Skyline.DataMiner.Net.Messages.SLDataGateway.PaToken}@)">
+            <summary>
+            Verifies if a condition is met given the <see cref="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.RoutingCondition.Operation"/> for a list of <paramref name="tokens"/> in queue.
+            </summary>
+            <param name="tokens">The tokens that are currently in queue.</param>
+            <param name="domInstanceCache">A cache provider for <see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomInstance"/> objects.</param>
+            <param name="matchingTokens">Tokens matching the routing condition.</param>
+            <returns>True if a condition is met;otherwise false.</returns>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.RoutingCondition.FindMatchingTokensByDomFieldCondition(System.Collections.Generic.List{Skyline.DataMiner.Net.Messages.SLDataGateway.PaToken},Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.DomInstanceCacheProvider)">
+            <summary>
+            Finds all tokens matching the routing condition taking into account the <see cref="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.RoutingCondition.DomField"/> condition.
+            </summary>
+            <param name="tokens">The tokens that are currently in queue.</param>
+            <param name="domInstanceCache">A cache provider for <see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomInstance"/> objects.</param>
+            <returns>Tokens matching the routing condition.</returns>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.RoutingRule">
+            <summary>
+            Represents the routing rule that is passed on parameter <see cref="F:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Objects.KnownParameters.GatewayRoutingRules"/>.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.RoutingRule.Evaluation">
+            <summary>
+            Gets or sets the rules evaluation type.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.RoutingRule.Rules">
+            <summary>
+            Gets or sets the rules.
+            </summary>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.RoutingRule.ValidateRoutingRules(System.Collections.Generic.IEnumerable{Skyline.DataMiner.Net.Messages.SLDataGateway.PaToken},System.Collections.Generic.IEnumerable{Skyline.DataMiner.Net.ServiceManager.Objects.Edge},System.Collections.Generic.List{Skyline.DataMiner.Net.Messages.SLDataGateway.PaToken}@)">
+            <summary>
+            For each existent rule retrieves the list of new tokens to be generated given the Evaluation.
+            </summary>
+            <param name="tokensInQueue">The list of tokens that are in queue.</param>
+            <param name="outputEdges">The list of service definition output edges.</param>
+            <param name="matchingTokens">The list of tokens that matches the routing rules.</param>
+            <returns>Returns the new tokens to be generated.</returns>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.RoutingRule.GenerateToken(System.Collections.Generic.List{Skyline.DataMiner.Net.Messages.SLDataGateway.PaToken},System.Int32,System.String)">
+            <summary>
+            Generates a new token based on all incoming tokens matching the rule to the new token.
+            </summary>
+            <param name="parentTokens">The parent tokens to be associated with the new token.</param>
+            <param name="outgoingInterfaceId">The outgoing interface Id to be set as the associated result on the new token.</param>
+            <param name="customIdentifier">The custom identifier to be set on the new token.</param>
+            <returns>Returns a new token.</returns>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.Rule">
+            <summary>
+            Represents the rule used on <see cref="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.RoutingRule"/>.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.Rule.Conditions">
+            <summary>
+            Gets or sets the rule conditions.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.Rule.Description">
+            <summary>
+            Gets or sets the description of the rule.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.Rule.DoTagTokens">
+            <summary>
+            Gets or sets a value indicating whether a new custom identifier should be generated.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.Rule.OutgoingInterfaceIds">
+            <summary>
+            Gets or sets the list of outgoing interface ids of the new token.
+            Empty List for everything.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.Rule.SequenceId">
+            <summary>
+            Gets or sets the id of the rule.
+            </summary>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.Rule.ValidateRule(System.Collections.Generic.List{Skyline.DataMiner.Net.Messages.SLDataGateway.PaToken},Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.DomInstanceCacheProvider,System.Collections.Generic.List{Skyline.DataMiner.Net.Messages.SLDataGateway.PaToken}@)">
+            <summary>
+            Verifies if all conditions are met given the <paramref name="tokens"/> in queue.
+            </summary>
+            <param name="tokens">The tokens that are currently in queue.</param>
+            <param name="domInstanceCache">A cache provider for <see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomInstance"/> objects.</param>
+            <param name="ruleMatchingTokens">Tokens matching the rule.</param>
+            <returns>True if all conditions are met;otherwise false.</returns>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.DomInstanceCacheProvider">
+            <summary>
+            A cache provider for <see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomInstance"/> objects.
+            </summary>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.DomInstanceCacheProvider.#ctor(System.Collections.Generic.IEnumerable{Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomInstanceId},System.Collections.Generic.IEnumerable{Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomInstanceId})">
+            <summary>
+            Initializes a new instance of <see cref="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.DomInstanceCacheProvider"/>.
+            </summary>
+            <param name="processDomInstanceIds">Process Dom Instance Ids to load.</param>
+            <param name="userDomInstanceIds">User Dom Instance Ids to load.</param>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.DomInstanceCacheProvider.GetDomInstanceById(Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomInstanceId)">
+            <summary>
+            Gets a Dom Instance by its Id.
+            </summary>
+            <param name="domInstanceId">Id of the Dom Instance.</param>
+            <returns><see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomInstance"/> object.</returns>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ScriptInfo.ScriptName">
+            <summary>
+            The name of the script
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ScriptInfo.ScriptParams">
+            <summary>
+            The input parameters and their values
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ScriptInfo.ScriptDummies">
+            <summary>
+            The script dummies and their element references
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ProcessProfileInstances.ProcessProfileInstancesGuid">
+            <summary>
+            The list of guids referring to existing process profile instances.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ProcessProfileInstances.VolatileProcessProfileInstances">
+            <summary>
+            The list of volatile (temporary) process profile instance objects that get generated by the consumer.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ConsumerInfo.DmaId">
+            <summary>
+            The id of the DataMiner Agent
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ConsumerInfo.ElementId">
+            <summary>
+            The id of the Consumer Element
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ConsumerInfo.FunctionGuid">
+            <summary>
+            The guid of the consumer function
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ProcessInfo.ActivityMetadata">
+            <summary>
+            Gets or sets the activity metadata.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ProcessInfo.CallbackData">
+            <summary>
+            The data returned by a consumer upon the execution of the callback operation.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ProcessInfo.CallbackScriptInfo">
+            <summary>
+            The ScriptInfo data that is needed in order to perform the callback operation.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ProcessInfo.GatewayKey">
+            <summary>
+            Gets or sets the gateway key.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ProcessInfo.MessageType">
+            <summary>
+            Indicates the type of the message that is exchanged between the queue element, token handler and profile load scripts.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ProcessInfo.OutgoingProfileDefinitionsGuid">
+            <summary>
+            The list of profile definitions defining the output interfaces of the current function.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ProcessInfo.ProcessProfileInstances">
+            <summary>
+            The list of process profile instances.
+            </summary>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ProfileInstancesInfo">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ProfileInstancesInfo.NodeProfileInstance">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ProfileInstancesInfo.InterfacesProfileInstances">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.InterfaceDetails.Type">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.InterfaceDetails.InterfaceId">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.InterfaceDetails.InterfaceLabel">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.InterfaceDetails.ProfileInstance">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ProfileLoad.InputData">
+            <summary>
+            Represents the input data of a profile-load script.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ProfileLoad.InputData.FunctionDve">
+            <summary>
+            The FunctionDve dummy parameter.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ProfileLoad.InputData.Info">
+            <summary>
+            The SRM Resource Configuration Info object.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ProfileLoad.InputData.ProcessInfo">
+            <summary>
+            Contains process-related information such as the callback script and data, process profile instances (existing or volatile).
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ProfileLoad.InputData.ProfileInstance">
+            <summary>
+            The node and interface profile instances that are selected during the creation of the booking.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ElementReference.DmaId">
+            <summary>
+            The id of the DataMiner Agent
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.ElementReference.ElementId">
+            <summary>
+            The id of the Element
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.TokenHandler.InputData.ActivityMetadata">
+            <summary>
+            Gets or sets the activity metadata.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.TokenHandler.InputData.ConsumerInfo">
+            <summary>
+            The information necessary to identify the targeted consumer
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.TokenHandler.InputData.GatewayKey">
+            <summary>
+            Gets or sets the gateway key.
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.TokenHandler.InputData.MessageType">
+            <summary>
+            Indicates the type of the message that is received by the token handler from either the queue element or the profile load script
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.TokenHandler.InputData.ProcessProfileInstances">
+            <summary>
+            The list of process profile instances
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.TokenHandler.InputData.QueueReference">
+            <summary>
+            The reference to the targeted queue
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.TokenHandler.InputData.ResourceGuid">
+            <summary>
+            The guid of the assigned resource
+            </summary>
+        </member>
+        <member name="P:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Model.TokenHandler.InputData.TokenGuid">
+            <summary>
+            The guid of the token
+            </summary>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Objects.KnownParameters">
+            <summary>
+            Contains the names of the Parameters that are known to the Process Automation application.
+            </summary>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Objects.KnownProperties">
+            <summary>
+            Contains the names of the Properties that are known to the Process Automation application.
+            </summary>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Objects.KnownProperties.PaToken">
+            <summary>
+            Allowed properties for PaToken objects.
+            </summary>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Objects.KnownProperties.ResourcePool">
+            <summary>
+            Allowed properties for Resource Pool objects.
+            </summary>
+        </member>
+        <member name="F:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Objects.KnownProperties.ResourcePool.ProcessAutomation">
+            <summary>
+            Flag to be set with a true/false value to allow auto creation of a queue element based on Resource Pool.
+            </summary>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Objects.KnownProperties.ServiceDefinition">
+            <summary>
+            Allowed properties for Service Definition objects.
+            </summary>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Objects.KnownScripts">
+            <summary>
+            Contains the names of the scripts that are known to the Process Automation application.
+            </summary>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Objects.KnownScripts.ServiceDefinition">
+            <summary>
+            Allowed scripts for Service Definition objects.
+            </summary>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Objects.KnownScripts.ServiceDefinition.ScriptEntry">
+            <summary>
+            Script to run when a state has changed.
+            </summary>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Objects.KnownProtocols">
+            <summary>
+            Contains the names of the protocols that are known to the Process Automation application.
+            </summary>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Objects.PaTokenDefaultValues">
+            <summary>
+            Contains the default values of the some PaToken fields known to the Process Automation application.
+            </summary>
+        </member>
+        <member name="F:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Objects.PaTokenDefaultValues.MaxTimeInQueue">
+            <summary>
+            The Max Time in Queue.
+            </summary>
+        </member>
+        <member name="F:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Objects.PaTokenDefaultValues.Preemptive">
+            <summary>
+            Indicates whether the token is preemptive or not.
+            </summary>
+        </member>
+        <member name="F:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Objects.PaTokenDefaultValues.Priority">
+            <summary>
+            The priority of the token.
+            </summary>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Utils.DomCacheProvider">
+            <summary>
+            A cache provider for DataMiner Object Model objects.
+            </summary>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Utils.DomCacheProvider.GetAllDomHelpers">
+            <summary>
+            Gets the Dom helpers for all modules configured in the system.
+            </summary>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomHelper"/>.</returns>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Utils.DomCacheProvider.GetDomDefinitionById(Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomDefinitionId)">
+            <summary>
+            Gets a Dom Definition by its Id.
+            </summary>
+            <param name="domDefinitionId">Id of the Dom Definition.</param>
+            <returns><see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomDefinition"/> object.</returns>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="domDefinitionId"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">If <see cref="P:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomDefinitionId.ModuleId"/> is null or white-space
+            or <see cref="P:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomDefinitionId.Id"/> is <seealso cref="F:System.Guid.Empty"/>.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Utils.DomCacheProvider.GetDomDefinitionsById(System.Collections.Generic.IEnumerable{Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomDefinitionId})">
+            <summary>
+            Gets an  <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomDefinitionId"/> with the DomDefinitions objects for the specified <paramref name="ids"/>.
+            </summary>
+            <param name="ids"><see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomDefinitionId"/> with the ids of all DomDefinitions to look for.</param>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomDefinition"/> with the list of DomDefinitions.</returns>
+            <exception cref="T:System.ArgumentException">If <paramref name="ids"/> is empty.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Utils.DomCacheProvider.GetDomDefinitionsByModuleId(System.String)">
+            <summary>
+            Gets all Dom Definitions by a module Id.
+            </summary>
+            <param name="moduleId">Id of the module to look for Dom Definitions.</param>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomDefinition"/>.</returns>
+            <exception cref="T:System.ArgumentException">If <paramref name="moduleId"/> is null or white-space.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Utils.DomCacheProvider.GetDomHelperByModuleId(System.String)">
+            <summary>
+            Gets a Dom Helper by a module Id.
+            </summary>
+            <param name="moduleId">Id of the module.</param>
+            <returns>A <see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomHelper"/>.</returns>
+            <exception cref="T:System.ArgumentException">If <paramref name="moduleId"/> is null or white-space.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Utils.DomCacheProvider.GetDomInstanceById(Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomInstanceId)">
+            <summary>
+            Gets a Dom Instance by its Id.
+            </summary>
+            <param name="domInstanceId">Id of the Dom Instance.</param>
+            <returns><see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomInstance"/> object.</returns>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="domInstanceId"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">If <see cref="P:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomInstanceId.ModuleId"/> is null or white-space
+            or <see cref="P:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomInstanceId.Id"/> is <seealso cref="F:System.Guid.Empty"/>.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Utils.DomCacheProvider.GetDomInstancesById(System.Collections.Generic.IEnumerable{Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomInstanceId})">
+            <summary>
+            Gets an  <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomInstance"/> with the Dom Instance objects for the specified <paramref name="ids"/>.
+            </summary>
+            <param name="ids"><see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomInstanceId"/> with the ids of all Dom Instances to look for.</param>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomInstance"/> with the list of Dom Instances.</returns>
+            <exception cref="T:System.ArgumentException">If <paramref name="ids"/> is empty.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Utils.DomCacheProvider.GetSectionDefinitionById(Skyline.DataMiner.Net.Sections.SectionDefinitionID)">
+            <summary>
+            Gets a SectionDefinition by its Id.
+            </summary>
+            <param name="sectionDefinitionId">Id of the SectionDefinition.</param>
+            <returns><see cref="T:Skyline.DataMiner.Net.Sections.SectionDefinition"/> object.</returns>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="sectionDefinitionId"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">If <see cref="P:Skyline.DataMiner.Net.Sections.SectionDefinitionID.ModuleId"/> is null or white-space
+            or <see cref="P:Skyline.DataMiner.Net.Sections.SectionDefinitionID.Id"/> is <seealso cref="F:System.Guid.Empty"/>.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Utils.DomCacheProvider.GetSectionDefinitionsByDomDefinition(Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomDefinition)">
+            <summary>
+            Gets an IEnumerable with all Section Definition configured in a DomDefinition.
+            </summary>
+            <param name="domDefinition">Dom Definition object.</param>
+            <returns>An IEnumerable of all the Section Definitions part of a DomDefinition.</returns>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="domDefinition"/> is null.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Utils.DomCacheProvider.GetSectionDefinitionsByDomDefinition(Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomDefinitionId)">
+            <summary>
+            Gets an IEnumerable with all Section Definition by a DomDefinition Id.
+            </summary>
+            <param name="domDefinitionId">Id of the Dom Definition.</param>
+            <returns>An IEnumerable of all the Section Definitions part of a DomDefinition.</returns>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="domDefinitionId"/> is null.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Utils.DomCacheProvider.GetSectionDefinitionsById(System.Collections.Generic.IEnumerable{Skyline.DataMiner.Net.Sections.SectionDefinitionID})">
+            <summary>
+            Gets an  <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Skyline.DataMiner.Net.Sections.SectionDefinition"/> with the SectionDefinition objects for the specified <paramref name="ids"/>.
+            </summary>
+            <param name="ids"><see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Skyline.DataMiner.Net.Sections.SectionDefinitionID"/> with the ids of all SectionDefinitions to look for.</param>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Skyline.DataMiner.Net.Sections.SectionDefinition"/> with the list of SectionDefinitions.</returns>
+            <exception cref="T:System.ArgumentException">If <paramref name="ids"/> is empty.</exception>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Utils.PaUtilities">
+            <summary>
+            Contains some Process Automation utilities static methods.
+            </summary>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Utils.PaUtilities.GetPaTimerStartEventRecurringPattern(Skyline.DataMiner.Library.Solutions.SRM.LifecycleServiceOrchestration.SrmResourceConfiguration)">
+            <summary>
+            Gets the value present in the Profile Instance for <see cref="F:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Objects.KnownParameters.TimerStartEventRecurringPattern"/> profile parameter.
+            </summary>
+            <param name="resource">SrmResourceConfiguration Reference.</param>
+            <returns><see cref="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.MessageHandler.PaTimerStartEventRecurringPattern"/> object reference.</returns>
+            <exception cref="T:System.ArgumentNullException">In case the <paramref name="resource"/> is null.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Utils.PaUtilities.TryGetPaStartEventDomInstance(Skyline.DataMiner.Library.Solutions.SRM.LifecycleServiceOrchestration.SrmResourceConfiguration,Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomInstanceId@)">
+            <summary>
+            Tries to Get the Dom Instance Id from a Resource.
+            </summary>
+            <param name="resource">SrmResourceConfiguration Reference.</param>
+            <param name="domInstanceId">A Dom Instance Id</param>
+            <returns>If true the provided resource has a PA DOM Reference with proper value</returns>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Utils.PaUtilities.VerifyProcessCompletion(System.Collections.Generic.IEnumerable{Skyline.DataMiner.Net.Messages.SLDataGateway.PaToken})">
+            <summary>
+            Checks if the process associated with the given <paramref name="paTokens"/> tokens can be completed.
+            </summary>
+            <param name="paTokens">Tokens that have an associated process.</param>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Utils.PaUtilities.VerifyProcessCompletion(System.Collections.Generic.IEnumerable{Skyline.DataMiner.Net.Messages.SLDataGateway.PaToken},System.Collections.Generic.Dictionary{System.String,Skyline.DataMiner.Net.Messages.SLDataGateway.PaToken[]})">
+            <summary>
+            Checks if the processes and main tokens associated with the given <paramref name="paTokens"/> tokens can be completed based on the following rules:
+            <para>In case there are any child tokens, process is not completed yet.</para>
+            <para>In case there are main tokens for a business Id where all child tokens have been completed and the main token is valid, the main token can be completed.</para>
+            </summary>
+            <param name="paTokens">Tokens that have an associated process.</param>
+            <param name="notCompletedPaTokensByProcessId">Not completed tokens by process id.</param>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Utils.PaUtilities.GetPaStartEventDomInstance(Skyline.DataMiner.Library.Solutions.SRM.LifecycleServiceOrchestration.SrmResourceConfiguration)">
+            <summary>
+            Gets a DOM Reference Id from a resource.
+            </summary>
+            <param name="resource">SrmResourceConfiguration Reference.</param>
+            <returns>A Dom Instance Id object.</returns>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Validators.DomInstanceValidator">
+            <summary>
+            Contains some Process Automation utilities static methods.
+            </summary>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Validators.DomInstanceValidator.ValidateProcessDomInstance(Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomInstanceId)">
+            <summary>
+            Validates if <paramref name="domInstanceId"/> is a valid Process DOM Instance.
+            </summary>
+            <param name="domInstanceId">The DOM Instance ID to validate.</param>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="domInstanceId"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">If <paramref name="domInstanceId"/> isn't associated with the <see cref="F:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Objects.KnownDomIds.ProcessAutomationModuleId"/> module.</exception>
+        </member>
+        <member name="T:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Validators.DomDefinitionValidator">
+            <summary>
+            Contains some Process Automation utilities static methods.
+            </summary>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Validators.DomDefinitionValidator.ValidateUserTaskDomDefinition(Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomDefinitionId,Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Utils.DomCacheProvider)">
+            <summary>
+            Validates if <paramref name="domDefinitionId"/> is a valid UserTaskDomDefinition.
+            </summary>
+            <param name="domDefinitionId">The Dom Definition Id reference.</param>
+            <param name="domCacheProvider">The Dom cache Provider.</param>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="domDefinitionId"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">If DomDefinition associated with <paramref name="domDefinitionId"/> has no <see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomBehaviorDefinition"/> or no status <see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomBehaviorDefinition"/> for status <see cref="F:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Objects.KnownDomIds.PaUserTaskOpenStatusId"/> or <see cref="F:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Objects.KnownDomIds.PaUserTaskClosedStatusId"/>.</exception>
+        </member>
+        <member name="M:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Validators.DomDefinitionValidator.ValidateUserTaskDomDefinition(Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomDefinition)">
+            <summary>
+            Validates if <paramref name="domDefinition"/> is a valid UserTaskDomDefinition.
+            </summary>
+            <param name="domDefinition">The Dom Definition reference.</param>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="domDefinition"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">If DomDefinition associated with <paramref name="domDefinition"/> has no <see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomBehaviorDefinition"/> or no status <see cref="T:Skyline.DataMiner.Net.Apps.DataMinerObjectModel.DomBehaviorDefinition"/> for status <see cref="F:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Objects.KnownDomIds.PaUserTaskOpenStatusId"/> or <see cref="F:Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Objects.KnownDomIds.PaUserTaskClosedStatusId"/>.</exception>
+        </member>
+    </members>
+</doc>

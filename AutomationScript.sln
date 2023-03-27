@@ -1,0 +1,236 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32228.430
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Internal", "Internal", "{CB5AAB82-ED85-4B23-B26C-E4E1A07BD5E6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{C2D65165-8F45-41BB-BC64-DCC80297A186}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dlls", "Dlls", "{EB7E7C04-4045-4E65-B1BB-B3EFDC40DCF3}"
+	ProjectSection(SolutionItems) = preProject
+		Dlls\readme.txt = Dlls\readme.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{52871C57-7384-4FFB-94E8-0157DCD97C94}"
+	ProjectSection(SolutionItems) = preProject
+		Documentation\readme.txt = Documentation\readme.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Code Analysis", "Code Analysis", "{C8A350C2-71C8-4547-8BED-18FFA9FE5D59}"
+	ProjectSection(SolutionItems) = preProject
+		Internal\Code Analysis\qaction-debug.ruleset = Internal\Code Analysis\qaction-debug.ruleset
+		Internal\Code Analysis\qaction-release.ruleset = Internal\Code Analysis\qaction-release.ruleset
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Create TAG DOM", "Create TAG DOM", "{8E395509-4031-4E8C-BB00-8CE36189AEAB}"
+	ProjectSection(SolutionItems) = preProject
+		Create TAG DOM.xml = Create TAG DOM.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Process", "Process", "{E855D6F6-488D-402D-904E-88D5C0DC38EB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Channel", "Channel", "{7072DD23-6B38-42F1-B2A3-36593998EA0E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scan", "Scan", "{F1BCD433-C4E5-4FE6-8DE8-97018263A973}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Provision", "Provision", "{6D7F6A67-A68B-4A1E-9841-9F3DD9FFE989}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Actions", "Actions", "{276EFA25-15D6-4577-A646-38DC24B8CA57}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Create TAG DOM", "Create TAG DOM\Create TAG DOM.csproj", "{1BC1BF1B-576B-4386-B942-331A8540FF60}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Clear Layout", "Clear Layout", "{BFFB2F97-7C85-4230-960C-71E98C4D7E5B}"
+	ProjectSection(SolutionItems) = preProject
+		TAG Processes\Channel Process\Clear Layout.xml = TAG Processes\Channel Process\Clear Layout.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Update Monitoring State", "Update Monitoring State", "{F702278A-2E68-4F2B-B298-6E9E16A7A0E6}"
+	ProjectSection(SolutionItems) = preProject
+		TAG Processes\Channel Process\Update Monitoring State.xml = TAG Processes\Channel Process\Update Monitoring State.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Update Properties", "Update Properties", "{3BEE88DA-D5B1-452C-BAD2-E07FE23DF30B}"
+	ProjectSection(SolutionItems) = preProject
+		TAG Processes\Channel Process\Update Properties.xml = TAG Processes\Channel Process\Update Properties.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Actions", "Actions", "{BAAF0A55-A63F-49EE-B5B8-DBE4EADA00F3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Actions", "Actions", "{333F8AF9-A8E2-4CFF-8F8F-4683FC34B304}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Actions", "Actions", "{95E32DA1-2BF9-4640-89AB-803AA153171D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clear Layout", "TAG Processes\Channel Process\Clear Layout\Clear Layout.csproj", "{6CC71493-C59E-4287-AE31-19406AB3C4AC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Update Monitoring State", "TAG Processes\Channel Process\Update Monitoring State\Update Monitoring State.csproj", "{B9C289FF-ABAF-4515-99DF-42894FD27F9E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Update Properties", "TAG Processes\Channel Process\Update Properties\Update Properties.csproj", "{073736B2-D79F-4818-84AB-2FBCB8560811}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Create Scanner and KMS", "Create Scanner and KMS", "{D9BFD0DA-1CD5-4741-89F2-725DC1C8D0D4}"
+	ProjectSection(SolutionItems) = preProject
+		TAG Processes\Scan Process\Create Scanner and KMS.xml = TAG Processes\Scan Process\Create Scanner and KMS.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deactivate Scanner", "Deactivate Scanner", "{319118C2-7385-4AA9-8D99-7E247514904C}"
+	ProjectSection(SolutionItems) = preProject
+		TAG Processes\Scan Process\Deactivate Scanner.xml = TAG Processes\Scan Process\Deactivate Scanner.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Monitor Channels Progress", "Monitor Channels Progress", "{016F2495-9CDB-45D8-A64F-2FD5A6D6B0D8}"
+	ProjectSection(SolutionItems) = preProject
+		TAG Processes\Scan Process\Monitor Channels Progress.xml = TAG Processes\Scan Process\Monitor Channels Progress.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Monitor Scanner Progress", "Monitor Scanner Progress", "{2ED7619B-235D-4E64-A21E-4AAD1493091F}"
+	ProjectSection(SolutionItems) = preProject
+		TAG Processes\Scan Process\Monitor Scanner Progress.xml = TAG Processes\Scan Process\Monitor Scanner Progress.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Actions", "Actions", "{C0335738-25A2-4FBC-81CD-9250A1CF6733}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Actions", "Actions", "{14111023-6E78-4E65-90B6-37CC38772678}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Actions", "Actions", "{81103794-AB0E-448E-90D8-E80AD5142323}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Actions", "Actions", "{B2FCA937-9B6F-4FCF-8E17-CA4148991367}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Create Scanner and KMS", "TAG Processes\Scan Process\Create Scanner and KMS\Create Scanner and KMS.csproj", "{923C13CE-DFC9-4852-A3D7-FAD5B525112A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deactivate Scanner", "TAG Processes\Scan Process\Deactivate Scanner\Deactivate Scanner.csproj", "{9D37E683-F559-484C-9266-05D6334589C1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monitor Channels Progress", "TAG Processes\Scan Process\Monitor Channels Progress\Monitor Channels Progress.csproj", "{3DB8CAE1-2AE4-4834-A83E-2A83A846AD82}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monitor Scanner Progress", "TAG Processes\Scan Process\Monitor Scanner Progress\Monitor Scanner Progress.csproj", "{A9DE2D7E-1D39-4939-84ED-46859BAAD016}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Generic Classes", "Generic Classes", "{C131B91B-DA68-4239-BB4E-5CD262318CD9}"
+	ProjectSection(SolutionItems) = preProject
+		TAG.cs = TAG.cs
+		TAGScan.cs = TAGScan.cs
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Start Scanners", "Start Scanners", "{E3392FD5-6E7E-499D-A04C-EE572F7E2E55}"
+	ProjectSection(SolutionItems) = preProject
+		TAG Processes\TAG Provision Process\Start Scanners\PA_TAG_Start Scanners.xml = TAG Processes\TAG Provision Process\Start Scanners\PA_TAG_Start Scanners.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Monitor Scanners", "Monitor Scanners", "{CABC4426-EA6F-4784-899E-AFB2CB2E723A}"
+	ProjectSection(SolutionItems) = preProject
+		TAG Processes\TAG Provision Process\Monitor Scanners\PA_TAG_Monitor Scanners.xml = TAG Processes\TAG Provision Process\Monitor Scanners\PA_TAG_Monitor Scanners.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Actions", "Actions", "{3565B40F-A49D-45FE-B539-7D7925E9B670}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Actions", "Actions", "{5CCC8669-E876-4FD1-838C-C8C289CD177B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PA_TAG_Monitor Scanners", "TAG Processes\TAG Provision Process\Monitor Scanners\PA_TAG_Monitor Scanners\PA_TAG_Monitor Scanners.csproj", "{453538AA-7589-477D-9655-FE4111C64A0C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PA_TAG_Start Scanners", "TAG Processes\TAG Provision Process\Start Scanners\PA_TAG_Start Scanners\PA_TAG_Start Scanners.csproj", "{B96666BE-0E72-486E-B050-847888D6947F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "start_process", "start_process", "{BCB97A32-8A29-4D82-90A3-4B2314121302}"
+	ProjectSection(SolutionItems) = preProject
+		start_process\start_process.xml = start_process\start_process.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Actions", "Actions", "{666CAA53-AF49-40A2-BC41-74595F6C6449}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "start_process", "start_process\start_process\start_process.csproj", "{AFFB56B6-E72F-4201-8A1C-7763C3E8053B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1BC1BF1B-576B-4386-B942-331A8540FF60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1BC1BF1B-576B-4386-B942-331A8540FF60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1BC1BF1B-576B-4386-B942-331A8540FF60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1BC1BF1B-576B-4386-B942-331A8540FF60}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6CC71493-C59E-4287-AE31-19406AB3C4AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CC71493-C59E-4287-AE31-19406AB3C4AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CC71493-C59E-4287-AE31-19406AB3C4AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CC71493-C59E-4287-AE31-19406AB3C4AC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9C289FF-ABAF-4515-99DF-42894FD27F9E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9C289FF-ABAF-4515-99DF-42894FD27F9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9C289FF-ABAF-4515-99DF-42894FD27F9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9C289FF-ABAF-4515-99DF-42894FD27F9E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{073736B2-D79F-4818-84AB-2FBCB8560811}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{073736B2-D79F-4818-84AB-2FBCB8560811}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{073736B2-D79F-4818-84AB-2FBCB8560811}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{073736B2-D79F-4818-84AB-2FBCB8560811}.Release|Any CPU.Build.0 = Release|Any CPU
+		{923C13CE-DFC9-4852-A3D7-FAD5B525112A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{923C13CE-DFC9-4852-A3D7-FAD5B525112A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{923C13CE-DFC9-4852-A3D7-FAD5B525112A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{923C13CE-DFC9-4852-A3D7-FAD5B525112A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9D37E683-F559-484C-9266-05D6334589C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D37E683-F559-484C-9266-05D6334589C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D37E683-F559-484C-9266-05D6334589C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D37E683-F559-484C-9266-05D6334589C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DB8CAE1-2AE4-4834-A83E-2A83A846AD82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DB8CAE1-2AE4-4834-A83E-2A83A846AD82}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DB8CAE1-2AE4-4834-A83E-2A83A846AD82}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DB8CAE1-2AE4-4834-A83E-2A83A846AD82}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9DE2D7E-1D39-4939-84ED-46859BAAD016}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9DE2D7E-1D39-4939-84ED-46859BAAD016}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9DE2D7E-1D39-4939-84ED-46859BAAD016}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9DE2D7E-1D39-4939-84ED-46859BAAD016}.Release|Any CPU.Build.0 = Release|Any CPU
+		{453538AA-7589-477D-9655-FE4111C64A0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{453538AA-7589-477D-9655-FE4111C64A0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{453538AA-7589-477D-9655-FE4111C64A0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{453538AA-7589-477D-9655-FE4111C64A0C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B96666BE-0E72-486E-B050-847888D6947F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B96666BE-0E72-486E-B050-847888D6947F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B96666BE-0E72-486E-B050-847888D6947F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B96666BE-0E72-486E-B050-847888D6947F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AFFB56B6-E72F-4201-8A1C-7763C3E8053B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AFFB56B6-E72F-4201-8A1C-7763C3E8053B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AFFB56B6-E72F-4201-8A1C-7763C3E8053B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AFFB56B6-E72F-4201-8A1C-7763C3E8053B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C8A350C2-71C8-4547-8BED-18FFA9FE5D59} = {CB5AAB82-ED85-4B23-B26C-E4E1A07BD5E6}
+		{8E395509-4031-4E8C-BB00-8CE36189AEAB} = {C2D65165-8F45-41BB-BC64-DCC80297A186}
+		{E855D6F6-488D-402D-904E-88D5C0DC38EB} = {C2D65165-8F45-41BB-BC64-DCC80297A186}
+		{7072DD23-6B38-42F1-B2A3-36593998EA0E} = {E855D6F6-488D-402D-904E-88D5C0DC38EB}
+		{F1BCD433-C4E5-4FE6-8DE8-97018263A973} = {E855D6F6-488D-402D-904E-88D5C0DC38EB}
+		{6D7F6A67-A68B-4A1E-9841-9F3DD9FFE989} = {E855D6F6-488D-402D-904E-88D5C0DC38EB}
+		{276EFA25-15D6-4577-A646-38DC24B8CA57} = {8E395509-4031-4E8C-BB00-8CE36189AEAB}
+		{1BC1BF1B-576B-4386-B942-331A8540FF60} = {276EFA25-15D6-4577-A646-38DC24B8CA57}
+		{BFFB2F97-7C85-4230-960C-71E98C4D7E5B} = {7072DD23-6B38-42F1-B2A3-36593998EA0E}
+		{F702278A-2E68-4F2B-B298-6E9E16A7A0E6} = {7072DD23-6B38-42F1-B2A3-36593998EA0E}
+		{3BEE88DA-D5B1-452C-BAD2-E07FE23DF30B} = {7072DD23-6B38-42F1-B2A3-36593998EA0E}
+		{BAAF0A55-A63F-49EE-B5B8-DBE4EADA00F3} = {BFFB2F97-7C85-4230-960C-71E98C4D7E5B}
+		{333F8AF9-A8E2-4CFF-8F8F-4683FC34B304} = {F702278A-2E68-4F2B-B298-6E9E16A7A0E6}
+		{95E32DA1-2BF9-4640-89AB-803AA153171D} = {3BEE88DA-D5B1-452C-BAD2-E07FE23DF30B}
+		{6CC71493-C59E-4287-AE31-19406AB3C4AC} = {BAAF0A55-A63F-49EE-B5B8-DBE4EADA00F3}
+		{B9C289FF-ABAF-4515-99DF-42894FD27F9E} = {333F8AF9-A8E2-4CFF-8F8F-4683FC34B304}
+		{073736B2-D79F-4818-84AB-2FBCB8560811} = {95E32DA1-2BF9-4640-89AB-803AA153171D}
+		{D9BFD0DA-1CD5-4741-89F2-725DC1C8D0D4} = {F1BCD433-C4E5-4FE6-8DE8-97018263A973}
+		{319118C2-7385-4AA9-8D99-7E247514904C} = {F1BCD433-C4E5-4FE6-8DE8-97018263A973}
+		{016F2495-9CDB-45D8-A64F-2FD5A6D6B0D8} = {F1BCD433-C4E5-4FE6-8DE8-97018263A973}
+		{2ED7619B-235D-4E64-A21E-4AAD1493091F} = {F1BCD433-C4E5-4FE6-8DE8-97018263A973}
+		{C0335738-25A2-4FBC-81CD-9250A1CF6733} = {D9BFD0DA-1CD5-4741-89F2-725DC1C8D0D4}
+		{14111023-6E78-4E65-90B6-37CC38772678} = {319118C2-7385-4AA9-8D99-7E247514904C}
+		{81103794-AB0E-448E-90D8-E80AD5142323} = {016F2495-9CDB-45D8-A64F-2FD5A6D6B0D8}
+		{B2FCA937-9B6F-4FCF-8E17-CA4148991367} = {2ED7619B-235D-4E64-A21E-4AAD1493091F}
+		{923C13CE-DFC9-4852-A3D7-FAD5B525112A} = {C0335738-25A2-4FBC-81CD-9250A1CF6733}
+		{9D37E683-F559-484C-9266-05D6334589C1} = {14111023-6E78-4E65-90B6-37CC38772678}
+		{3DB8CAE1-2AE4-4834-A83E-2A83A846AD82} = {81103794-AB0E-448E-90D8-E80AD5142323}
+		{A9DE2D7E-1D39-4939-84ED-46859BAAD016} = {B2FCA937-9B6F-4FCF-8E17-CA4148991367}
+		{E3392FD5-6E7E-499D-A04C-EE572F7E2E55} = {6D7F6A67-A68B-4A1E-9841-9F3DD9FFE989}
+		{CABC4426-EA6F-4784-899E-AFB2CB2E723A} = {6D7F6A67-A68B-4A1E-9841-9F3DD9FFE989}
+		{3565B40F-A49D-45FE-B539-7D7925E9B670} = {CABC4426-EA6F-4784-899E-AFB2CB2E723A}
+		{5CCC8669-E876-4FD1-838C-C8C289CD177B} = {E3392FD5-6E7E-499D-A04C-EE572F7E2E55}
+		{453538AA-7589-477D-9655-FE4111C64A0C} = {3565B40F-A49D-45FE-B539-7D7925E9B670}
+		{B96666BE-0E72-486E-B050-847888D6947F} = {5CCC8669-E876-4FD1-838C-C8C289CD177B}
+		{BCB97A32-8A29-4D82-90A3-4B2314121302} = {C2D65165-8F45-41BB-BC64-DCC80297A186}
+		{666CAA53-AF49-40A2-BC41-74595F6C6449} = {BCB97A32-8A29-4D82-90A3-4B2314121302}
+		{AFFB56B6-E72F-4201-8A1C-7763C3E8053B} = {666CAA53-AF49-40A2-BC41-74595F6C6449}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BF264E17-2956-41D7-9B7F-5C340832C75E}
+	EndGlobalSection
+EndGlobal

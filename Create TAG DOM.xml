@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<DMSScript options="272" xmlns="http://www.skyline.be/automation">
+	<Name>PA_TAG_Create TAG DOM</Name>
+	<Description></Description>
+	<Type>Automation</Type>
+	<Author>SKYLINE2\BlakeSM</Author>
+	<CheckSets>FALSE</CheckSets>
+	<Folder>PA Provision OTT/DOM Creation Scripts</Folder>
+
+	<Protocols>
+	</Protocols>
+
+	<Memory>
+	</Memory>
+
+	<Parameters>
+	</Parameters>
+
+	<Script>
+		<Exe id="1" type="csharp">
+			<Value><![CDATA[[Project:Create TAG DOM]]]></Value>
+			<!--<Param type="debug">true</Param>-->
+			<Message></Message>
+		</Exe>
+	</Script>
+</DMSScript>

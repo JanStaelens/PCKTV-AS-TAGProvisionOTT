@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Conviva Scripts_1</name>
+    </assembly>
+    <members>
+        <member name="M:Script.Script.Run(Skyline.DataMiner.Automation.Engine)">
+            <summary>
+            The Script entry point.
+            </summary>
+            <param name="engine">The <see cref="T:Skyline.DataMiner.Automation.Engine" /> instance used to communicate with DataMiner.</param>
+        </member>
+    </members>
+</doc>

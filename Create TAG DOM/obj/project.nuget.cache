@@ -1,0 +1,23 @@
+{
+  "version": 2,
+  "dgSpecHash": "uMkYX10nBJZD0usd96AZ34cmDIS+IDzpDDaOnCopRKA+z76ayk5FuaG7qRIR6tisUmGmW2aJtNDlLeOSrEKasA==",
+  "success": true,
+  "projectFilePath": "C:\\GIT\\GITHUB\\PA-PCK-TAGProcessOTT\\Create TAG DOM\\Create TAG DOM.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\BlakeSM\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512",
+    "C:\\Users\\BlakeSM\\.nuget\\packages\\sharpziplib\\1.3.3\\sharpziplib.1.3.3.nupkg.sha512",
+    "C:\\Users\\BlakeSM\\.nuget\\packages\\skyline.dataminer.core.dataminersystem.automation\\1.1.0.1\\skyline.dataminer.core.dataminersystem.automation.1.1.0.1.nupkg.sha512",
+    "C:\\Users\\BlakeSM\\.nuget\\packages\\skyline.dataminer.core.dataminersystem.common\\1.1.0.1\\skyline.dataminer.core.dataminersystem.common.1.1.0.1.nupkg.sha512",
+    "C:\\Users\\BlakeSM\\.nuget\\packages\\skyline.dataminer.dev.automation\\10.3.3\\skyline.dataminer.dev.automation.10.3.3.nupkg.sha512",
+    "C:\\Users\\BlakeSM\\.nuget\\packages\\skyline.dataminer.dev.common\\10.3.3\\skyline.dataminer.dev.common.10.3.3.nupkg.sha512",
+    "C:\\Users\\BlakeSM\\.nuget\\packages\\skyline.dataminer.files.protobufnet\\10.3.3\\skyline.dataminer.files.protobufnet.10.3.3.nupkg.sha512",
+    "C:\\Users\\BlakeSM\\.nuget\\packages\\skyline.dataminer.files.skyline.dataminer.storage.types\\10.3.3\\skyline.dataminer.files.skyline.dataminer.storage.types.10.3.3.nupkg.sha512",
+    "C:\\Users\\BlakeSM\\.nuget\\packages\\skyline.dataminer.files.slanalyticstypes\\10.3.3\\skyline.dataminer.files.slanalyticstypes.10.3.3.nupkg.sha512",
+    "C:\\Users\\BlakeSM\\.nuget\\packages\\skyline.dataminer.files.slloggerutil\\10.3.3\\skyline.dataminer.files.slloggerutil.10.3.3.nupkg.sha512",
+    "C:\\Users\\BlakeSM\\.nuget\\packages\\skyline.dataminer.files.slmanagedautomation\\10.3.3\\skyline.dataminer.files.slmanagedautomation.10.3.3.nupkg.sha512",
+    "C:\\Users\\BlakeSM\\.nuget\\packages\\skyline.dataminer.files.slnettypes\\10.3.3\\skyline.dataminer.files.slnettypes.10.3.3.nupkg.sha512",
+    "C:\\Users\\BlakeSM\\.nuget\\packages\\skyline.dataminer.files.slprotobuflibrary\\10.3.3\\skyline.dataminer.files.slprotobuflibrary.10.3.3.nupkg.sha512",
+    "C:\\Users\\BlakeSM\\.nuget\\packages\\stylecop.analyzers\\1.1.118\\stylecop.analyzers.1.1.118.nupkg.sha512"
+  ],
+  "logs": []
+}
