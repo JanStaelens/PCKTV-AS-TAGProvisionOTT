@@ -40,8 +40,9 @@
     <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ProcessAutomation">
-      <HintPath>..\..\..\..\..\..\..\..\Skyline DataMiner\ProtocolScripts\ProcessAutomation.dll</HintPath>
+    <Reference Include="ProcessAutomation, Version=1.3.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Dlls\ProcessAutomation.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <AdditionalFiles Include="stylecop.json" />
