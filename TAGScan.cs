@@ -65,11 +65,11 @@
         }
 
         /// <summary>
-		/// Retry until success or until timeout.
-		/// </summary>
-		/// <param name="func">Operation to retry.</param>
-		/// <param name="timeout">Max TimeSpan during which the operation specified in <paramref name="func"/> can be retried.</param>
-		/// <returns><c>true</c> if one of the retries succeeded within the specified <paramref name="timeout"/>. Otherwise <c>false</c>.</returns>
+        /// Retry until success or until timeout.
+        /// </summary>
+        /// <param name="func">Operation to retry.</param>
+        /// <param name="timeout">Max TimeSpan during which the operation specified in <paramref name="func"/> can be retried.</param>
+        /// <returns><c>true</c> if one of the retries succeeded within the specified <paramref name="timeout"/>. Otherwise <c>false</c>.</returns>
         public bool Retry(Func<bool> func, TimeSpan timeout)
         {
             bool success;
@@ -95,7 +95,7 @@
 
             foreach (var section in instance.Sections)
             {
-                Func<SectionDefinitionID, SectionDefinition> sectionDefinitionFunc = SetSectionDefinitionById;
+                Func<SectionDefinitionID, SectionDefinition> sectionDefinitionFunc = this.SetSectionDefinitionById;
                 section.Stitch(sectionDefinitionFunc);
 
                 if (!section.GetSectionDefinition().GetName().Equals("Manifests"))
@@ -117,7 +117,7 @@
                             break;
 
                         default:
-                            innerHelper.Log($"fieldName not found: {field.GetFieldDescriptor().Name}", PaLogLevel.Error);
+                            this.innerHelper.Log($"fieldName not found: {field.GetFieldDescriptor().Name}", PaLogLevel.Error);
                             break;
                     }
                 }
@@ -144,31 +144,31 @@
             foreach (var channel in scanner.Channels)
             {
                 var subFilter = DomInstanceExposers.Id.Equal(new DomInstanceId(channel));
-                var subInstance = innerDomHelper.DomInstances.Read(subFilter).First();
+                var subInstance = this.innerDomHelper.DomInstances.Read(subFilter).First();
 
                 if (scanner.Action == "provision" || scanner.Action == "reprovision")
                 {
-                    innerDomHelper.DomInstances.ExecuteAction(subInstance.ID, "provision");
+                    this.innerDomHelper.DomInstances.ExecuteAction(subInstance.ID, "provision");
                 }
                 else if (scanner.Action == "deactivate")
                 {
-                    innerDomHelper.DomInstances.ExecuteAction(subInstance.ID, "deactivate");
+                    this.innerDomHelper.DomInstances.ExecuteAction(subInstance.ID, "deactivate");
                 }
                 else if (scanner.Action == "complete-provision")
                 {
-                    innerDomHelper.DomInstances.ExecuteAction(subInstance.ID, "complete-provision");
+                    this.innerDomHelper.DomInstances.ExecuteAction(subInstance.ID, "complete-provision");
                 }
             }
         }
 
         private SectionDefinition SetSectionDefinitionById(SectionDefinitionID sectionDefinitionId)
         {
-            return innerDomHelper.SectionDefinitions.Read(SectionDefinitionExposers.ID.Equal(sectionDefinitionId)).First();
+            return this.innerDomHelper.SectionDefinitions.Read(SectionDefinitionExposers.ID.Equal(sectionDefinitionId)).First();
         }
 
         private DomDefinition SetDomDefinitionById(DomDefinitionId domDefinitionId)
         {
-            return innerDomHelper.DomDefinitions.Read(DomDefinitionExposers.Id.Equal(domDefinitionId)).First();
+            return this.innerDomHelper.DomDefinitions.Read(DomDefinitionExposers.Id.Equal(domDefinitionId)).First();
         }
     }
 }

@@ -71,7 +71,7 @@ namespace Script
 
 	internal class Script
 	{
-		private static readonly string ModuleId = "process_automation";
+		private const string ModuleId = "process_automation";
 		private static Engine internalEngine;
 		private DomHelper domHelper;
 

@@ -9,3 +9,6 @@ trim_trailing_whitespace = true
 
 [*.cs]
 dotnet_sort_system_directives_first = true
+
+# SA1649: File name should match first type name
+dotnet_diagnostic.SA1649.severity = none

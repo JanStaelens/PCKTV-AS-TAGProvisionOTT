@@ -30,22 +30,22 @@ Skyline Communications.
 
 Any inquiries can be addressed to:
 
-	Skyline Communications NV
-	Ambachtenstraat 33
-	B-8870 Izegem
-	Belgium
-	Tel.	: +32 51 31 35 69
-	Fax.	: +32 51 31 01 29
-	E-mail	: info@skyline.be
-	Web		: www.skyline.be
-	Contact	: Ben Vandenberghe
+    Skyline Communications NV
+    Ambachtenstraat 33
+    B-8870 Izegem
+    Belgium
+    Tel.    : +32 51 31 35 69
+    Fax.    : +32 51 31 01 29
+    E-mail  : info@skyline.be
+    Web     : www.skyline.be
+    Contact : Ben Vandenberghe
 
 ****************************************************************************
 Revision History:
 
-DATE		VERSION		AUTHOR			COMMENTS
+DATE        VERSION     AUTHOR          COMMENTS
 
-dd/mm/2023	1.0.0.1		XXX, Skyline	Initial version
+dd/mm/2023  1.0.0.1     XXX, Skyline    Initial version
 ****************************************************************************
 */
 
@@ -67,155 +67,157 @@ using TagHelperMethods;
 /// </summary>
 public class Script
 {
-	private static PaProfileLoadDomHelper innerHelper;
-	private DomHelper innerDomHelper;
+    private static PaProfileLoadDomHelper innerHelper;
+    private DomHelper innerDomHelper;
 
-	/// <summary>
-	/// The Script entry point.
-	/// </summary>
-	/// <param name="engine">Link with SLAutomation process.</param>
-	public void Run(Engine engine)
-	{
-		var scriptName = "Monitor Channels Progress";
+    /// <summary>
+    /// The Script entry point.
+    /// </summary>
+    /// <param name="engine">Link with SLAutomation process.</param>
+    public void Run(Engine engine)
+    {
+        var scriptName = "Monitor Channels Progress";
 
-		innerHelper = new PaProfileLoadDomHelper(engine);
-		innerDomHelper = new DomHelper(engine.SendSLNetMessages, "process_automation");
+#pragma warning disable S2696 // Instance members should not write to "static" fields
+        innerHelper = new PaProfileLoadDomHelper(engine);
+#pragma warning restore S2696 // Instance members should not write to "static" fields
+        this.innerDomHelper = new DomHelper(engine.SendSLNetMessages, "process_automation");
 
-		var exceptionHelper = new ExceptionHelper(engine, innerDomHelper);
-		var sharedMethods = new SharedMethods(innerHelper, innerDomHelper);
+        var exceptionHelper = new ExceptionHelper(engine, this.innerDomHelper);
+        var sharedMethods = new SharedMethods(innerHelper, this.innerDomHelper);
 
-		engine.GenerateInformation("START " + scriptName);
+        engine.GenerateInformation("START " + scriptName);
 
-		var instanceId = innerHelper.GetParameterValue<string>("InstanceId");
-		var instance = innerDomHelper.DomInstances.Read(DomInstanceExposers.Id.Equal(new DomInstanceId(Guid.Parse(instanceId)))).First();
-		var status = instance.StatusId;
+        var instanceId = innerHelper.GetParameterValue<string>("InstanceId");
+        var instance = this.innerDomHelper.DomInstances.Read(DomInstanceExposers.Id.Equal(new DomInstanceId(Guid.Parse(instanceId)))).First();
+        var status = instance.StatusId;
 
-		if (!status.Equals("in_progress"))
-		{
-			innerHelper.SendErrorMessageToTokenHandler();
-			return;
-		}
+        if (!status.Equals("in_progress"))
+        {
+            innerHelper.SendErrorMessageToTokenHandler();
+            return;
+        }
 
-		var scanner = new Scanner
-		{
-			AssetId = innerHelper.GetParameterValue<string>("Asset ID"),
-			InstanceId = instanceId,
-			ScanName = innerHelper.GetParameterValue<string>("Scan Name"),
-			SourceElement = innerHelper.TryGetParameterValue("Source Element", out string sourceElement) ? sourceElement : String.Empty,
-			SourceId = innerHelper.TryGetParameterValue("Source ID", out string sourceId) ? sourceId : String.Empty,
-			TagDevice = innerHelper.GetParameterValue<string>("TAG Device"),
-			TagElement = innerHelper.GetParameterValue<string>("TAG Element"),
-			TagInterface = innerHelper.GetParameterValue<string>("TAG Interface"),
-			ScanType = innerHelper.GetParameterValue<string>("Scan Type"),
-			Action = innerHelper.GetParameterValue<string>("Action"),
-			Channels = innerHelper.TryGetParameterValue("Channels", out List<Guid> channels) ? channels : new List<Guid>(),
-		};
+        var scanner = new Scanner
+        {
+            AssetId = innerHelper.GetParameterValue<string>("Asset ID"),
+            InstanceId = instanceId,
+            ScanName = innerHelper.GetParameterValue<string>("Scan Name"),
+            SourceElement = innerHelper.TryGetParameterValue("Source Element", out string sourceElement) ? sourceElement : String.Empty,
+            SourceId = innerHelper.TryGetParameterValue("Source ID", out string sourceId) ? sourceId : String.Empty,
+            TagDevice = innerHelper.GetParameterValue<string>("TAG Device"),
+            TagElement = innerHelper.GetParameterValue<string>("TAG Element"),
+            TagInterface = innerHelper.GetParameterValue<string>("TAG Interface"),
+            ScanType = innerHelper.GetParameterValue<string>("Scan Type"),
+            Action = innerHelper.GetParameterValue<string>("Action"),
+            Channels = innerHelper.TryGetParameterValue("Channels", out List<Guid> channels) ? channels : new List<Guid>(),
+        };
 
-		try
-		{
-			var totalChannels = scanner.Channels.Count;
-			var expectedChannels = 0;
+        try
+        {
+            var totalChannels = scanner.Channels.Count;
+            var expectedChannels = 0;
 
-			bool CheckStateChange()
-			{
-				try
-				{
-					foreach (var channel in scanner.Channels)
-					{
-						var channelFilter = DomInstanceExposers.Id.Equal(new DomInstanceId(channel));
-						var subInstance = innerDomHelper.DomInstances.Read(channelFilter).First();
+            bool CheckStateChange()
+            {
+                try
+                {
+                    foreach (var channel in scanner.Channels)
+                    {
+                        var channelFilter = DomInstanceExposers.Id.Equal(new DomInstanceId(channel));
+                        var subInstance = this.innerDomHelper.DomInstances.Read(channelFilter).First();
 
-						if ((scanner.Action == "provision" || scanner.Action == "reprovision") && subInstance.StatusId == "active")
-						{
-							expectedChannels++;
-						}
-					}
+                        if ((scanner.Action == "provision" || scanner.Action == "reprovision") && subInstance.StatusId == "active")
+                        {
+                            expectedChannels++;
+                        }
+                    }
 
-					return expectedChannels == totalChannels;
-				}
-				catch (Exception ex)
-				{
-					innerHelper.Log("Exception thrown while verifying the subprocess: " + ex, PaLogLevel.Error);
-					throw;
-				}
-			}
+                    return expectedChannels == totalChannels;
+                }
+                catch (Exception ex)
+                {
+                    innerHelper.Log("Exception thrown while verifying the subprocess: " + ex, PaLogLevel.Error);
+                    throw;
+                }
+            }
 
-			if (Retry(CheckStateChange, new TimeSpan(0, 5, 0)))
-			{
-				if (scanner.Action == "provision" || scanner.Action == "reprovision")
-				{
-					innerHelper.TransitionState("inprogress_to_active");
-					innerHelper.SendFinishMessageToTokenHandler();
-				}
-			}
-			else
-			{
-				// failed to execute in time
-				var log = new Log
-				{
-					AffectedItem = scriptName,
-					AffectedService = scanner.ScanName,
-					Timestamp = DateTime.Now,
-					ErrorCode = new ErrorCode
-					{
-						ConfigurationItem = scanner.ScanName,
-						ConfigurationType = ErrorCode.ConfigType.Automation,
-						Severity = ErrorCode.SeverityType.Warning,
-						Source = scriptName,
-						Description = "Channel subprocess didn't finish (wrong status on linked instances).",
-					},
-				};
-				exceptionHelper.GenerateLog(log);
-				innerHelper.SendErrorMessageToTokenHandler();
-			}
-		}
-		catch (ScriptAbortException)
-		{
-			// no issue
-		}
-		catch (Exception ex)
-		{
-			var log = new Log
-			{
-				AffectedItem = scriptName,
-				AffectedService = scanner.ScanName,
-				Timestamp = DateTime.Now,
-				ErrorCode = new ErrorCode
-				{
-					ConfigurationItem = scanner.ScanName,
-					ConfigurationType = ErrorCode.ConfigType.Automation,
-					Severity = ErrorCode.SeverityType.Warning,
-					Source = scriptName,
-				},
-			};
-			exceptionHelper.ProcessException(ex, log);
-			innerHelper.SendErrorMessageToTokenHandler();
-			throw;
-		}
-	}
+            if (this.Retry(CheckStateChange, new TimeSpan(0, 5, 0)))
+            {
+                if (scanner.Action == "provision" || scanner.Action == "reprovision")
+                {
+                    innerHelper.TransitionState("inprogress_to_active");
+                    innerHelper.SendFinishMessageToTokenHandler();
+                }
+            }
+            else
+            {
+                // failed to execute in time
+                var log = new Log
+                {
+                    AffectedItem = scriptName,
+                    AffectedService = scanner.ScanName,
+                    Timestamp = DateTime.Now,
+                    ErrorCode = new ErrorCode
+                    {
+                        ConfigurationItem = scanner.ScanName,
+                        ConfigurationType = ErrorCode.ConfigType.Automation,
+                        Severity = ErrorCode.SeverityType.Warning,
+                        Source = scriptName,
+                        Description = "Channel subprocess didn't finish (wrong status on linked instances).",
+                    },
+                };
+                exceptionHelper.GenerateLog(log);
+                innerHelper.SendErrorMessageToTokenHandler();
+            }
+        }
+        catch (ScriptAbortException)
+        {
+            // no issue
+        }
+        catch (Exception ex)
+        {
+            var log = new Log
+            {
+                AffectedItem = scriptName,
+                AffectedService = scanner.ScanName,
+                Timestamp = DateTime.Now,
+                ErrorCode = new ErrorCode
+                {
+                    ConfigurationItem = scanner.ScanName,
+                    ConfigurationType = ErrorCode.ConfigType.Automation,
+                    Severity = ErrorCode.SeverityType.Warning,
+                    Source = scriptName,
+                },
+            };
+            exceptionHelper.ProcessException(ex, log);
+            innerHelper.SendErrorMessageToTokenHandler();
+            throw;
+        }
+    }
 
-	// <summary>
-	// Retry until success or until timeout.
-	// </summary>
-	// <param name="func">Operation to retry.</param>
-	// <param name="timeout">Max TimeSpan during which the operation specified in <paramref name="func"/> can be retried.</param>
-	// <returns><c>true</c> if one of the retries succeeded within the specified <paramref name="timeout"/>. Otherwise <c>false</c>.</returns>
-	private bool Retry(Func<bool> func, TimeSpan timeout)
-	{
-		bool success;
+    // <summary>
+    // Retry until success or until timeout.
+    // </summary>
+    // <param name="func">Operation to retry.</param>
+    // <param name="timeout">Max TimeSpan during which the operation specified in <paramref name="func"/> can be retried.</param>
+    // <returns><c>true</c> if one of the retries succeeded within the specified <paramref name="timeout"/>. Otherwise <c>false</c>.</returns>
+    private bool Retry(Func<bool> func, TimeSpan timeout)
+    {
+        bool success;
 
-		Stopwatch sw = new Stopwatch();
-		sw.Start();
+        Stopwatch sw = new Stopwatch();
+        sw.Start();
 
-		do
-		{
-			success = func();
-			if (!success)
-			{
-				Thread.Sleep(5000);
-			}
-		}
-		while (!success && sw.Elapsed <= timeout);
-		return success;
-	}
+        do
+        {
+            success = func();
+            if (!success)
+            {
+                Thread.Sleep(5000);
+            }
+        }
+        while (!success && sw.Elapsed <= timeout);
+        return success;
+    }
 }

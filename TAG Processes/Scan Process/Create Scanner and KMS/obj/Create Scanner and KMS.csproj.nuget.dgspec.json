@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\GIT\\GITHUB\\PA-PCK-TAGProcessOTT\\TAG Processes\\Scan Process\\Create Scanner and KMS\\Create Scanner and KMS.csproj": {}
+    "C:\\GIT\\GITHUB\\PCKTV-AS-TAGProcessOTT\\TAG Processes\\Scan Process\\Create Scanner and KMS\\Create Scanner and KMS.csproj": {}
   },
   "projects": {
-    "C:\\GIT\\GITHUB\\PA-PCK-TAGProcessOTT\\TAG Processes\\Scan Process\\Create Scanner and KMS\\Create Scanner and KMS.csproj": {
+    "C:\\GIT\\GITHUB\\PCKTV-AS-TAGProcessOTT\\TAG Processes\\Scan Process\\Create Scanner and KMS\\Create Scanner and KMS.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\GIT\\GITHUB\\PA-PCK-TAGProcessOTT\\TAG Processes\\Scan Process\\Create Scanner and KMS\\Create Scanner and KMS.csproj",
+        "projectUniqueName": "C:\\GIT\\GITHUB\\PCKTV-AS-TAGProcessOTT\\TAG Processes\\Scan Process\\Create Scanner and KMS\\Create Scanner and KMS.csproj",
         "projectName": "Create Scanner and KMS_1",
-        "projectPath": "C:\\GIT\\GITHUB\\PA-PCK-TAGProcessOTT\\TAG Processes\\Scan Process\\Create Scanner and KMS\\Create Scanner and KMS.csproj",
+        "projectPath": "C:\\GIT\\GITHUB\\PCKTV-AS-TAGProcessOTT\\TAG Processes\\Scan Process\\Create Scanner and KMS\\Create Scanner and KMS.csproj",
         "packagesPath": "C:\\Users\\BlakeSM\\.nuget\\packages\\",
-        "outputPath": "C:\\GIT\\GITHUB\\PA-PCK-TAGProcessOTT\\TAG Processes\\Scan Process\\Create Scanner and KMS\\obj\\",
+        "outputPath": "C:\\GIT\\GITHUB\\PCKTV-AS-TAGProcessOTT\\TAG Processes\\Scan Process\\Create Scanner and KMS\\obj\\",
         "projectStyle": "PackageReference",
         "skipContentFileWrite": true,
         "fallbackFolders": [
@@ -40,15 +40,15 @@
           "dependencies": {
             "Newtonsoft.Json": {
               "target": "Package",
-              "version": "[13.0.2, )"
+              "version": "[13.0.3, )"
             },
             "Skyline.DataMiner.Core.DataMinerSystem.Automation": {
               "target": "Package",
-              "version": "[1.1.0.1, )"
+              "version": "[1.1.0.2, )"
             },
             "Skyline.DataMiner.Dev.Automation": {
               "target": "Package",
-              "version": "[10.3.2.1-rc, )"
+              "version": "[10.3.3.1, )"
             },
             "StyleCop.Analyzers": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
