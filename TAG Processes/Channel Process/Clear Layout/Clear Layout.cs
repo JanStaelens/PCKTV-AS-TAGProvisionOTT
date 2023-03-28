@@ -91,11 +91,11 @@ namespace Script
 
             try
             {
-                tagElementName = helper.GetParameterValue<string>("TAG Element");
-                channelName = helper.GetParameterValue<string>("Channel Name");
-                var channelMatch = helper.GetParameterValue<string>("Channel Match");
+                tagElementName = helper.GetParameterValue<string>("TAG Element (TAG Channel)");
+                channelName = helper.GetParameterValue<string>("Channel Name (TAG Channel)");
+                var channelMatch = helper.GetParameterValue<string>("Channel Match (TAG Channel)");
 
-                var instanceId = helper.GetParameterValue<string>("InstanceId");
+                var instanceId = helper.GetParameterValue<string>("InstanceId (TAG Channel)");
                 var instance = this.innerDomHelper.DomInstances.Read(DomInstanceExposers.Id.Equal(new DomInstanceId(Guid.Parse(instanceId)))).First();
                 var status = instance.StatusId;
 

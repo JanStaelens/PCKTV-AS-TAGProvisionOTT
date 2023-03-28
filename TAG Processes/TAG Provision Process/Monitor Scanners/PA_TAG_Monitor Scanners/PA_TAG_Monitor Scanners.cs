@@ -86,13 +86,13 @@ namespace Script
 
             engine.GenerateInformation("START " + scriptName);
 
-            var channelName = helper.GetParameterValue<string>("Provision Name");
+            var channelName = helper.GetParameterValue<string>("Provision Name (TAG Provision)");
 
             try
             {
-                var action = helper.GetParameterValue<string>("Action");
+                var action = helper.GetParameterValue<string>("Action (TAG Provision)");
 
-                var scanners = helper.GetParameterValue<List<Guid>>("TAG Scanners");
+                var scanners = helper.GetParameterValue<List<Guid>>("TAG Scanners (TAG Provision)");
                 Dictionary<Guid, bool> scannersComplete = new Dictionary<Guid, bool>();
 
                 bool CheckScanners()

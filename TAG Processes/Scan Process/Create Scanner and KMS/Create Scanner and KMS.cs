@@ -90,7 +90,7 @@ namespace Script
 
             engine.GenerateInformation("START " + scriptName);
 
-            var instanceId = innerHelper.GetParameterValue<string>("InstanceId");
+            var instanceId = innerHelper.GetParameterValue<string>("InstanceId (TAG Scan)");
             var instance = this.innerDomHelper.DomInstances.Read(DomInstanceExposers.Id.Equal(new DomInstanceId(Guid.Parse(instanceId)))).First();
             var status = instance.StatusId;
 
@@ -102,17 +102,17 @@ namespace Script
 
             var scanner = new Scanner
             {
-                AssetId = innerHelper.GetParameterValue<string>("Asset ID"),
+                AssetId = innerHelper.GetParameterValue<string>("Asset ID (TAG Scan)"),
                 InstanceId = instanceId,
-                ScanName = innerHelper.GetParameterValue<string>("Scan Name"),
-                SourceElement = innerHelper.TryGetParameterValue("Source Element", out string sourceElement) ? sourceElement : String.Empty,
-                SourceId = innerHelper.TryGetParameterValue("Source ID", out string sourceId) ? sourceId : String.Empty,
-                TagDevice = innerHelper.GetParameterValue<string>("TAG Device"),
-                TagElement = innerHelper.GetParameterValue<string>("TAG Element"),
-                TagInterface = innerHelper.GetParameterValue<string>("TAG Interface"),
-                ScanType = innerHelper.GetParameterValue<string>("Scan Type"),
-                Action = innerHelper.GetParameterValue<string>("Action"),
-                Channels = innerHelper.TryGetParameterValue("Channels", out List<Guid> channels) ? channels : new List<Guid>(),
+                ScanName = innerHelper.GetParameterValue<string>("Scan Name (TAG Scan)"),
+                SourceElement = innerHelper.TryGetParameterValue("Source Element (TAG Scan)", out string sourceElement) ? sourceElement : String.Empty,
+                SourceId = innerHelper.TryGetParameterValue("Source ID (TAG Scan)", out string sourceId) ? sourceId : String.Empty,
+                TagDevice = innerHelper.GetParameterValue<string>("TAG Device (TAG Scan)"),
+                TagElement = innerHelper.GetParameterValue<string>("TAG Element (TAG Scan)"),
+                TagInterface = innerHelper.GetParameterValue<string>("TAG Interface (TAG Scan)"),
+                ScanType = innerHelper.GetParameterValue<string>("Scan Type (TAG Scan)"),
+                Action = innerHelper.GetParameterValue<string>("Action (TAG Scan)"),
+                Channels = innerHelper.TryGetParameterValue("Channels (TAG Scan)", out List<Guid> channels) ? channels : new List<Guid>(),
             };
 
             try

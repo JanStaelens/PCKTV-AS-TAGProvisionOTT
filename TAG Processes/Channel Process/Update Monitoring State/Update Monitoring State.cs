@@ -257,9 +257,9 @@ namespace Script
 
         public TagChannelInfo(Engine engine, PaProfileLoadDomHelper helper, DomHelper domHelper)
         {
-            this.ElementName = helper.GetParameterValue<string>("TAG Element");
-            this.Channel = helper.GetParameterValue<string>("Channel Name");
-            this.ChannelMatch = helper.GetParameterValue<string>("Channel Match");
+            this.ElementName = helper.GetParameterValue<string>("TAG Element (TAG Channel)");
+            this.Channel = helper.GetParameterValue<string>("Channel Name (TAG Channel)");
+            this.ChannelMatch = helper.GetParameterValue<string>("Channel Match (TAG Channel)");
 
             IDms thisDms = engine.GetDms();
             this.Element = thisDms.GetElement(this.ElementName);
@@ -268,13 +268,13 @@ namespace Script
             this.AllLayoutsTable = this.Element.GetTable(10300);
             this.ChannelStatusTable = this.Element.GetTable(240);
 
-            this.MonitoringMode = helper.GetParameterValue<string>("Monitoring Mode");
-            this.Threshold = helper.GetParameterValue<string>("Threshold");
-            this.Notification = helper.GetParameterValue<string>("Notification");
-            this.Encryption = helper.GetParameterValue<string>("Encryption");
-            this.KMS = helper.GetParameterValue<string>("KMS");
+            this.MonitoringMode = helper.GetParameterValue<string>("Monitoring Mode (TAG Channel)");
+            this.Threshold = helper.GetParameterValue<string>("Threshold (TAG Channel)");
+            this.Notification = helper.GetParameterValue<string>("Notification (TAG Channel)");
+            this.Encryption = helper.GetParameterValue<string>("Encryption (TAG Channel)");
+            this.KMS = helper.GetParameterValue<string>("KMS (TAG Channel)");
 
-            var instanceId = helper.GetParameterValue<string>("InstanceId");
+            var instanceId = helper.GetParameterValue<string>("InstanceId (TAG Channel)");
             this.Instance = domHelper.DomInstances.Read(DomInstanceExposers.Id.Equal(new DomInstanceId(Guid.Parse(instanceId)))).First();
             this.Status = this.Instance.StatusId;
 

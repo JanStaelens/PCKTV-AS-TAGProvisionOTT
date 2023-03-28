@@ -84,12 +84,12 @@ namespace Script
 
             engine.GenerateInformation("START " + scriptName);
 
-            var channelName = helper.GetParameterValue<string>("Provision Name");
+            var channelName = helper.GetParameterValue<string>("Provision Name (TAG Provision)");
 
             try
             {
-                var action = helper.GetParameterValue<string>("Action");
-                var scanners = helper.GetParameterValue<List<Guid>>("TAG Scanners");
+                var action = helper.GetParameterValue<string>("Action (TAG Provision)");
+                var scanners = helper.GetParameterValue<List<Guid>>("TAG Scanners (TAG Provision)");
 
                 foreach (var scanner in scanners)
                 {
