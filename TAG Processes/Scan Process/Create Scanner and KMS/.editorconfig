@@ -9,3 +9,21 @@ trim_trailing_whitespace = true
 
 [*.cs]
 dotnet_sort_system_directives_first = true
+
+# Default severity for analyzer diagnostics with category 'StyleCop.CSharp.DocumentationRules'
+dotnet_analyzer_diagnostic.category-StyleCop.CSharp.DocumentationRules.severity = none
+
+# Default severity for analyzer diagnostics with category 'Critical Code Smell'
+dotnet_analyzer_diagnostic.category-Critical Code Smell.severity = none
+
+# S2696: Instance members should not write to "static" fields
+dotnet_diagnostic.S2696.severity = none
+
+# Default severity for analyzer diagnostics with category 'StyleCop.CSharp.ReadabilityRules'
+dotnet_analyzer_diagnostic.category-StyleCop.CSharp.ReadabilityRules.severity = none
+
+# Default severity for analyzer diagnostics with category 'Minor Code Smell'
+dotnet_analyzer_diagnostic.category-Minor Code Smell.severity = none
+
+# S3267: Loops should be simplified with "LINQ" expressions
+dotnet_diagnostic.S3267.severity = none

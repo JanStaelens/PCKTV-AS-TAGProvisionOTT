@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\GIT\\GITHUB\\PA-PCK-TAGProcessOTT\\Create TAG DOM\\Create TAG DOM.csproj": {}
+    "C:\\GIT\\GITHUB\\PCKTV-AS-TAGProcessOTT\\Create TAG DOM\\Create TAG DOM.csproj": {}
   },
   "projects": {
-    "C:\\GIT\\GITHUB\\PA-PCK-TAGProcessOTT\\Create TAG DOM\\Create TAG DOM.csproj": {
+    "C:\\GIT\\GITHUB\\PCKTV-AS-TAGProcessOTT\\Create TAG DOM\\Create TAG DOM.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\GIT\\GITHUB\\PA-PCK-TAGProcessOTT\\Create TAG DOM\\Create TAG DOM.csproj",
+        "projectUniqueName": "C:\\GIT\\GITHUB\\PCKTV-AS-TAGProcessOTT\\Create TAG DOM\\Create TAG DOM.csproj",
         "projectName": "Conviva Scripts_1",
-        "projectPath": "C:\\GIT\\GITHUB\\PA-PCK-TAGProcessOTT\\Create TAG DOM\\Create TAG DOM.csproj",
+        "projectPath": "C:\\GIT\\GITHUB\\PCKTV-AS-TAGProcessOTT\\Create TAG DOM\\Create TAG DOM.csproj",
         "packagesPath": "C:\\Users\\BlakeSM\\.nuget\\packages\\",
-        "outputPath": "C:\\GIT\\GITHUB\\PA-PCK-TAGProcessOTT\\Create TAG DOM\\obj\\",
+        "outputPath": "C:\\GIT\\GITHUB\\PCKTV-AS-TAGProcessOTT\\Create TAG DOM\\obj\\",
         "projectStyle": "PackageReference",
         "skipContentFileWrite": true,
         "fallbackFolders": [
@@ -44,11 +44,11 @@
             },
             "Skyline.DataMiner.Core.DataMinerSystem.Automation": {
               "target": "Package",
-              "version": "[1.1.0.1, )"
+              "version": "[1.1.0.2, )"
             },
             "Skyline.DataMiner.Dev.Automation": {
               "target": "Package",
-              "version": "[10.3.3, )"
+              "version": "[10.3.3.1, )"
             },
             "StyleCop.Analyzers": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",

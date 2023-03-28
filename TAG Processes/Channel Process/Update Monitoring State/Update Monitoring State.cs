@@ -30,264 +30,259 @@ Skyline Communications.
 
 Any inquiries can be addressed to:
 
-	Skyline Communications NV
-	Ambachtenstraat 33
-	B-8870 Izegem
-	Belgium
-	Tel.	: +32 51 31 35 69
-	Fax.	: +32 51 31 01 29
-	E-mail	: info@skyline.be
-	Web		: www.skyline.be
-	Contact	: Ben Vandenberghe
+    Skyline Communications NV
+    Ambachtenstraat 33
+    B-8870 Izegem
+    Belgium
+    Tel.    : +32 51 31 35 69
+    Fax.    : +32 51 31 01 29
+    E-mail  : info@skyline.be
+    Web     : www.skyline.be
+    Contact : Ben Vandenberghe
 
 ****************************************************************************
 Revision History:
 
-DATE		VERSION		AUTHOR			COMMENTS
+DATE        VERSION     AUTHOR          COMMENTS
 
-10/01/2023	1.0.0.1		BSM, Skyline	Initial Version
+10/01/2023  1.0.0.1     BSM, Skyline    Initial Version
 
 ****************************************************************************
 */
 
 namespace Script
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Diagnostics;
-	using System.Linq;
-	using System.Threading;
-	using Skyline.DataMiner.Automation;
-	using Skyline.DataMiner.Core.DataMinerSystem.Automation;
-	using Skyline.DataMiner.Core.DataMinerSystem.Common;
-	using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.Logging;
-	using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager;
-	using Skyline.DataMiner.ExceptionHelper;
-	using Skyline.DataMiner.Net.Apps.DataMinerObjectModel;
-	using Skyline.DataMiner.Net.Sections;
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Threading;
+    using Skyline.DataMiner.Automation;
+    using Skyline.DataMiner.Core.DataMinerSystem.Automation;
+    using Skyline.DataMiner.Core.DataMinerSystem.Common;
+    using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.Logging;
+    using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager;
+    using Skyline.DataMiner.ExceptionHelper;
+    using Skyline.DataMiner.Net.Apps.DataMinerObjectModel;
+    using Skyline.DataMiner.Net.Sections;
 
-	internal class Script
-	{
-		private DomHelper innerDomHelper;
+    internal class Script
+    {
+        private DomHelper innerDomHelper;
 
-		/// <summary>
-		/// The Script entry point.
-		/// </summary>
-		/// <param name="engine">The <see cref="Engine" /> instance used to communicate with DataMiner.</param>
-		public void Run(Engine engine)
-		{
-			engine.SetFlag(RunTimeFlags.NoCheckingSets);
+        /// <summary>
+        /// The Script entry point.
+        /// </summary>
+        /// <param name="engine">The <see cref="Engine" /> instance used to communicate with DataMiner.</param>
+        public void Run(Engine engine)
+        {
+            engine.SetFlag(RunTimeFlags.NoCheckingSets);
 
-			var scriptName = "Update Monitoring State";
-			var tagElementName = "Pre-Code";
-			var channelName = "Pre-Code";
-			var helper = new PaProfileLoadDomHelper(engine);
-			innerDomHelper = new DomHelper(engine.SendSLNetMessages, "process_automation");
-			var exceptionHelper = new ExceptionHelper(engine, innerDomHelper);
+            var scriptName = "Update Monitoring State";
+            var tagElementName = "Pre-Code";
+            var channelName = "Pre-Code";
+            var helper = new PaProfileLoadDomHelper(engine);
+            this.innerDomHelper = new DomHelper(engine.SendSLNetMessages, "process_automation");
+            var exceptionHelper = new ExceptionHelper(engine, this.innerDomHelper);
 
-			try
-			{
-				TagChannelInfo tagInfo = new TagChannelInfo(engine, helper, innerDomHelper);
-				channelName = tagInfo.Channel;
-				tagElementName = tagInfo.ElementName;
-				engine.GenerateInformation("START " + scriptName);
+            try
+            {
+                TagChannelInfo tagInfo = new TagChannelInfo(engine, helper, this.innerDomHelper);
+                channelName = tagInfo.Channel;
+                tagElementName = tagInfo.ElementName;
+                engine.GenerateInformation("START " + scriptName);
 
-				var filterColumn = new ColumnFilter { ComparisonOperator = ComparisonOperator.Equal, Value = tagInfo.ChannelMatch, Pid = 248 };
-				var channelStatusRows = tagInfo.ChannelStatusTable.QueryData(new List<ColumnFilter> { filterColumn });
-				if (channelStatusRows.Any())
-				{
-					foreach (var row in channelStatusRows)
-					{
-						tagInfo.EngineElement.SetParameterByPrimaryKey(356, Convert.ToString(row[0]), (int)tagInfo.MonitorUpdate);
-					}
-				}
-				else
-				{
-					var log = new Log
-					{
-						AffectedItem = scriptName,
-						AffectedService = channelName,
-						Timestamp = DateTime.Now,
-						ErrorCode = new ErrorCode
-						{
-							ConfigurationItem = channelName,
-							ConfigurationType = ErrorCode.ConfigType.Automation,
-							Source = scriptName,
-							Code = "ChannelNotFound",
-							Severity = ErrorCode.SeverityType.Warning,
-							Description = $"No channels found in channel status with given name: {channelName} in Channel Status Table.",
-						},
-					};
+                var filterColumn = new ColumnFilter { ComparisonOperator = ComparisonOperator.Equal, Value = tagInfo.ChannelMatch, Pid = 248 };
+                var channelStatusRows = tagInfo.ChannelStatusTable.QueryData(new List<ColumnFilter> { filterColumn });
+                if (channelStatusRows.Any())
+                {
+                    foreach (var row in channelStatusRows)
+                    {
+                        tagInfo.EngineElement.SetParameterByPrimaryKey(356, Convert.ToString(row[0]), (int)tagInfo.MonitorUpdate);
+                    }
+                }
+                else
+                {
+                    var log = new Log
+                    {
+                        AffectedItem = scriptName,
+                        AffectedService = channelName,
+                        Timestamp = DateTime.Now,
+                        ErrorCode = new ErrorCode
+                        {
+                            ConfigurationItem = channelName,
+                            ConfigurationType = ErrorCode.ConfigType.Automation,
+                            Source = scriptName,
+                            Code = "ChannelNotFound",
+                            Severity = ErrorCode.SeverityType.Warning,
+                            Description = $"No channels found in channel status with given name: {channelName} in Channel Status Table.",
+                        },
+                    };
 
-					helper.Log($"No channels found in channel status with given name: {channelName}.", PaLogLevel.Error);
-					engine.GenerateInformation("Did not find any channels with match: " + tagInfo.ChannelMatch);
-					exceptionHelper.GenerateLog(log);
-				}
+                    helper.Log($"No channels found in channel status with given name: {channelName}.", PaLogLevel.Error);
+                    engine.GenerateInformation("Did not find any channels with match: " + tagInfo.ChannelMatch);
+                    exceptionHelper.GenerateLog(log);
+                }
 
-				if (tagInfo.Status.Equals("deactivating"))
-				{
-					helper.TransitionState("deactivating_to_complete");
-					engine.GenerateInformation("Successfully executed " + scriptName + " for: " + tagElementName);
-					helper.SendFinishMessageToTokenHandler();
-					return;
-				}
-				else if (tagInfo.Status.Equals("ready"))
-				{
-					helper.TransitionState("ready_to_inprogress");
-				}
-				else if (tagInfo.Status.Equals("in_progress"))
-				{
-					// no update
-				}
-				else
-				{
-					var log = new Log
-					{
-						AffectedItem = scriptName,
-						AffectedService = channelName,
-						Timestamp = DateTime.Now,
-						ErrorCode = new ErrorCode
-						{
-							ConfigurationItem = channelName,
-							ConfigurationType = ErrorCode.ConfigType.Automation,
-							Source = scriptName,
-							Code = "InvalidStatusForTransition",
-							Severity = ErrorCode.SeverityType.Warning,
-							Description = $"Cannot execute the transition as the current status is unexpected. Current status: {tagInfo.Status}",
-						},
-					};
+                if (tagInfo.Status.Equals("deactivating"))
+                {
+                    helper.TransitionState("deactivating_to_complete");
+                    engine.GenerateInformation("Successfully executed " + scriptName + " for: " + tagElementName);
+                    helper.SendFinishMessageToTokenHandler();
+                    return;
+                }
+                else if (tagInfo.Status.Equals("ready"))
+                {
+                    helper.TransitionState("ready_to_inprogress");
+                }
+                else if (tagInfo.Status.Equals("in_progress"))
+                {
+                    // no update
+                }
+                else
+                {
+                    var log = new Log
+                    {
+                        AffectedItem = scriptName,
+                        AffectedService = channelName,
+                        Timestamp = DateTime.Now,
+                        ErrorCode = new ErrorCode
+                        {
+                            ConfigurationItem = channelName,
+                            ConfigurationType = ErrorCode.ConfigType.Automation,
+                            Source = scriptName,
+                            Code = "InvalidStatusForTransition",
+                            Severity = ErrorCode.SeverityType.Warning,
+                            Description = $"Cannot execute the transition as the current status is unexpected. Current status: {tagInfo.Status}",
+                        },
+                    };
 
-					helper.Log($"Cannot execute the transition as the status. Current status: {tagInfo.ChannelMatch}", PaLogLevel.Error);
-					exceptionHelper.GenerateLog(log);
-				}
+                    helper.Log($"Cannot execute the transition as the status. Current status: {tagInfo.ChannelMatch}", PaLogLevel.Error);
+                    exceptionHelper.GenerateLog(log);
+                }
 
-				engine.GenerateInformation("Successfully executed " + scriptName + " for: " + tagElementName);
-				helper.ReturnSuccess();
-			}
-			catch (Exception ex)
-			{
-				engine.GenerateInformation($"An issue occurred while executing {scriptName} activity for {channelName}: {ex}");
-				var log = new Log
-				{
-					AffectedItem = scriptName,
-					AffectedService = channelName,
-					Timestamp = DateTime.Now,
-					ErrorCode = new ErrorCode
-					{
-						ConfigurationItem = channelName,
-						ConfigurationType = ErrorCode.ConfigType.Automation,
-						Source = scriptName,
-						Severity = ErrorCode.SeverityType.Critical,
-						Description = "Exception while processing " + scriptName,
-					},
-				};
+                engine.GenerateInformation("Successfully executed " + scriptName + " for: " + tagElementName);
+                helper.ReturnSuccess();
+            }
+            catch (Exception ex)
+            {
+                engine.GenerateInformation($"An issue occurred while executing {scriptName} activity for {channelName}: {ex}");
+                var log = new Log
+                {
+                    AffectedItem = scriptName,
+                    AffectedService = channelName,
+                    Timestamp = DateTime.Now,
+                    ErrorCode = new ErrorCode
+                    {
+                        ConfigurationItem = channelName,
+                        ConfigurationType = ErrorCode.ConfigType.Automation,
+                        Source = scriptName,
+                        Severity = ErrorCode.SeverityType.Critical,
+                        Description = "Exception while processing " + scriptName,
+                    },
+                };
 
-				exceptionHelper.ProcessException(ex, log);
-				helper.Log($"An issue occurred while executing {scriptName} activity for {channelName}: {ex}", PaLogLevel.Error);
-				helper.SendErrorMessageToTokenHandler();
-			}
-		}
+                exceptionHelper.ProcessException(ex, log);
+                helper.Log($"An issue occurred while executing {scriptName} activity for {channelName}: {ex}", PaLogLevel.Error);
+                helper.SendErrorMessageToTokenHandler();
+            }
+        }
 
-		private SectionDefinition SetSectionDefinitionById(SectionDefinitionID sectionDefinitionId)
-		{
-			return innerDomHelper.SectionDefinitions.Read(SectionDefinitionExposers.ID.Equal(sectionDefinitionId)).First();
-		}
+        /// <summary>
+        /// Retry until success or until timeout.
+        /// </summary>
+        /// <param name="func">Operation to retry.</param>
+        /// <param name="timeout">Max TimeSpan during which the operation specified in <paramref name="func"/> can be retried.</param>
+        /// <returns><c>true</c> if one of the retries succeeded within the specified <paramref name="timeout"/>. Otherwise <c>false</c>.</returns>
+        public static bool Retry(Func<bool> func, TimeSpan timeout)
+        {
+            bool success = false;
 
-		/// <summary>
-		/// Retry until success or until timeout.
-		/// </summary>
-		/// <param name="func">Operation to retry.</param>
-		/// <param name="timeout">Max TimeSpan during which the operation specified in <paramref name="func"/> can be retried.</param>
-		/// <returns><c>true</c> if one of the retries succeeded within the specified <paramref name="timeout"/>. Otherwise <c>false</c>.</returns>
-		public static bool Retry(Func<bool> func, TimeSpan timeout)
-		{
-			bool success = false;
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
 
-			Stopwatch sw = new Stopwatch();
-			sw.Start();
+            do
+            {
+                success = func();
+                if (!success)
+                {
+                    Thread.Sleep(3000);
+                }
+            }
+            while (!success && sw.Elapsed <= timeout);
 
-			do
-			{
-				success = func();
-				if (!success)
-				{
-					Thread.Sleep(3000);
-				}
-			}
-			while (!success && sw.Elapsed <= timeout);
+            return success;
+        }
+    }
 
-			return success;
-		}
-	}
+    public class TagChannelInfo
+    {
+        public string ElementName { get; set; }
 
-	public class TagChannelInfo
-	{
-		public string ElementName { get; set; }
+        public string Channel { get; set; }
 
-		public string Channel { get; set; }
+        public string ChannelMatch { get; set; }
 
-		public string ChannelMatch { get; set; }
+        public string Threshold { get; set; }
 
-		public string Threshold { get; set; }
+        public string MonitoringMode { get; set; }
 
-		public string MonitoringMode { get; set; }
+        public string Notification { get; set; }
 
-		public string Notification { get; set; }
+        public string Encryption { get; set; }
 
-		public string Encryption { get; set; }
+        public string KMS { get; set; }
 
-		public string KMS { get; set; }
+        public DomInstance Instance { get; set; }
 
-		public DomInstance Instance { get; set; }
+        public Element EngineElement { get; set; }
 
-		public Element EngineElement { get; set; }
+        public IDmsElement Element { get; set; }
 
-		public IDmsElement Element { get; set; }
+        public IDmsTable ChannelProfileTable { get; set; }
 
-		public IDmsTable ChannelProfileTable { get; set; }
+        public IDmsTable ChannelStatusTable { get; set; }
 
-		public IDmsTable ChannelStatusTable { get; set; }
+        public IDmsTable AllLayoutsTable { get; set; }
 
-		public IDmsTable AllLayoutsTable { get; set; }
+        public TagMonitoring MonitorUpdate { get; set; }
 
-		public TagMonitoring MonitorUpdate { get; set; }
+        public string Status { get; set; }
 
-		public string Status { get; set; }
+        public enum TagMonitoring
+        {
+            No = 0,
+            Yes = 1,
+        }
 
-		public enum TagMonitoring
-		{
-			No = 0,
-			Yes = 1,
-		}
+        public TagChannelInfo(Engine engine, PaProfileLoadDomHelper helper, DomHelper domHelper)
+        {
+            this.ElementName = helper.GetParameterValue<string>("TAG Element (TAG Channel)");
+            this.Channel = helper.GetParameterValue<string>("Channel Name (TAG Channel)");
+            this.ChannelMatch = helper.GetParameterValue<string>("Channel Match (TAG Channel)");
 
-		public TagChannelInfo(Engine engine, PaProfileLoadDomHelper helper, DomHelper domHelper)
-		{
-			ElementName = helper.GetParameterValue<string>("TAG Element");
-			Channel = helper.GetParameterValue<string>("Channel Name");
-			ChannelMatch = helper.GetParameterValue<string>("Channel Match");
+            IDms thisDms = engine.GetDms();
+            this.Element = thisDms.GetElement(this.ElementName);
+            this.EngineElement = engine.FindElement(this.Element.Name);
+            this.ChannelProfileTable = this.Element.GetTable(8000);
+            this.AllLayoutsTable = this.Element.GetTable(10300);
+            this.ChannelStatusTable = this.Element.GetTable(240);
 
-			IDms thisDms = engine.GetDms();
-			Element = thisDms.GetElement(ElementName);
-			EngineElement = engine.FindElement(Element.Name);
-			ChannelProfileTable = Element.GetTable(8000);
-			AllLayoutsTable = Element.GetTable(10300);
-			ChannelStatusTable = Element.GetTable(240);
+            this.MonitoringMode = helper.GetParameterValue<string>("Monitoring Mode (TAG Channel)");
+            this.Threshold = helper.GetParameterValue<string>("Threshold (TAG Channel)");
+            this.Notification = helper.GetParameterValue<string>("Notification (TAG Channel)");
+            this.Encryption = helper.GetParameterValue<string>("Encryption (TAG Channel)");
+            this.KMS = helper.GetParameterValue<string>("KMS (TAG Channel)");
 
-			MonitoringMode = helper.GetParameterValue<string>("Monitoring Mode");
-			Threshold = helper.GetParameterValue<string>("Threshold");
-			Notification = helper.GetParameterValue<string>("Notification");
-			Encryption = helper.GetParameterValue<string>("Encryption");
-			KMS = helper.GetParameterValue<string>("KMS");
+            var instanceId = helper.GetParameterValue<string>("InstanceId (TAG Channel)");
+            this.Instance = domHelper.DomInstances.Read(DomInstanceExposers.Id.Equal(new DomInstanceId(Guid.Parse(instanceId)))).First();
+            this.Status = this.Instance.StatusId;
 
-			var instanceId = helper.GetParameterValue<string>("InstanceId");
-			Instance = domHelper.DomInstances.Read(DomInstanceExposers.Id.Equal(new DomInstanceId(Guid.Parse(instanceId)))).First();
-			Status = Instance.StatusId;
-
-			MonitorUpdate = TagMonitoring.Yes;
-			if (Status.Equals("deactivating"))
-			{
-				MonitorUpdate = TagMonitoring.No;
-			}
-		}
-	}
+            this.MonitorUpdate = TagMonitoring.Yes;
+            if (this.Status.Equals("deactivating"))
+            {
+                this.MonitorUpdate = TagMonitoring.No;
+            }
+        }
+    }
 }

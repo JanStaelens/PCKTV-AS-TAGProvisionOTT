@@ -30,229 +30,221 @@ Skyline Communications.
 
 Any inquiries can be addressed to:
 
-	Skyline Communications NV
-	Ambachtenstraat 33
-	B-8870 Izegem
-	Belgium
-	Tel.	: +32 51 31 35 69
-	Fax.	: +32 51 31 01 29
-	E-mail	: info@skyline.be
-	Web		: www.skyline.be
-	Contact	: Ben Vandenberghe
+    Skyline Communications NV
+    Ambachtenstraat 33
+    B-8870 Izegem
+    Belgium
+    Tel.    : +32 51 31 35 69
+    Fax.    : +32 51 31 01 29
+    E-mail  : info@skyline.be
+    Web     : www.skyline.be
+    Contact : Ben Vandenberghe
 
 ****************************************************************************
 Revision History:
 
-DATE		VERSION		AUTHOR			COMMENTS
+DATE        VERSION     AUTHOR          COMMENTS
 
-dd/mm/2023	1.0.0.1		XXX, Skyline	Initial version
+dd/mm/2023  1.0.0.1     XXX, Skyline    Initial version
 ****************************************************************************
 */
 
 namespace Script
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Linq;
-	using Newtonsoft.Json;
-	using Skyline.DataMiner.Automation;
-	using Skyline.DataMiner.Core.DataMinerSystem.Automation;
-	using Skyline.DataMiner.Core.DataMinerSystem.Common;
-	using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager;
-	using Skyline.DataMiner.ExceptionHelper;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Newtonsoft.Json;
+    using Skyline.DataMiner.Automation;
+    using Skyline.DataMiner.Core.DataMinerSystem.Automation;
+    using Skyline.DataMiner.Core.DataMinerSystem.Common;
+    using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager;
+    using Skyline.DataMiner.ExceptionHelper;
+    using Skyline.DataMiner.Net.Apps.DataMinerObjectModel;
+    using Skyline.DataMiner.Net.Sections;
+    using TagHelperMethods;
 
-	//using Skyline.DataMiner.Library.Automation;
-	//using Skyline.DataMiner.Library.Common;
-	using Skyline.DataMiner.Net.Apps.DataMinerObjectModel;
-	using Skyline.DataMiner.Net.Sections;
-	using TagHelperMethods;
+    /// <summary>
+    /// DataMiner Script Class.
+    /// </summary>
+    public class Script
+    {
+        private static PaProfileLoadDomHelper innerHelper;
+        private readonly int scanChannelsTable = 1310;
+        private DomHelper innerDomHelper;
+        private SharedMethods sharedMethods;
 
-	/// <summary>
-	/// DataMiner Script Class.
-	/// </summary>
-	public class Script
-	{
-		private static PaProfileLoadDomHelper innerHelper;
-		private readonly int scanChannelsTable = 1310;
-		private DomHelper innerDomHelper;
-		private SharedMethods sharedMethods;
+        /// <summary>
+        /// The Script entry point.
+        /// </summary>
+        /// <param name="engine">Link with SLAutomation process.</param>
+        public void Run(Engine engine)
+        {
+            var scriptName = "Create Scanner and KMS";
 
-		/// <summary>
-		/// The Script entry point.
-		/// </summary>
-		/// <param name="engine">Link with SLAutomation process.</param>
-		public void Run(Engine engine)
-		{
-			var scriptName = "Create Scanner and KMS";
+            innerHelper = new PaProfileLoadDomHelper(engine);
+            this.innerDomHelper = new DomHelper(engine.SendSLNetMessages, "process_automation");
 
-			innerHelper = new PaProfileLoadDomHelper(engine);
-			innerDomHelper = new DomHelper(engine.SendSLNetMessages, "process_automation");
+            var exceptionHelper = new ExceptionHelper(engine, this.innerDomHelper);
+            this.sharedMethods = new SharedMethods(innerHelper, this.innerDomHelper);
 
-			var exceptionHelper = new ExceptionHelper(engine, innerDomHelper);
-			sharedMethods = new SharedMethods(innerHelper, innerDomHelper);
+            engine.GenerateInformation("START " + scriptName);
 
-			engine.GenerateInformation("START " + scriptName);
+            var instanceId = innerHelper.GetParameterValue<string>("InstanceId (TAG Scan)");
+            var instance = this.innerDomHelper.DomInstances.Read(DomInstanceExposers.Id.Equal(new DomInstanceId(Guid.Parse(instanceId)))).First();
+            var status = instance.StatusId;
 
-			var instanceId = innerHelper.GetParameterValue<string>("InstanceId");
-			var instance = innerDomHelper.DomInstances.Read(DomInstanceExposers.Id.Equal(new DomInstanceId(Guid.Parse(instanceId)))).First();
-			var status = instance.StatusId;
+            if (!status.Equals("ready"))
+            {
+                innerHelper.SendErrorMessageToTokenHandler();
+                return;
+            }
 
-			if (!status.Equals("ready"))
-			{
-				innerHelper.SendErrorMessageToTokenHandler();
-				return;
-			}
+            var scanner = new Scanner
+            {
+                AssetId = innerHelper.GetParameterValue<string>("Asset ID (TAG Scan)"),
+                InstanceId = instanceId,
+                ScanName = innerHelper.GetParameterValue<string>("Scan Name (TAG Scan)"),
+                SourceElement = innerHelper.TryGetParameterValue("Source Element (TAG Scan)", out string sourceElement) ? sourceElement : String.Empty,
+                SourceId = innerHelper.TryGetParameterValue("Source ID (TAG Scan)", out string sourceId) ? sourceId : String.Empty,
+                TagDevice = innerHelper.GetParameterValue<string>("TAG Device (TAG Scan)"),
+                TagElement = innerHelper.GetParameterValue<string>("TAG Element (TAG Scan)"),
+                TagInterface = innerHelper.GetParameterValue<string>("TAG Interface (TAG Scan)"),
+                ScanType = innerHelper.GetParameterValue<string>("Scan Type (TAG Scan)"),
+                Action = innerHelper.GetParameterValue<string>("Action (TAG Scan)"),
+                Channels = innerHelper.TryGetParameterValue("Channels (TAG Scan)", out List<Guid> channels) ? channels : new List<Guid>(),
+            };
 
-			var scanner = new Scanner
-			{
-				AssetId = innerHelper.GetParameterValue<string>("Asset ID"),
-				InstanceId = instanceId,
-				ScanName = innerHelper.GetParameterValue<string>("Scan Name"),
-				SourceElement = innerHelper.TryGetParameterValue("Source Element", out string sourceElement) ? sourceElement : String.Empty,
-				SourceId = innerHelper.TryGetParameterValue("Source ID", out string sourceId) ? sourceId : String.Empty,
-				TagDevice = innerHelper.GetParameterValue<string>("TAG Device"),
-				TagElement = innerHelper.GetParameterValue<string>("TAG Element"),
-				TagInterface = innerHelper.GetParameterValue<string>("TAG Interface"),
-				ScanType = innerHelper.GetParameterValue<string>("Scan Type"),
-				Action = innerHelper.GetParameterValue<string>("Action"),
-				Channels = innerHelper.TryGetParameterValue("Channels", out List<Guid> channels) ? channels : new List<Guid>(),
-			};
+            try
+            {
+                IDms dms = engine.GetDms();
+                IDmsElement element = dms.GetElement(scanner.TagElement);
 
-			try
-			{
-				IDms dms = engine.GetDms();
-				IDmsElement element = dms.GetElement(scanner.TagElement);
+                var tagDictionary = new Dictionary<string, TagRequest>();
 
-				var tagDictionary = new Dictionary<string, TagRequest>();
+                var tagRequest = new TagRequest();
+                var scanList = this.CreateScanRequestJson(instance, scanner);
+                tagRequest.ScanRequests = scanList;
+                tagDictionary.Add(scanner.TagDevice, tagRequest);
 
-				var tagRequest = new TagRequest();
-				var scanList = CreateScanRequestJson(instance, scanner);
-				tagRequest.ScanRequests = scanList;
-				tagDictionary.Add(scanner.TagDevice, tagRequest);
+                element.GetStandaloneParameter<string>(3).SetValue(JsonConvert.SerializeObject(tagDictionary));
 
-				element.GetStandaloneParameter<string>(3).SetValue(JsonConvert.SerializeObject(tagDictionary));
+                bool VerifyScanCreation()
+                {
+                    try
+                    {
+                        var scanRequests = scanList;
+                        var requestTitles = this.GetScanRequestTitles(scanRequests);
 
-				bool VerifyScanCreation()
-				{
-					try
-					{
-						var scanRequests = scanList;
-						var requestTitles = GetScanRequestTitles(scanRequests);
+                        object[][] scanChannelsRows = null;
+                        var scanChannelTable = element.GetTable(this.scanChannelsTable);
+                        scanChannelsRows = scanChannelTable.GetRows();
 
-						object[][] scanChannelsRows = null;
-						var scanChannelTable = element.GetTable(scanChannelsTable);
-						scanChannelsRows = scanChannelTable.GetRows();
+                        return scanChannelsRows == null || this.CheckScanRow(requestTitles, scanChannelsRows);
+                    }
+                    catch (Exception e)
+                    {
+                        engine.Log("Exception thrown while checking TAG Scan status: " + e);
+                        throw;
+                    }
+                }
 
-						return scanChannelsRows == null || CheckScanRow(requestTitles, scanChannelsRows);
-					}
-					catch (Exception e)
-					{
-						engine.Log("Exception thrown while checking TAG Scan status: " + e);
-						throw;
-					}
-				}
+                if (this.sharedMethods.Retry(VerifyScanCreation, new TimeSpan(0, 5, 0)))
+                {
+                    // successfully created filter
+                    innerHelper.TransitionState("ready_to_inprogress");
+                    innerHelper.ReturnSuccess();
+                }
+                else
+                {
+                    // failed to execute in time
+                    var log = new Log
+                    {
+                        AffectedItem = scriptName,
+                        AffectedService = scanner.ScanName,
+                        Timestamp = DateTime.Now,
+                        ErrorCode = new ErrorCode
+                        {
+                            ConfigurationItem = scanner.ScanName,
+                            ConfigurationType = ErrorCode.ConfigType.Automation,
+                            Severity = ErrorCode.SeverityType.Warning,
+                            Source = scriptName,
+                            Description = "Create Scan failed.",
+                        },
+                    };
+                    exceptionHelper.GenerateLog(log);
+                    innerHelper.SendErrorMessageToTokenHandler();
+                }
+            }
+            catch (ScriptAbortException)
+            {
+                // no issue
+            }
+            catch (Exception ex)
+            {
+                var log = new Log
+                {
+                    AffectedItem = scriptName,
+                    AffectedService = scanner.ScanName,
+                    Timestamp = DateTime.Now,
+                    ErrorCode = new ErrorCode
+                    {
+                        ConfigurationItem = scanner.ScanName,
+                        ConfigurationType = ErrorCode.ConfigType.Automation,
+                        Severity = ErrorCode.SeverityType.Warning,
+                        Source = scriptName,
+                    },
+                };
+                exceptionHelper.ProcessException(ex, log);
+                innerHelper.SendErrorMessageToTokenHandler();
+            }
+        }
 
-				if (sharedMethods.Retry(VerifyScanCreation, new TimeSpan(0, 5, 0)))
-				{
-					// successfully created filter
-					innerHelper.TransitionState("ready_to_inprogress");
-					innerHelper.ReturnSuccess();
-				}
-				else
-				{
-					// failed to execute in time
-					var log = new Log
-					{
-						AffectedItem = scriptName,
-						AffectedService = scanner.ScanName,
-						Timestamp = DateTime.Now,
-						ErrorCode = new ErrorCode
-						{
-							ConfigurationItem = scanner.ScanName,
-							ConfigurationType = ErrorCode.ConfigType.Automation,
-							Severity = ErrorCode.SeverityType.Warning,
-							Source = scriptName,
-							Description = "Create Scan failed.",
-						},
-					};
-					exceptionHelper.GenerateLog(log);
-					innerHelper.SendErrorMessageToTokenHandler();
-				}
-			}
-			catch (ScriptAbortException)
-			{
-				// no issue
-			}
-			catch (Exception ex)
-			{
-				var log = new Log
-				{
-					AffectedItem = scriptName,
-					AffectedService = scanner.ScanName,
-					Timestamp = DateTime.Now,
-					ErrorCode = new ErrorCode
-					{
-						ConfigurationItem = scanner.ScanName,
-						ConfigurationType = ErrorCode.ConfigType.Automation,
-						Severity = ErrorCode.SeverityType.Warning,
-						Source = scriptName,
-					},
-				};
-				exceptionHelper.ProcessException(ex, log);
-				innerHelper.SendErrorMessageToTokenHandler();
-			}
-		}
+        private List<Scan> CreateScanRequestJson(DomInstance instance, Scanner scanner)
+        {
+            List<Scan> scans = new List<Scan>();
+            var nameFormat = "{0} {1} #RES|BAND#";
 
-		private List<Scan> CreateScanRequestJson(DomInstance instance, Scanner scanner)
-		{
-			List<Scan> scans = new List<Scan>();
-			var nameFormat = "{0} {1} #RES|BAND#";
+            var manifests = this.sharedMethods.GetManifests(instance);
 
-			var manifests = sharedMethods.GetManifests(instance);
+            foreach (var manifest in manifests)
+            {
+                scans.Add(new Scan
+                {
+                    Action = (int)TagRequest.TAGAction.Add,
+                    AssetId = scanner.AssetId,
+                    Interface = scanner.TagInterface,
+                    Name = String.Format(nameFormat, scanner.ScanName, manifest.Name),
+                    Type = scanner.ScanType,
+                    Url = manifest.Url,
+                });
+            }
 
-			foreach (var manifest in manifests)
-			{
-				scans.Add(new Scan
-				{
-					Action = (int)TagRequest.TAGAction.Add,
-					AssetId = scanner.AssetId,
-					Interface = scanner.TagInterface,
-					Name = String.Format(nameFormat, scanner.ScanName, manifest.Name), // ScanName: WICU Skyline Test, ManifestName: AKAMI_hjkfga_hjaksld
-					Type = scanner.ScanType,
-					Url = manifest.Url,
-				});
-			}
+            return scans;
+        }
 
-			return scans;
-		}
+        private List<string> GetScanRequestTitles(List<Scan> scanRequests)
+        {
+            var scanTitles = new List<string>();
+            foreach (var scan in scanRequests)
+            {
+                scanTitles.Add(scan.Name);
+            }
 
-		private List<string> GetScanRequestTitles(List<Scan> scanRequests)
-		{
-			var scanTitles = new List<string>();
-			foreach (var scan in scanRequests)
-			{
-				scanTitles.Add(scan.Name);
-			}
+            return scanTitles;
+        }
 
-			return scanTitles;
-		}
+        private bool CheckScanRow(List<string> titles, object[][] scanChannelsRows)
+        {
+            foreach (var row in scanChannelsRows)
+            {
+                if (titles.Contains(Convert.ToString(row[13 /*Title*/])))
+                {
+                    return true;
+                }
+            }
 
-		private bool CheckScanRow(List<string> titles, object[][] scanChannelsRows)
-		{
-			foreach (var row in scanChannelsRows)
-			{
-				if (titles.Contains(Convert.ToString(row[13 /*Title*/])))
-				{
-					return true;
-				}
-			}
-
-			return false;
-		}
-
-		private SectionDefinition SetSectionDefinitionById(SectionDefinitionID sectionDefinitionId)
-		{
-			return innerDomHelper.SectionDefinitions.Read(SectionDefinitionExposers.ID.Equal(sectionDefinitionId)).First();
-		}
-	}
+            return false;
+        }
+    }
 }

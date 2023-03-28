@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\GIT\\Automation\\Customers\\NBC Sports\\Event Manager Scripts\\Peacock Process\\start_process\\start_process\\start_process.csproj": {}
+    "C:\\GIT\\GITHUB\\PCKTV-AS-TAGProcessOTT\\start_process\\start_process\\start_process.csproj": {}
   },
   "projects": {
-    "C:\\GIT\\Automation\\Customers\\NBC Sports\\Event Manager Scripts\\Peacock Process\\start_process\\start_process\\start_process.csproj": {
+    "C:\\GIT\\GITHUB\\PCKTV-AS-TAGProcessOTT\\start_process\\start_process\\start_process.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\GIT\\Automation\\Customers\\NBC Sports\\Event Manager Scripts\\Peacock Process\\start_process\\start_process\\start_process.csproj",
+        "projectUniqueName": "C:\\GIT\\GITHUB\\PCKTV-AS-TAGProcessOTT\\start_process\\start_process\\start_process.csproj",
         "projectName": "Provision Touchstream_1",
-        "projectPath": "C:\\GIT\\Automation\\Customers\\NBC Sports\\Event Manager Scripts\\Peacock Process\\start_process\\start_process\\start_process.csproj",
+        "projectPath": "C:\\GIT\\GITHUB\\PCKTV-AS-TAGProcessOTT\\start_process\\start_process\\start_process.csproj",
         "packagesPath": "C:\\Users\\BlakeSM\\.nuget\\packages\\",
-        "outputPath": "C:\\GIT\\Automation\\Customers\\NBC Sports\\Event Manager Scripts\\Peacock Process\\start_process\\start_process\\obj\\",
+        "outputPath": "C:\\GIT\\GITHUB\\PCKTV-AS-TAGProcessOTT\\start_process\\start_process\\obj\\",
         "projectStyle": "PackageReference",
         "skipContentFileWrite": true,
         "fallbackFolders": [
@@ -44,17 +44,17 @@
             },
             "Skyline.DataMiner.Core.DataMinerSystem.Automation": {
               "target": "Package",
-              "version": "[1.1.0.1, )"
+              "version": "[1.1.0.2, )"
             },
             "Skyline.DataMiner.Dev.Automation": {
               "target": "Package",
-              "version": "[10.3.3, )"
+              "version": "[10.3.3.1, )"
             },
             "StyleCop.Analyzers": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[1.2.0-beta.435, )"
+              "version": "[1.1.118, )"
             }
           }
         }

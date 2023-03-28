@@ -9,3 +9,9 @@ trim_trailing_whitespace = true
 
 [*.cs]
 dotnet_sort_system_directives_first = true
+
+# Default severity for analyzer diagnostics with category 'Critical Code Smell'
+dotnet_analyzer_diagnostic.category-Critical Code Smell.severity = none
+
+# S1481: Unused local variables should be removed
+dotnet_diagnostic.S1481.severity = none
