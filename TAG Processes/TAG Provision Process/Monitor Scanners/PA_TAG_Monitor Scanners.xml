@@ -5,7 +5,7 @@
 	<Type>Automation</Type>
 	<Author>SKYLINE2\BlakeSM</Author>
 	<CheckSets>FALSE</CheckSets>
-	<Folder>PA OTT Provision/TAG/Provision</Folder>
+	<Folder>PA Provision OTT/TAG/Provision</Folder>
 
 	<Protocols>
 		<Protocol id="1">

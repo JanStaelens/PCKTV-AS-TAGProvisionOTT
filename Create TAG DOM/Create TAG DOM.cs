@@ -637,7 +637,7 @@ namespace Script
 					ScriptOptions = new List<string>
 					{
 						$"PARAMETER:1:{processName}",
-						"PARAMETER:2:active_to_complete",
+						"PARAMETER:2:active_to_deactivate",
 						$"PARAMETER:3:{businessKeyField}",
 						"PARAMETER:4:deactivate",
 					},

@@ -95,7 +95,7 @@ namespace Script
                 {
                     var scannerFilter = DomInstanceExposers.Id.Equal(new DomInstanceId(scanner));
                     var scannerInstance = this.innerDomHelper.DomInstances.Read(scannerFilter).First();
-
+                    engine.GenerateInformation("status of scanner instance: " + scannerInstance.StatusId);
                     this.ExecuteActionOnScanners(action, scannerInstance);
                 }
 
@@ -147,9 +147,9 @@ namespace Script
 
                 section.Stitch(sectionDefinitionFunc);
                 var fieldDescriptors = section.GetSectionDefinition().GetAllFieldDescriptors();
-                if (fieldDescriptors.Any(x => x.Name == "Action"))
+                if (fieldDescriptors.Any(x => x.Name.Contains("Action")))
                 {
-                    var fieldToUpdate = fieldDescriptors.First(x => x.Name == "Action");
+                    var fieldToUpdate = fieldDescriptors.First(x => x.Name.Contains("Action"));
                     instance.AddOrUpdateFieldValue(section.GetSectionDefinition(), fieldToUpdate, action);
                     this.innerDomHelper.DomInstances.Update(instance);
 

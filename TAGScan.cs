@@ -108,11 +108,11 @@
                 {
                     switch (field.GetFieldDescriptor().Name)
                     {
-                        case "Manifest Name":
+                        case "Manifest Name (TAG Scan)":
                             manifest.Name = field.Value.ToString();
                             break;
 
-                        case "Manifest URL":
+                        case "Manifest URL (TAG Scan)":
                             manifest.Url = field.Value.ToString();
                             break;
 

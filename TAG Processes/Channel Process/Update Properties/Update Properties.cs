@@ -238,11 +238,11 @@ namespace Script
                         Source = scriptName,
                         Code = "LayoutFull",
                         Severity = ErrorCode.SeverityType.Critical,
-                        Description = $"Did not find any channels with match: " + tagInfo.ChannelMatch,
+                        Description = $"Did not find any suitable position for channel on layout: " + layout,
                     },
                 };
 
-                engine.GenerateInformation("Did not find any channels with match: " + tagInfo.ChannelMatch);
+                engine.GenerateInformation($"Did not find any suitable position for channel on layout: " + layout);
                 exceptionHelper.GenerateLog(log);
             }
 

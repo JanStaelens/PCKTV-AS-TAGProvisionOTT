@@ -14,8 +14,17 @@
 	</Memory>
 
 	<Parameters>
+		<ScriptParameter id="1" type="string" values="">
+			<Description>process</Description>
+		</ScriptParameter>
 		<ScriptParameter id="2" type="string" values="">
-			<Description>Activity Information</Description>
+			<Description>transition</Description>
+		</ScriptParameter>
+		<ScriptParameter id="3" type="string" values="">
+			<Description>key</Description>
+		</ScriptParameter>
+		<ScriptParameter id="4" type="string" values="">
+			<Description>action</Description>
 		</ScriptParameter>
 	</Parameters>
 
