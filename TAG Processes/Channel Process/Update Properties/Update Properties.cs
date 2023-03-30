@@ -52,316 +52,371 @@ DATE        VERSION     AUTHOR          COMMENTS
 
 namespace Script
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Linq;
-    using System.Threading;
-    using Skyline.DataMiner.Automation;
-    using Skyline.DataMiner.Core.DataMinerSystem.Automation;
-    using Skyline.DataMiner.Core.DataMinerSystem.Common;
-    using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.Logging;
-    using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager;
-    using Skyline.DataMiner.ExceptionHelper;
-    using Skyline.DataMiner.Net.Apps.DataMinerObjectModel;
-    using Skyline.DataMiner.Net.Sections;
+	using System;
+	using System.Collections.Generic;
+	using System.Diagnostics;
+	using System.Linq;
+	using System.Threading;
+	using Skyline.DataMiner.Automation;
+	using Skyline.DataMiner.Core.DataMinerSystem.Automation;
+	using Skyline.DataMiner.Core.DataMinerSystem.Common;
+	using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.Logging;
+	using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager;
+	using Skyline.DataMiner.ExceptionHelper;
+	using Skyline.DataMiner.Net.Apps.DataMinerObjectModel;
+	using Skyline.DataMiner.Net.Sections;
 
-    public class Script
-    {
-        private DomHelper innerDomHelper;
+	public class Script
+	{
+		private DomHelper innerDomHelper;
 
-        /// <summary>
-        /// The Script entry point.
-        /// </summary>
-        /// <param name="engine">The <see cref="Engine" /> instance used to communicate with DataMiner.</param>
-        public void Run(Engine engine)
-        {
-            engine.SetFlag(RunTimeFlags.NoCheckingSets);
+		/// <summary>
+		/// The Script entry point.
+		/// </summary>
+		/// <param name="engine">The <see cref="Engine" /> instance used to communicate with DataMiner.</param>
+		public void Run(Engine engine)
+		{
+			engine.SetFlag(RunTimeFlags.NoCheckingSets);
 
-            var scriptName = "Update Properties";
-            var tagElementName = "Pre-Code";
-            var channelName = "Pre-Code";
-            var helper = new PaProfileLoadDomHelper(engine);
-            this.innerDomHelper = new DomHelper(engine.SendSLNetMessages, "process_automation");
-            var exceptionHelper = new ExceptionHelper(engine, this.innerDomHelper);
+			var scriptName = "Update Properties";
+			var tagElementName = "Pre-Code";
+			var channelName = "Pre-Code";
+			var helper = new PaProfileLoadDomHelper(engine);
+			this.innerDomHelper = new DomHelper(engine.SendSLNetMessages, "process_automation");
+			var exceptionHelper = new ExceptionHelper(engine, this.innerDomHelper);
 
-            try
-            {
-                TagChannelInfo tagInfo = new TagChannelInfo(engine, helper, this.innerDomHelper);
-                channelName = tagInfo.Channel;
-                tagElementName = tagInfo.ElementName;
-                engine.GenerateInformation("START " + scriptName);
+			try
+			{
+				TagChannelInfo tagInfo = new TagChannelInfo(engine, helper, this.innerDomHelper);
+				channelName = tagInfo.Channel;
+				tagElementName = tagInfo.ElementName;
+				engine.GenerateInformation("START " + scriptName);
 
-                this.ExecuteChannelSets(engine, scriptName, helper, exceptionHelper, tagInfo);
+				this.ExecuteChannelSets(engine, scriptName, helper, exceptionHelper, tagInfo);
 
-                if (tagInfo.Status.Equals("in_progress"))
-                {
-                    helper.TransitionState("inprogress_to_active");
-                }
-                else
-                {
-                    var log = new Log
-                    {
-                        AffectedItem = scriptName,
-                        AffectedService = channelName,
-                        Timestamp = DateTime.Now,
-                        ErrorCode = new ErrorCode
-                        {
-                            ConfigurationItem = channelName,
-                            ConfigurationType = ErrorCode.ConfigType.Automation,
-                            Source = scriptName,
-                            Code = "InvalidStatusForTransition",
-                            Severity = ErrorCode.SeverityType.Warning,
-                            Description = $"Cannot execute the transition as the current status is unexpected. Current status: {tagInfo.Status}",
-                        },
-                    };
+				if (tagInfo.Status.Equals("in_progress"))
+				{
+					helper.TransitionState("inprogress_to_active");
+				}
+				else
+				{
+					var log = new Log
+					{
+						AffectedItem = scriptName,
+						AffectedService = channelName,
+						Timestamp = DateTime.Now,
+						ErrorCode = new ErrorCode
+						{
+							ConfigurationItem = channelName,
+							ConfigurationType = ErrorCode.ConfigType.Automation,
+							Source = scriptName,
+							Code = "InvalidStatusForTransition",
+							Severity = ErrorCode.SeverityType.Warning,
+							Description = $"Cannot execute the transition as the current status is unexpected. Current status: {tagInfo.Status}",
+						},
+					};
 
-                    helper.Log($"Cannot execute the transition as the status. Current status: {tagInfo.ChannelMatch}", PaLogLevel.Error);
-                    exceptionHelper.GenerateLog(log);
-                }
+					helper.Log($"Cannot execute the transition as the status. Current status: {tagInfo.ChannelMatch}", PaLogLevel.Error);
+					exceptionHelper.GenerateLog(log);
+				}
 
-                engine.GenerateInformation("Successfully executed " + scriptName + " for: " + tagElementName);
-                helper.ReturnSuccess();
-            }
-            catch (Exception ex)
-            {
-                engine.GenerateInformation($"An issue occurred while executing {scriptName} activity for {channelName}: {ex}");
-                var log = new Log
-                {
-                    AffectedItem = scriptName,
-                    AffectedService = channelName,
-                    Timestamp = DateTime.Now,
-                    ErrorCode = new ErrorCode
-                    {
-                        ConfigurationItem = channelName,
-                        ConfigurationType = ErrorCode.ConfigType.Automation,
-                        Source = scriptName,
-                        Severity = ErrorCode.SeverityType.Critical,
-                        Description = "Exception while processing " + scriptName,
-                    },
-                };
+				engine.GenerateInformation("Successfully executed " + scriptName + " for: " + tagElementName);
+				helper.ReturnSuccess();
+			}
+			catch (Exception ex)
+			{
+				engine.GenerateInformation($"An issue occurred while executing {scriptName} activity for {channelName}: {ex}");
+				var log = new Log
+				{
+					AffectedItem = scriptName,
+					AffectedService = channelName,
+					Timestamp = DateTime.Now,
+					ErrorCode = new ErrorCode
+					{
+						ConfigurationItem = channelName,
+						ConfigurationType = ErrorCode.ConfigType.Automation,
+						Source = scriptName,
+						Severity = ErrorCode.SeverityType.Critical,
+						Description = "Exception while processing " + scriptName,
+					},
+				};
 
-                exceptionHelper.ProcessException(ex, log);
-                helper.Log($"An issue occurred while executing {scriptName} activity for {channelName}: {ex}", PaLogLevel.Error);
-                helper.SendErrorMessageToTokenHandler();
-            }
-        }
+				exceptionHelper.ProcessException(ex, log);
+				helper.Log($"An issue occurred while executing {scriptName} activity for {channelName}: {ex}", PaLogLevel.Error);
+				helper.SendErrorMessageToTokenHandler();
+			}
+		}
 
-        private void ExecuteChannelSets(Engine engine, string scriptName, PaProfileLoadDomHelper helper, ExceptionHelper exceptionHelper, TagChannelInfo tagInfo)
-        {
-            var filterColumn = new ColumnFilter { ComparisonOperator = ComparisonOperator.Equal, Value = tagInfo.ChannelMatch, Pid = 8010 };
-            var channelRows = tagInfo.ChannelProfileTable.QueryData(new List<ColumnFilter> { filterColumn });
-            if (channelRows.Any())
-            {
-                var row = channelRows.First();
-                var key = Convert.ToString(row[0]);
-                tagInfo.EngineElement.SetParameterByPrimaryKey(8083, key, tagInfo.MonitoringMode);
-                Thread.Sleep(5000);
-                tagInfo.EngineElement.SetParameterByPrimaryKey(8054, key, tagInfo.Threshold);
-                Thread.Sleep(5000);
-                tagInfo.EngineElement.SetParameterByPrimaryKey(8055, key, tagInfo.Notification);
-                Thread.Sleep(5000);
-                // pending features to set channel KMS/encryption on TAG
-                // engineTag.SetParameterByPrimaryKey(356, key, encryption);
-                // engineTag.SetParameterByPrimaryKey(356, key, kms);
+		private void ExecuteChannelSets(Engine engine, string scriptName, PaProfileLoadDomHelper helper, ExceptionHelper exceptionHelper, TagChannelInfo tagInfo)
+		{
+			var filterColumn = new ColumnFilter { ComparisonOperator = ComparisonOperator.Equal, Value = tagInfo.ChannelMatch, Pid = 8010 };
+			var channelRows = tagInfo.ChannelProfileTable.QueryData(new List<ColumnFilter> { filterColumn });
+			if (channelRows.Any())
+			{
+				var row = channelRows.First();
+				var key = Convert.ToString(row[0]);
+				tagInfo.MonitoringSetSuccuess = tagInfo.TryChannelSet(engine, 8083, tagInfo.MonitoringMode, key);
+				tagInfo.ThresholdSetSuccuess = tagInfo.TryChannelSet(engine, 8054, tagInfo.Threshold, key);
+				tagInfo.NotificationSetSuccuess = tagInfo.TryChannelSet(engine, 8055, tagInfo.Notification, key);
+				// tagInfo.EncryptionSetSuccuess = tagInfo.TryChannelSet(engine, 356, tagInfo.Encryption, key);
+				// tagInfo.KmsSetSuccuess = tagInfo.TryChannelSet(engine, 356, tagInfo.KMS, key);
 
-                this.UpdateLayouts(engine, scriptName, helper, exceptionHelper, tagInfo);
-            }
-            else
-            {
-                var log = new Log
-                {
-                    AffectedItem = scriptName,
-                    AffectedService = tagInfo.ChannelMatch,
-                    Timestamp = DateTime.Now,
-                    ErrorCode = new ErrorCode
-                    {
-                        ConfigurationItem = tagInfo.ChannelMatch,
-                        ConfigurationType = ErrorCode.ConfigType.Automation,
-                        Source = scriptName,
-                        Code = "ChannelNotFound",
-                        Severity = ErrorCode.SeverityType.Warning,
-                        Description = $"No channels found in channel status with given name: {tagInfo.ChannelMatch}.",
-                    },
-                };
+				// Can generate a log displaying which sets failed
 
-                helper.Log($"No channels found in channel status with given name: {tagInfo.ChannelMatch}.", PaLogLevel.Error);
-                engine.GenerateInformation("Did not find any channels with match: " + tagInfo.ChannelMatch);
-                exceptionHelper.GenerateLog(log);
-            }
-        }
+				this.UpdateLayouts(engine, scriptName, helper, exceptionHelper, tagInfo);
+			}
+			else
+			{
+				var log = new Log
+				{
+					AffectedItem = scriptName,
+					AffectedService = tagInfo.ChannelMatch,
+					Timestamp = DateTime.Now,
+					ErrorCode = new ErrorCode
+					{
+						ConfigurationItem = tagInfo.ChannelMatch,
+						ConfigurationType = ErrorCode.ConfigType.Automation,
+						Source = scriptName,
+						Code = "ChannelNotFound",
+						Severity = ErrorCode.SeverityType.Warning,
+						Description = $"No channels found in channel status with given name: {tagInfo.ChannelMatch}.",
+					},
+				};
 
-        private void UpdateLayouts(Engine engine, string scriptName, PaProfileLoadDomHelper helper, ExceptionHelper exceptionHelper, TagChannelInfo tagInfo)
-        {
-            foreach (var section in tagInfo.Instance.Sections)
-            {
-                Func<SectionDefinitionID, SectionDefinition> sectionDefinitionFunc = this.SetSectionDefinitionById;
-                section.Stitch(sectionDefinitionFunc);
+				helper.Log($"No channels found in channel status with given name: {tagInfo.ChannelMatch}.", PaLogLevel.Error);
+				engine.GenerateInformation("Did not find any channels with match: " + tagInfo.ChannelMatch);
+				exceptionHelper.GenerateLog(log);
+			}
+		}
 
-                if (!section.GetSectionDefinition().GetName().Equals("Layouts"))
-                {
-                    continue;
-                }
+		private void UpdateLayouts(Engine engine, string scriptName, PaProfileLoadDomHelper helper, ExceptionHelper exceptionHelper, TagChannelInfo tagInfo)
+		{
+			foreach (var section in tagInfo.Instance.Sections)
+			{
+				string layout = "Empty";
+				try
+				{
+					Func<SectionDefinitionID, SectionDefinition> sectionDefinitionFunc = this.SetSectionDefinitionById;
+					section.Stitch(sectionDefinitionFunc);
 
-                var layoutMatchField = section.FieldValues.First();
-                var layout = Convert.ToString(layoutMatchField.Value.Value);
-                var index = CheckAndUpdateLayout(engine, scriptName, exceptionHelper, tagInfo, layout);
-                if (!String.IsNullOrWhiteSpace(index))
-                {
-                    tagInfo.EngineElement.SetParameterByPrimaryKey(10353, index, tagInfo.ChannelMatch);
-                }
-            }
-        }
+					if (!section.GetSectionDefinition().GetName().Equals("Layouts"))
+					{
+						continue;
+					}
 
-        public static string CheckAndUpdateLayout(Engine engine, string scriptName, ExceptionHelper exceptionHelper, TagChannelInfo tagInfo, string layout)
-        {
-            IEnumerable<object[]> layoutNoneRows = tagInfo.GetLayoutsFromTable(layout);
-            if (layoutNoneRows.Any())
-            {
-                // Get first available layout row (index 0 => primary key which looks like '5/7')
-                var minimumIndex = layoutNoneRows.Select(row => Convert.ToInt32(Convert.ToString(row[0]).Split('/')[1])).Min();
-                var index = Convert.ToString(layoutNoneRows.First()[0]).Split('/')[0] + "/" + minimumIndex;
+					var layoutMatchField = section.FieldValues.First();
+					layout = Convert.ToString(layoutMatchField.Value.Value);
+					var index = CheckLayoutIndexes(engine, scriptName, exceptionHelper, tagInfo, layout);
+					if (!String.IsNullOrWhiteSpace(index))
+					{
+						tagInfo.EngineElement.SetParameterByPrimaryKey(10353, index, tagInfo.ChannelMatch);
+					}
+				}
+				catch (Exception ex)
+				{
+					engine.GenerateInformation($"Failed to set channel {tagInfo.ChannelMatch} on {layout} layout: " + ex);
+				}
+			}
+		}
 
-                return index;
-            }
-            else
-            {
-                var log = new Log
-                {
-                    AffectedItem = scriptName,
-                    AffectedService = tagInfo.ChannelMatch,
-                    Timestamp = DateTime.Now,
-                    ErrorCode = new ErrorCode
-                    {
-                        ConfigurationItem = tagInfo.ChannelMatch,
-                        ConfigurationType = ErrorCode.ConfigType.Automation,
-                        Source = scriptName,
-                        Code = "LayoutFull",
-                        Severity = ErrorCode.SeverityType.Critical,
-                        Description = $"Did not find any suitable position for channel on layout: " + layout,
-                    },
-                };
+		public static string CheckLayoutIndexes(Engine engine, string scriptName, ExceptionHelper exceptionHelper, TagChannelInfo tagInfo, string layout)
+		{
+			IEnumerable<object[]> layoutNoneRows = tagInfo.GetLayoutsFromTable(layout);
+			if (layoutNoneRows.Any())
+			{
+				// Get first available layout row (index 0 => primary key which looks like '5/7')
+				var minimumIndex = layoutNoneRows.Select(row => Convert.ToInt32(Convert.ToString(row[0]).Split('/')[1])).Min();
+				var index = Convert.ToString(layoutNoneRows.First()[0]).Split('/')[0] + "/" + minimumIndex;
 
-                engine.GenerateInformation($"Did not find any suitable position for channel on layout: " + layout);
-                exceptionHelper.GenerateLog(log);
-            }
+				return index;
+			}
+			else
+			{
+				var log = new Log
+				{
+					AffectedItem = scriptName,
+					AffectedService = tagInfo.ChannelMatch,
+					Timestamp = DateTime.Now,
+					ErrorCode = new ErrorCode
+					{
+						ConfigurationItem = tagInfo.ChannelMatch,
+						ConfigurationType = ErrorCode.ConfigType.Automation,
+						Source = scriptName,
+						Code = "LayoutFull",
+						Severity = ErrorCode.SeverityType.Critical,
+						Description = $"Did not find any suitable position for channel on layout: " + layout,
+					},
+				};
 
-            return String.Empty;
-        }
+				engine.GenerateInformation($"Did not find any suitable position for channel on layout: " + layout);
+				exceptionHelper.GenerateLog(log);
+			}
 
-        private SectionDefinition SetSectionDefinitionById(SectionDefinitionID sectionDefinitionId)
-        {
-            return this.innerDomHelper.SectionDefinitions.Read(SectionDefinitionExposers.ID.Equal(sectionDefinitionId)).First();
-        }
+			return String.Empty;
+		}
 
-        /// <summary>
-        /// Retry until success or until timeout.
-        /// </summary>
-        /// <param name="func">Operation to retry.</param>
-        /// <param name="timeout">Max TimeSpan during which the operation specified in <paramref name="func"/> can be retried.</param>
-        /// <returns><c>true</c> if one of the retries succeeded within the specified <paramref name="timeout"/>. Otherwise <c>false</c>.</returns>
-        public static bool Retry(Func<bool> func, TimeSpan timeout)
-        {
-            bool success = false;
+		private SectionDefinition SetSectionDefinitionById(SectionDefinitionID sectionDefinitionId)
+		{
+			return this.innerDomHelper.SectionDefinitions.Read(SectionDefinitionExposers.ID.Equal(sectionDefinitionId)).First();
+		}
+	}
 
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
+	public class TagChannelInfo
+	{
+		public string ElementName { get; set; }
 
-            do
-            {
-                success = func();
-                if (!success)
-                {
-                    Thread.Sleep(3000);
-                }
-            }
-            while (!success && sw.Elapsed <= timeout);
+		public string Channel { get; set; }
 
-            return success;
-        }
-    }
+		public string ChannelMatch { get; set; }
 
-    public class TagChannelInfo
-    {
-        public string ElementName { get; set; }
+		public string Threshold { get; set; }
 
-        public string Channel { get; set; }
+		public bool ThresholdSetSuccuess { get; set; }
 
-        public string ChannelMatch { get; set; }
+		public string MonitoringMode { get; set; }
 
-        public string Threshold { get; set; }
+		public bool MonitoringSetSuccuess { get; set; }
 
-        public string MonitoringMode { get; set; }
+		public string Notification { get; set; }
 
-        public string Notification { get; set; }
+		public bool NotificationSetSuccuess { get; set; }
 
-        public string Encryption { get; set; }
+		public string Encryption { get; set; }
 
-        public string KMS { get; set; }
+		public bool EncryptionSetSuccuess { get; set; }
 
-        public DomInstance Instance { get; set; }
+		public string KMS { get; set; }
 
-        public Element EngineElement { get; set; }
+		public bool KmsSetSuccuess { get; set; }
 
-        public IDmsElement Element { get; set; }
+		public DomInstance Instance { get; set; }
 
-        public IDmsTable ChannelProfileTable { get; set; }
+		public Element EngineElement { get; set; }
 
-        public IDmsTable ChannelStatusTable { get; set; }
+		public IDmsElement Element { get; set; }
 
-        public IDmsTable AllLayoutsTable { get; set; }
+		public IDmsTable ChannelProfileTable { get; set; }
 
-        public TagMonitoring MonitorUpdate { get; set; }
+		public IDmsTable ChannelStatusTable { get; set; }
 
-        public string Status { get; set; }
+		public IDmsTable AllLayoutsTable { get; set; }
 
-        public enum TagMonitoring
-        {
-            No = 0,
-            Yes = 1,
-        }
+		public TagMonitoring MonitorUpdate { get; set; }
 
-        public TagChannelInfo(Engine engine, PaProfileLoadDomHelper helper, DomHelper domHelper)
-        {
-            this.ElementName = helper.GetParameterValue<string>("TAG Element (TAG Channel)");
-            this.Channel = helper.GetParameterValue<string>("Channel Name (TAG Channel)");
-            this.ChannelMatch = helper.GetParameterValue<string>("Channel Match (TAG Channel)");
+		public string Status { get; set; }
 
-            IDms thisDms = engine.GetDms();
-            this.Element = thisDms.GetElement(this.ElementName);
-            this.EngineElement = engine.FindElement(this.Element.Name);
-            this.ChannelProfileTable = this.Element.GetTable(8000);
-            this.AllLayoutsTable = this.Element.GetTable(10300);
-            this.ChannelStatusTable = this.Element.GetTable(240);
+		public enum TagMonitoring
+		{
+			No = 0,
+			Yes = 1,
+		}
 
-            this.MonitoringMode = helper.GetParameterValue<string>("Monitoring Mode (TAG Channel)");
-            this.Threshold = helper.GetParameterValue<string>("Threshold (TAG Channel)");
-            this.Notification = helper.GetParameterValue<string>("Notification (TAG Channel)");
-            this.Encryption = helper.GetParameterValue<string>("Encryption (TAG Channel)");
-            this.KMS = helper.GetParameterValue<string>("KMS (TAG Channel)");
+		public TagChannelInfo(Engine engine, PaProfileLoadDomHelper helper, DomHelper domHelper)
+		{
+			this.ElementName = helper.GetParameterValue<string>("TAG Element (TAG Channel)");
+			this.Channel = helper.GetParameterValue<string>("Channel Name (TAG Channel)");
+			this.ChannelMatch = helper.GetParameterValue<string>("Channel Match (TAG Channel)");
 
-            var instanceId = helper.GetParameterValue<string>("InstanceId (TAG Channel)");
-            this.Instance = domHelper.DomInstances.Read(DomInstanceExposers.Id.Equal(new DomInstanceId(Guid.Parse(instanceId)))).First();
-            this.Status = this.Instance.StatusId;
+			IDms thisDms = engine.GetDms();
+			this.Element = thisDms.GetElement(this.ElementName);
+			this.EngineElement = engine.FindElement(this.Element.Name);
+			this.ChannelProfileTable = this.Element.GetTable(8000);
+			this.AllLayoutsTable = this.Element.GetTable(10300);
+			this.ChannelStatusTable = this.Element.GetTable(240);
 
-            this.MonitorUpdate = TagMonitoring.Yes;
-            if (this.Status.Equals("deactivating"))
-            {
-                this.MonitorUpdate = TagMonitoring.No;
-            }
-        }
+			this.MonitoringMode = helper.GetParameterValue<string>("Monitoring Mode (TAG Channel)");
+			this.Threshold = helper.GetParameterValue<string>("Threshold (TAG Channel)");
+			this.Notification = helper.GetParameterValue<string>("Notification (TAG Channel)");
+			this.Encryption = helper.GetParameterValue<string>("Encryption (TAG Channel)");
+			this.KMS = helper.GetParameterValue<string>("KMS (TAG Channel)");
 
-        public TagChannelInfo()
-        {
-            // necessary for unit test
-        }
+			var instanceId = helper.GetParameterValue<string>("InstanceId (TAG Channel)");
+			this.Instance = domHelper.DomInstances.Read(DomInstanceExposers.Id.Equal(new DomInstanceId(Guid.Parse(instanceId)))).First();
+			this.Status = this.Instance.StatusId;
 
-        public virtual List<object[]> GetLayoutsFromTable(string layout)
-        {
-            var layoutFilter = new ColumnFilter { ComparisonOperator = ComparisonOperator.Equal, Value = layout, Pid = 10305 };
-            var noneFilter = new ColumnFilter { ComparisonOperator = ComparisonOperator.Equal, Value = "None", Pid = 10303 };
-            var layoutNoneRows = this.AllLayoutsTable.QueryData(new List<ColumnFilter> { layoutFilter, noneFilter });
-            return layoutNoneRows.ToList();
-        }
-    }
+			this.MonitorUpdate = TagMonitoring.Yes;
+			if (this.Status.Equals("deactivating"))
+			{
+				this.MonitorUpdate = TagMonitoring.No;
+			}
+		}
+
+		public TagChannelInfo()
+		{
+			// necessary for unit test
+		}
+
+		public virtual List<object[]> GetLayoutsFromTable(string layout)
+		{
+			var layoutFilter = new ColumnFilter { ComparisonOperator = ComparisonOperator.Equal, Value = layout, Pid = 10305 };
+			var noneFilter = new ColumnFilter { ComparisonOperator = ComparisonOperator.Equal, Value = "None", Pid = 10303 };
+			var layoutNoneRows = this.AllLayoutsTable.QueryData(new List<ColumnFilter> { layoutFilter, noneFilter });
+			return layoutNoneRows.ToList();
+		}
+
+		public bool TryChannelSet(Engine engine, int columnPid, string updatedValue, string key)
+		{
+			try
+			{
+				EngineElement.SetParameterByPrimaryKey(columnPid, key, updatedValue);
+
+				bool VerifySet()
+				{
+					try
+					{
+						var valueToCheck = Convert.ToString(EngineElement.GetParameterByPrimaryKey(columnPid - 50, key));
+
+						if (valueToCheck == updatedValue)
+						{
+							return true;
+						}
+
+						return false;
+					}
+					catch (Exception e)
+					{
+						engine.GenerateInformation($"Exception checking channel set: {updatedValue}" + e);
+						throw;
+					}
+				}
+
+				if (Retry(VerifySet, new TimeSpan(0, 1, 0)))
+				{
+					return true;
+				}
+			}
+			catch (Exception e)
+			{
+				engine.GenerateInformation($"Failed to perform set: {updatedValue} on {ChannelMatch}: " + e);
+			}
+
+			return false;
+		}
+
+		/// <summary>
+		/// Retry until success or until timeout.
+		/// </summary>
+		/// <param name="func">Operation to retry.</param>
+		/// <param name="timeout">Max TimeSpan during which the operation specified in <paramref name="func"/> can be retried.</param>
+		/// <returns><c>true</c> if one of the retries succeeded within the specified <paramref name="timeout"/>. Otherwise <c>false</c>.</returns>
+		public static bool Retry(Func<bool> func, TimeSpan timeout)
+		{
+			bool success = false;
+
+			Stopwatch sw = new Stopwatch();
+			sw.Start();
+
+			do
+			{
+				success = func();
+				if (!success)
+				{
+					Thread.Sleep(5000);
+				}
+			}
+			while (!success && sw.Elapsed <= timeout);
+
+			return success;
+		}
+	}
 }
