@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\GIT\\Automation\\Customers\\NBC Sports\\Event Manager Scripts\\TAG Processes\\Channel Process\\Update PropertiesTests\\Update PropertiesTests.csproj": {}
+    "C:\\GIT\\GITHUB\\PCKTV-AS-TAGProcessOTT\\TAG Processes\\Channel Process\\Update PropertiesTests\\Update PropertiesTests.csproj": {}
   },
   "projects": {
-    "C:\\GIT\\Automation\\Customers\\NBC Sports\\Event Manager Scripts\\TAG Processes\\Channel Process\\Update PropertiesTests\\Update PropertiesTests.csproj": {
+    "C:\\GIT\\GITHUB\\PCKTV-AS-TAGProcessOTT\\TAG Processes\\Channel Process\\Update PropertiesTests\\Update PropertiesTests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\GIT\\Automation\\Customers\\NBC Sports\\Event Manager Scripts\\TAG Processes\\Channel Process\\Update PropertiesTests\\Update PropertiesTests.csproj",
+        "projectUniqueName": "C:\\GIT\\GITHUB\\PCKTV-AS-TAGProcessOTT\\TAG Processes\\Channel Process\\Update PropertiesTests\\Update PropertiesTests.csproj",
         "projectName": "Update PropertiesTests",
-        "projectPath": "C:\\GIT\\Automation\\Customers\\NBC Sports\\Event Manager Scripts\\TAG Processes\\Channel Process\\Update PropertiesTests\\Update PropertiesTests.csproj",
+        "projectPath": "C:\\GIT\\GITHUB\\PCKTV-AS-TAGProcessOTT\\TAG Processes\\Channel Process\\Update PropertiesTests\\Update PropertiesTests.csproj",
         "packagesPath": "C:\\Users\\BlakeSM\\.nuget\\packages\\",
-        "outputPath": "C:\\GIT\\Automation\\Customers\\NBC Sports\\Event Manager Scripts\\TAG Processes\\Channel Process\\Update PropertiesTests\\obj\\",
+        "outputPath": "C:\\GIT\\GITHUB\\PCKTV-AS-TAGProcessOTT\\TAG Processes\\Channel Process\\Update PropertiesTests\\obj\\",
         "projectStyle": "PackageReference",
         "skipContentFileWrite": true,
         "fallbackFolders": [
@@ -32,8 +32,8 @@
         "frameworks": {
           "net462": {
             "projectReferences": {
-              "C:\\GIT\\Automation\\Customers\\NBC Sports\\Event Manager Scripts\\TAG Processes\\Channel Process\\Update Properties\\Update Properties.csproj": {
-                "projectPath": "C:\\GIT\\Automation\\Customers\\NBC Sports\\Event Manager Scripts\\TAG Processes\\Channel Process\\Update Properties\\Update Properties.csproj"
+              "C:\\GIT\\GITHUB\\PCKTV-AS-TAGProcessOTT\\TAG Processes\\Channel Process\\Update Properties\\Update Properties.csproj": {
+                "projectPath": "C:\\GIT\\GITHUB\\PCKTV-AS-TAGProcessOTT\\TAG Processes\\Channel Process\\Update Properties\\Update Properties.csproj"
               }
             }
           }
@@ -77,14 +77,14 @@
         }
       }
     },
-    "C:\\GIT\\Automation\\Customers\\NBC Sports\\Event Manager Scripts\\TAG Processes\\Channel Process\\Update Properties\\Update Properties.csproj": {
+    "C:\\GIT\\GITHUB\\PCKTV-AS-TAGProcessOTT\\TAG Processes\\Channel Process\\Update Properties\\Update Properties.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\GIT\\Automation\\Customers\\NBC Sports\\Event Manager Scripts\\TAG Processes\\Channel Process\\Update Properties\\Update Properties.csproj",
+        "projectUniqueName": "C:\\GIT\\GITHUB\\PCKTV-AS-TAGProcessOTT\\TAG Processes\\Channel Process\\Update Properties\\Update Properties.csproj",
         "projectName": "Clear Layout",
-        "projectPath": "C:\\GIT\\Automation\\Customers\\NBC Sports\\Event Manager Scripts\\TAG Processes\\Channel Process\\Update Properties\\Update Properties.csproj",
+        "projectPath": "C:\\GIT\\GITHUB\\PCKTV-AS-TAGProcessOTT\\TAG Processes\\Channel Process\\Update Properties\\Update Properties.csproj",
         "packagesPath": "C:\\Users\\BlakeSM\\.nuget\\packages\\",
-        "outputPath": "C:\\GIT\\Automation\\Customers\\NBC Sports\\Event Manager Scripts\\TAG Processes\\Channel Process\\Update Properties\\obj\\",
+        "outputPath": "C:\\GIT\\GITHUB\\PCKTV-AS-TAGProcessOTT\\TAG Processes\\Channel Process\\Update Properties\\obj\\",
         "projectStyle": "PackageReference",
         "skipContentFileWrite": true,
         "fallbackFolders": [
@@ -117,17 +117,17 @@
             },
             "Skyline.DataMiner.Core.DataMinerSystem.Automation": {
               "target": "Package",
-              "version": "[1.1.0.1, )"
+              "version": "[1.1.0.2, )"
             },
             "Skyline.DataMiner.Dev.Automation": {
               "target": "Package",
-              "version": "[10.3.3, )"
+              "version": "[10.3.3.1, )"
             },
             "StyleCop.Analyzers": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[1.2.0-beta.435, )"
+              "version": "[1.1.118, )"
             }
           }
         }

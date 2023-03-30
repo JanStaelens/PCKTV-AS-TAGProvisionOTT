@@ -10,7 +10,7 @@
             </summary>
             <param name="engine">The <see cref="T:Skyline.DataMiner.Automation.Engine" /> instance used to communicate with DataMiner.</param>
         </member>
-        <member name="M:Script.Script.Retry(System.Func{System.Boolean},System.TimeSpan)">
+        <member name="M:Script.TagChannelInfo.Retry(System.Func{System.Boolean},System.TimeSpan)">
             <summary>
             Retry until success or until timeout.
             </summary>

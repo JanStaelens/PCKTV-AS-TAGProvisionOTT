@@ -33,7 +33,7 @@ namespace Script.Tests
 
             tagInfo.Setup(tag => tag.GetLayoutsFromTable(layout)).Returns(new List<object[]> { new object[] { "1/1" }, new object[] { "1/2" } });
 
-            var indexToUpdate = Script.CheckAndUpdateLayout(fakeEngine.Object, "Update Properties Test", exceptionHelper, tagInfo.Object, layout);
+            var indexToUpdate = Script.CheckLayoutIndexes(fakeEngine.Object, "Update Properties Test", exceptionHelper, tagInfo.Object, layout);
 
             Assert.IsTrue(indexToUpdate == "1/1");
         }
