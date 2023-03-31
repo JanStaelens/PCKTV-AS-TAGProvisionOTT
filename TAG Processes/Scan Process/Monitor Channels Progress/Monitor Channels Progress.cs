@@ -67,7 +67,7 @@ using TagHelperMethods;
 /// </summary>
 public class Script
 {
-    private static PaProfileLoadDomHelper innerHelper;
+    private PaProfileLoadDomHelper innerHelper;
     private DomHelper innerDomHelper;
 
     /// <summary>
@@ -78,9 +78,7 @@ public class Script
     {
         var scriptName = "Monitor Channels Progress";
 
-#pragma warning disable S2696 // Instance members should not write to "static" fields
         innerHelper = new PaProfileLoadDomHelper(engine);
-#pragma warning restore S2696 // Instance members should not write to "static" fields
         this.innerDomHelper = new DomHelper(engine.SendSLNetMessages, "process_automation");
 
         var exceptionHelper = new ExceptionHelper(engine, this.innerDomHelper);
@@ -116,7 +114,7 @@ public class Script
         try
         {
             var totalChannels = scanner.Channels.Count;
-            var expectedChannels = 0;
+            var finishedChannels = 0;
 
             bool CheckStateChange()
             {
@@ -127,13 +125,14 @@ public class Script
                         var channelFilter = DomInstanceExposers.Id.Equal(new DomInstanceId(channel));
                         var subInstance = this.innerDomHelper.DomInstances.Read(channelFilter).First();
 
-                        if ((scanner.Action == "provision" || scanner.Action == "reprovision") && subInstance.StatusId == "active")
+                        if (subInstance.StatusId == "active")
                         {
-                            expectedChannels++;
+                            finishedChannels++;
                         }
                     }
 
-                    return expectedChannels == totalChannels;
+					engine.GenerateInformation($"finished channels: {finishedChannels} vs total: {totalChannels}");
+                    return finishedChannels == totalChannels;
                 }
                 catch (Exception ex)
                 {
@@ -144,11 +143,8 @@ public class Script
 
             if (this.Retry(CheckStateChange, new TimeSpan(0, 5, 0)))
             {
-                if (scanner.Action == "provision" || scanner.Action == "reprovision")
-                {
-                    innerHelper.TransitionState("inprogress_to_active");
-                    innerHelper.SendFinishMessageToTokenHandler();
-                }
+                innerHelper.TransitionState("inprogress_to_active");
+                innerHelper.SendFinishMessageToTokenHandler();
             }
             else
             {

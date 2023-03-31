@@ -15,3 +15,6 @@ dotnet_analyzer_diagnostic.category-Critical Code Smell.severity = none
 
 # S1481: Unused local variables should be removed
 dotnet_diagnostic.S1481.severity = none
+
+# Default severity for all analyzer diagnostics
+dotnet_analyzer_diagnostic.severity = none
