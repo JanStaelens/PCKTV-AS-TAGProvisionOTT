@@ -114,13 +114,14 @@ public class Script
         try
         {
             var totalChannels = scanner.Channels.Count;
-            var finishedChannels = 0;
-
+            
             bool CheckStateChange()
             {
                 try
                 {
-                    foreach (var channel in scanner.Channels)
+					var finishedChannels = 0;
+
+					foreach (var channel in scanner.Channels)
                     {
                         var channelFilter = DomInstanceExposers.Id.Equal(new DomInstanceId(channel));
                         var subInstance = this.innerDomHelper.DomInstances.Read(channelFilter).First();
