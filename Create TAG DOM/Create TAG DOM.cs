@@ -895,7 +895,7 @@ namespace Script
 							new DomStatusFieldDescriptorLink(fieldsList["Action (TAG Provision)"])
 							{
 								Visible = true,
-								ReadOnly = true,
+								ReadOnly = false,
 								RequiredForStatus = true,
 							},
 						},
@@ -1089,7 +1089,7 @@ namespace Script
 									new DomStatusFieldDescriptorLink(fieldsList["Action (TAG Scan)"])
 									{
 										Visible = true,
-										ReadOnly = true,
+										ReadOnly = false,
 										RequiredForStatus = true,
 									},
 								},
