@@ -349,8 +349,8 @@ namespace Script
 		public virtual List<object[]> GetLayoutsFromTable(string layout)
 		{
 			var layoutFilter = new ColumnFilter { ComparisonOperator = ComparisonOperator.Equal, Value = layout, Pid = 10305 };
-			var noneFilter = new ColumnFilter { ComparisonOperator = ComparisonOperator.Equal, Value = "None", Pid = 10303 };
-			var layoutNoneRows = this.AllLayoutsTable.QueryData(new List<ColumnFilter> { layoutFilter, noneFilter });
+			var zeroFilter = new ColumnFilter { ComparisonOperator = ComparisonOperator.Equal, Value = "0", Pid = 10302 };
+			var layoutNoneRows = this.AllLayoutsTable.QueryData(new List<ColumnFilter> { layoutFilter, zeroFilter });
 			return layoutNoneRows.ToList();
 		}
 
