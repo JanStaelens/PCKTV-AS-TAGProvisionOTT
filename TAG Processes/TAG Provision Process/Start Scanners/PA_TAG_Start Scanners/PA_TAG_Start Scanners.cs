@@ -99,7 +99,7 @@ namespace Script
                     this.ExecuteActionOnScanners(action, scannerInstance);
                 }
 
-                if (action == "provision")
+                if (action == "provision" || action == "complete-provision")
                 {
                     helper.TransitionState("ready_to_inprogress");
                 }
@@ -117,22 +117,23 @@ namespace Script
             catch (Exception ex)
             {
                 engine.GenerateInformation($"ERROR in {scriptName} " + ex);
-                var log = new Log
-                {
-                    AffectedItem = scriptName,
-                    AffectedService = channelName,
-                    Timestamp = DateTime.Now,
-                    ErrorCode = new ErrorCode
-                    {
-                        ConfigurationItem = channelName,
-                        ConfigurationType = ErrorCode.ConfigType.Automation,
-                        Source = scriptName,
-                        Severity = ErrorCode.SeverityType.Critical,
-                        Description = "Exception while processing " + scriptName,
-                    },
-                };
 
-                exceptionHelper.ProcessException(ex, log);
+                // var log = new Log
+                // {
+                //     AffectedItem = scriptName,
+                //     AffectedService = channelName,
+                //     Timestamp = DateTime.Now,
+                //     ErrorCode = new ErrorCode
+                //     {
+                //         ConfigurationItem = channelName,
+                //         ConfigurationType = ErrorCode.ConfigType.Automation,
+                //         Source = scriptName,
+                //         Severity = ErrorCode.SeverityType.Critical,
+                //         Description = "Exception while processing " + scriptName,
+                //     },
+                // };
+				   
+                // exceptionHelper.ProcessException(ex, log);
 
                 helper.Log($"An issue occurred while executing {scriptName} activity for {channelName}: {ex}", PaLogLevel.Error);
                 helper.SendErrorMessageToTokenHandler();

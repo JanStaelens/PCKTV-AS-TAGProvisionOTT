@@ -51,290 +51,302 @@ dd/mm/2023  1.0.0.1     XXX, Skyline    Initial version
 
 namespace Script
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Newtonsoft.Json;
-    using Skyline.DataMiner.Automation;
-    using Skyline.DataMiner.Core.DataMinerSystem.Automation;
-    using Skyline.DataMiner.Core.DataMinerSystem.Common;
-    using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.Logging;
-    using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager;
-    using Skyline.DataMiner.ExceptionHelper;
-    using Skyline.DataMiner.Net.Apps.DataMinerObjectModel;
-    using Skyline.DataMiner.Net.Messages.SLDataGateway;
-    using Skyline.DataMiner.Net.Sections;
-    using TagHelperMethods;
+	using System;
+	using System.Collections.Generic;
+	using System.Linq;
+	using Newtonsoft.Json;
+	using Skyline.DataMiner.Automation;
+	using Skyline.DataMiner.Core.DataMinerSystem.Automation;
+	using Skyline.DataMiner.Core.DataMinerSystem.Common;
+	using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.Logging;
+	using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager;
+	using Skyline.DataMiner.ExceptionHelper;
+	using Skyline.DataMiner.Net.Apps.DataMinerObjectModel;
+	using Skyline.DataMiner.Net.Messages.SLDataGateway;
+	using Skyline.DataMiner.Net.Sections;
+	using TagHelperMethods;
 
-    /// <summary>
-    /// DataMiner Script Class.
-    /// </summary>
-    public class Script
-    {
-        private static PaProfileLoadDomHelper innerHelper;
-        private readonly int scanChannelsTable = 1310;
-        private DomHelper innerDomHelper;
-        private SharedMethods sharedMethods;
+	/// <summary>
+	/// DataMiner Script Class.
+	/// </summary>
+	public class Script
+	{
+		private static PaProfileLoadDomHelper innerHelper;
+		private readonly int scanChannelsTable = 1310;
+		private DomHelper innerDomHelper;
+		private SharedMethods sharedMethods;
 
-        /// <summary>
-        /// The Script entry point.
-        /// </summary>
-        /// <param name="engine">The <see cref="Engine" /> instance used to communicate with DataMiner.</param>
-        public void Run(Engine engine)
-        {
-            var scriptName = "Deactivate Scanner";
+		/// <summary>
+		/// The Script entry point.
+		/// </summary>
+		/// <param name="engine">The <see cref="Engine" /> instance used to communicate with DataMiner.</param>
+		public void Run(Engine engine)
+		{
+			var scriptName = "Deactivate Scanner";
 
-            innerHelper = new PaProfileLoadDomHelper(engine);
-            this.innerDomHelper = new DomHelper(engine.SendSLNetMessages, "process_automation");
+			innerHelper = new PaProfileLoadDomHelper(engine);
+			this.innerDomHelper = new DomHelper(engine.SendSLNetMessages, "process_automation");
 
-            var exceptionHelper = new ExceptionHelper(engine, this.innerDomHelper);
-            this.sharedMethods = new SharedMethods(innerHelper, this.innerDomHelper);
+			var exceptionHelper = new ExceptionHelper(engine, this.innerDomHelper);
+			this.sharedMethods = new SharedMethods(innerHelper, this.innerDomHelper);
+			var instanceId = innerHelper.GetParameterValue<string>("InstanceId (TAG Scan)");
 
-            engine.GenerateInformation("START " + scriptName);
+			var scanner = new Scanner
+			{
+				AssetId = innerHelper.GetParameterValue<string>("Asset ID (TAG Scan)"),
+				InstanceId = instanceId,
+				ScanName = innerHelper.GetParameterValue<string>("Scan Name (TAG Scan)"),
+				SourceElement = innerHelper.TryGetParameterValue("Source Element (TAG Scan)", out string sourceElement) ? sourceElement : String.Empty,
+				SourceId = innerHelper.TryGetParameterValue("Source ID (TAG Scan)", out string sourceId) ? sourceId : String.Empty,
+				TagDevice = innerHelper.GetParameterValue<string>("TAG Device (TAG Scan)"),
+				TagElement = innerHelper.GetParameterValue<string>("TAG Element (TAG Scan)"),
+				TagInterface = innerHelper.GetParameterValue<string>("TAG Interface (TAG Scan)"),
+				ScanType = innerHelper.GetParameterValue<string>("Scan Type (TAG Scan)"),
+				Action = innerHelper.GetParameterValue<string>("Action (TAG Scan)"),
+				Channels = innerHelper.TryGetParameterValue("Channels (TAG Scan)", out List<Guid> channels) ? channels : new List<Guid>(),
+			};
 
-            var instanceId = innerHelper.GetParameterValue<string>("InstanceId (TAG Scan)");
-            var instanceFilter = DomInstanceExposers.Id.Equal(new DomInstanceId(Guid.Parse(instanceId)));
-            var instance = this.innerDomHelper.DomInstances.Read(instanceFilter).First();
-            var status = instance.StatusId;
+			try
+			{
+				engine.GenerateInformation("START " + scriptName);
 
-            if (!status.Equals("deactivate") && !status.Equals("reprovision"))
-            {
-                innerHelper.ReturnSuccess();
-                return;
-            }
+				var instanceFilter = DomInstanceExposers.Id.Equal(new DomInstanceId(Guid.Parse(instanceId)));
+				var scanInstances = this.innerDomHelper.DomInstances.Read(instanceFilter);
+				if (!scanInstances.Any())
+				{
+					engine.GenerateInformation("No TAG Scan Instance found with instanceId: " + instanceId);
+					innerHelper.ReturnSuccess();
+					return;
+				}
 
-            if (status.Equals("deactivate"))
-            {
-                innerHelper.TransitionState("deactivate_to_deactivating");
+				var instance = scanInstances.First();
 
-                // need to get instance again after a transition is executed
-                instance = this.innerDomHelper.DomInstances.Read(instanceFilter).First();
-                status = instance.StatusId;
-            }
+				var status = instance.StatusId;
 
-            var scanner = new Scanner
-            {
-                AssetId = innerHelper.GetParameterValue<string>("Asset ID (TAG Scan)"),
-                InstanceId = instanceId,
-                ScanName = innerHelper.GetParameterValue<string>("Scan Name (TAG Scan)"),
-                SourceElement = innerHelper.TryGetParameterValue("Source Element (TAG Scan)", out string sourceElement) ? sourceElement : String.Empty,
-                SourceId = innerHelper.TryGetParameterValue("Source ID (TAG Scan)", out string sourceId) ? sourceId : String.Empty,
-                TagDevice = innerHelper.GetParameterValue<string>("TAG Device (TAG Scan)"),
-                TagElement = innerHelper.GetParameterValue<string>("TAG Element (TAG Scan)"),
-                TagInterface = innerHelper.GetParameterValue<string>("TAG Interface (TAG Scan)"),
-                ScanType = innerHelper.GetParameterValue<string>("Scan Type (TAG Scan)"),
-                Action = innerHelper.GetParameterValue<string>("Action (TAG Scan)"),
-                Channels = innerHelper.TryGetParameterValue("Channels (TAG Scan)", out List<Guid> channels) ? channels : new List<Guid>(),
-            };
+				if (!status.Equals("deactivate") && !status.Equals("reprovision"))
+				{
+					innerHelper.ReturnSuccess();
+					return;
+				}
 
-            try
-            {
-                IDms dms = engine.GetDms();
-                IDmsElement element = dms.GetElement(scanner.TagElement);
+				if (status.Equals("deactivate"))
+				{
+					innerHelper.TransitionState("deactivate_to_deactivating");
 
-                var tagDictionary = new Dictionary<string, TagRequest>();
+					// need to get instance again after a transition is executed
+					instance = this.innerDomHelper.DomInstances.Read(instanceFilter).First();
+					status = instance.StatusId;
+				}
 
-                var tagRequest = new TagRequest();
-                var scanList = this.CreateScanRequestJson(instance, scanner);
-                tagRequest.ScanRequests = scanList;
-                tagDictionary.Add(scanner.TagDevice, tagRequest);
+				IDms dms = engine.GetDms();
+				IDmsElement element = dms.GetElement(scanner.TagElement);
 
-                element.GetStandaloneParameter<string>(3).SetValue(JsonConvert.SerializeObject(tagDictionary));
+				var tagDictionary = new Dictionary<string, TagRequest>();
 
-                this.ExecuteChannelsTransition(scanner.Channels, status);
+				var tagRequest = new TagRequest();
+				var scanList = this.CreateScanRequestJson(instance, scanner);
+				tagRequest.ScanRequests = scanList;
+				tagDictionary.Add(scanner.TagDevice, tagRequest);
 
-                bool VerifyScanDeleted()
-                {
-                    try
-                    {
-                        var scanRequests = scanList;
-                        var requestTitles = this.GetScanRequestTitles(scanRequests);
+				element.GetStandaloneParameter<string>(3).SetValue(JsonConvert.SerializeObject(tagDictionary));
 
-                        object[][] scanChannelsRows = null;
-                        var scanChannelTable = element.GetTable(this.scanChannelsTable);
-                        scanChannelsRows = scanChannelTable.GetRows();
+				this.ExecuteChannelsTransition(scanner.Channels, status);
 
-                        var scanCompleted = scanChannelsRows == null || this.CheckScanDelete(requestTitles, scanChannelsRows);
+				bool VerifyScanDeleted()
+				{
+					try
+					{
+						var scanRequests = scanList;
+						var requestTitles = this.GetScanRequestTitles(scanRequests);
 
-                        var channelsUpdated = this.ValidateChannelsStatus(scanner.Channels, status);
+						object[][] scanChannelsRows = null;
+						var scanChannelTable = element.GetTable(this.scanChannelsTable);
+						scanChannelsRows = scanChannelTable.GetRows();
 
-                        return scanCompleted && channelsUpdated;
-                    }
-                    catch (Exception e)
-                    {
-                        engine.Log("Exception thrown while checking TAG Scan status: " + e);
-                        throw;
-                    }
-                }
+						var scanCompleted = scanChannelsRows == null || this.CheckScanDelete(requestTitles, scanChannelsRows);
 
-                if (this.sharedMethods.Retry(VerifyScanDeleted, new TimeSpan(0, 5, 0)))
-                {
-                    // successfully deleted
-                    innerHelper.Log($"Scanner {scanner.ScanName} Deactivated", PaLogLevel.Information);
-                    if (status == "deactivating")
-                    {
-                        innerHelper.TransitionState("deactivating_to_complete");
-                        innerHelper.SendFinishMessageToTokenHandler();
-                    }
-                    else if (status == "reprovision")
-                    {
-                        innerHelper.TransitionState("complete_to_ready");
-                        innerHelper.ReturnSuccess();
-                    }
-                    else
-                    {
-                        var log = new Log
-                        {
-                            AffectedItem = scriptName,
-                            AffectedService = scanner.ScanName,
-                            Timestamp = DateTime.Now,
-                            ErrorCode = new ErrorCode
-                            {
-                                ConfigurationItem = scanner.ScanName,
-                                ConfigurationType = ErrorCode.ConfigType.Automation,
-                                Severity = ErrorCode.SeverityType.Warning,
-                                Source = scriptName,
-                                Description = $"Failed to execute transition status. Current status: {status}",
-                            },
-                        };
-                        exceptionHelper.GenerateLog(log);
-                        innerHelper.SendErrorMessageToTokenHandler();
-                    }
-                }
-                else
-                {
-                    // failed to execute in time
-                    var log = new Log
-                    {
-                        AffectedItem = scriptName,
-                        AffectedService = scanner.ScanName,
-                        Timestamp = DateTime.Now,
-                        ErrorCode = new ErrorCode
-                        {
-                            ConfigurationItem = scanner.ScanName,
-                            ConfigurationType = ErrorCode.ConfigType.Automation,
-                            Severity = ErrorCode.SeverityType.Warning,
-                            Source = scriptName,
-                            Description = "Failed to deactivate the scanners within the timeout time.",
-                        },
-                    };
-                    exceptionHelper.GenerateLog(log);
-                    innerHelper.SendErrorMessageToTokenHandler();
-                }
-            }
-            catch (ScriptAbortException)
-            {
-                // no issue
-            }
-            catch (Exception ex)
-            {
-                var log = new Log
-                {
-                    AffectedItem = scriptName,
-                    AffectedService = scanner.ScanName,
-                    Timestamp = DateTime.Now,
-                    ErrorCode = new ErrorCode
-                    {
-                        ConfigurationItem = scanner.ScanName,
-                        ConfigurationType = ErrorCode.ConfigType.Automation,
-                        Severity = ErrorCode.SeverityType.Major,
-                        Source = scriptName,
-                    },
-                };
-                exceptionHelper.ProcessException(ex, log);
-                innerHelper.SendErrorMessageToTokenHandler();
-            }
-        }
+						var channelsUpdated = this.ValidateChannelsStatus(scanner.Channels, status);
 
-        private bool ValidateChannelsStatus(List<Guid> channels, string status)
-        {
-            var expectedChannels = channels.Count;
-            var updatedChannels = 0;
+						return scanCompleted && channelsUpdated;
+					}
+					catch (Exception e)
+					{
+						engine.Log("Exception thrown while checking TAG Scan status: " + e);
+						throw;
+					}
+				}
 
-            var newStatus = status.Equals("deactivating") ? "complete" : "draft";
+				if (this.sharedMethods.Retry(VerifyScanDeleted, new TimeSpan(0, 5, 0)))
+				{
+					// successfully deleted
+					innerHelper.Log($"Scanner {scanner.ScanName} Deactivated", PaLogLevel.Information);
+					if (status == "deactivating")
+					{
+						innerHelper.TransitionState("deactivating_to_complete");
+						innerHelper.SendFinishMessageToTokenHandler();
+					}
+					else if (status == "reprovision")
+					{
+						innerHelper.TransitionState("complete_to_ready");
+						innerHelper.ReturnSuccess();
+					}
+					else
+					{
+						//var log = new Log
+						//{
+						//	AffectedItem = scriptName,
+						//	AffectedService = scanner.ScanName,
+						//	Timestamp = DateTime.Now,
+						//	ErrorCode = new ErrorCode
+						//	{
+						//		ConfigurationItem = scanner.ScanName,
+						//		ConfigurationType = ErrorCode.ConfigType.Automation,
+						//		Severity = ErrorCode.SeverityType.Warning,
+						//		Source = scriptName,
+						//		Description = $"Failed to execute transition status. Current status: {status}",
+						//	},
+						//};
 
-            foreach (var channel in channels)
-            {
-                var subFilter = DomInstanceExposers.Id.Equal(new DomInstanceId(channel));
-                var subInstance = this.innerDomHelper.DomInstances.Read(subFilter).First();
+						//exceptionHelper.GenerateLog(log);
+						innerHelper.SendErrorMessageToTokenHandler();
+					}
+				}
+				else
+				{
+					// failed to execute in time
+					engine.GenerateInformation("Failed to verify the scan was deleted in time");
+					//var log = new Log
+					//{
+					//	AffectedItem = scriptName,
+					//	AffectedService = scanner.ScanName,
+					//	Timestamp = DateTime.Now,
+					//	ErrorCode = new ErrorCode
+					//	{
+					//		ConfigurationItem = scanner.ScanName,
+					//		ConfigurationType = ErrorCode.ConfigType.Automation,
+					//		Severity = ErrorCode.SeverityType.Warning,
+					//		Source = scriptName,
+					//		Description = "Failed to deactivate the scanners within the timeout time.",
+					//	},
+					//};
+					//exceptionHelper.GenerateLog(log);
+					innerHelper.SendErrorMessageToTokenHandler();
+				}
+			}
+			catch (ScriptAbortException)
+			{
+				// no issue
+			}
+			catch (Exception ex)
+			{
+				engine.GenerateInformation("Exception caught in Deactivate Scanner: " + ex);
+				//var log = new Log
+				//{
+				//	AffectedItem = scriptName,
+				//	AffectedService = scanner.ScanName,
+				//	Timestamp = DateTime.Now,
+				//	ErrorCode = new ErrorCode
+				//	{
+				//		ConfigurationItem = scanner.ScanName,
+				//		ConfigurationType = ErrorCode.ConfigType.Automation,
+				//		Severity = ErrorCode.SeverityType.Major,
+				//		Source = scriptName,
+				//	},
+				//};
+				//exceptionHelper.ProcessException(ex, log);
+				innerHelper.SendErrorMessageToTokenHandler();
+			}
+		}
 
-                subInstance.Stitch(this.SetSectionDefinitionById, this.SetDomDefinitionById);
-                if (subInstance.StatusId == newStatus)
-                {
-                    updatedChannels++;
-                }
+		private bool ValidateChannelsStatus(List<Guid> channels, string status)
+		{
+			var expectedChannels = channels.Count;
+			var updatedChannels = 0;
 
-                if (updatedChannels == expectedChannels)
-                {
-                    return true;
-                }
-            }
+			var newStatus = status.Equals("deactivating") ? "complete" : "draft";
 
-            return false;
-        }
+			foreach (var channel in channels)
+			{
+				var subFilter = DomInstanceExposers.Id.Equal(new DomInstanceId(channel));
+				var subInstance = this.innerDomHelper.DomInstances.Read(subFilter).First();
 
-        private void ExecuteChannelsTransition(List<Guid> channels, string status)
-        {
-            var transition = status.Equals("deactivating") ? "active_to_complete" : "active_to_draft";
+				subInstance.Stitch(this.SetSectionDefinitionById, this.SetDomDefinitionById);
+				if (subInstance.StatusId == newStatus)
+				{
+					updatedChannels++;
+				}
 
-            foreach (var channel in channels)
-            {
-                var subFilter = DomInstanceExposers.Id.Equal(new DomInstanceId(channel));
-                var subInstance = this.innerDomHelper.DomInstances.Read(subFilter).First();
+				if (updatedChannels == expectedChannels)
+				{
+					return true;
+				}
+			}
 
-                this.innerDomHelper.DomInstances.DoStatusTransition(subInstance.ID, transition);
-            }
-        }
+			return false;
+		}
 
-        private bool CheckScanDelete(List<string> titles, object[][] scanChannelsRows)
-        {
-            foreach (var row in scanChannelsRows)
-            {
-                if (titles.Contains(Convert.ToString(row[13 /*Title*/])))
-                {
-                    return false;
-                }
-            }
+		private void ExecuteChannelsTransition(List<Guid> channels, string status)
+		{
+			var transition = status.Equals("deactivating") ? "active_to_complete" : "active_to_draft";
 
-            return true;
-        }
+			foreach (var channel in channels)
+			{
+				var subFilter = DomInstanceExposers.Id.Equal(new DomInstanceId(channel));
+				var subInstance = this.innerDomHelper.DomInstances.Read(subFilter).First();
 
-        private List<string> GetScanRequestTitles(List<Scan> scanRequests)
-        {
-            return scanRequests.Select(x => x.Name).ToList();
-        }
+				this.innerDomHelper.DomInstances.DoStatusTransition(subInstance.ID, transition);
+			}
+		}
 
-        private List<Scan> CreateScanRequestJson(DomInstance instance, Scanner scanner)
-        {
-            List<Scan> scans = new List<Scan>();
-            var nameFormat = "{0} {1} #RES|BAND#";
+		private bool CheckScanDelete(List<string> titles, object[][] scanChannelsRows)
+		{
+			foreach (var row in scanChannelsRows)
+			{
+				if (titles.Contains(Convert.ToString(row[13 /*Title*/])))
+				{
+					return false;
+				}
+			}
 
-            var manifests = this.sharedMethods.GetManifests(instance);
+			return true;
+		}
 
-            foreach (var manifest in manifests)
-            {
-                scans.Add(new Scan
-                {
-                    Action = (int)TagRequest.TAGAction.Delete,
-                    AssetId = scanner.AssetId,
-                    Interface = scanner.TagInterface,
-                    Name = String.Format(nameFormat, scanner.ScanName, manifest.Name),
-                    Type = scanner.ScanType,
-                    Url = manifest.Url,
-                });
-            }
+		private List<string> GetScanRequestTitles(List<Scan> scanRequests)
+		{
+			return scanRequests.Select(x => x.Name).ToList();
+		}
 
-            return scans;
-        }
+		private List<Scan> CreateScanRequestJson(DomInstance instance, Scanner scanner)
+		{
+			List<Scan> scans = new List<Scan>();
+			var nameFormat = "{0} {1} #RES|BAND#";
 
-        private SectionDefinition SetSectionDefinitionById(SectionDefinitionID sectionDefinitionId)
-        {
-            return this.innerDomHelper.SectionDefinitions.Read(SectionDefinitionExposers.ID.Equal(sectionDefinitionId)).First();
-        }
+			var manifests = this.sharedMethods.GetManifests(instance);
 
-        private DomDefinition SetDomDefinitionById(DomDefinitionId domDefinitionId)
-        {
-            return this.innerDomHelper.DomDefinitions.Read(DomDefinitionExposers.Id.Equal(domDefinitionId)).First();
-        }
-    }
+			foreach (var manifest in manifests)
+			{
+				scans.Add(new Scan
+				{
+					Action = (int)TagRequest.TAGAction.Delete,
+					AssetId = scanner.AssetId,
+					Interface = scanner.TagInterface,
+					Name = String.Format(nameFormat, scanner.ScanName, manifest.Name),
+					Type = scanner.ScanType,
+					Url = manifest.Url,
+				});
+			}
+
+			return scans;
+		}
+
+		private SectionDefinition SetSectionDefinitionById(SectionDefinitionID sectionDefinitionId)
+		{
+			return this.innerDomHelper.SectionDefinitions.Read(SectionDefinitionExposers.ID.Equal(sectionDefinitionId)).First();
+		}
+
+		private DomDefinition SetDomDefinitionById(DomDefinitionId domDefinitionId)
+		{
+			return this.innerDomHelper.DomDefinitions.Read(DomDefinitionExposers.Id.Equal(domDefinitionId)).First();
+		}
+	}
 }

@@ -519,6 +519,7 @@ namespace Script
 					new DomStatusTransition("reprovision_to_inprogress", "reprovision", "in_progress"),
 					new DomStatusTransition("deactivate_to_deactivating", "deactivate", "deactivating"),
 					new DomStatusTransition("deactivating_to_complete", "deactivating", "complete"),
+					new DomStatusTransition("complete_to_ready", "complete", "ready"),
 					new DomStatusTransition("complete_to_draft", "complete", "draft"),
 				};
 
@@ -562,6 +563,7 @@ namespace Script
 					new DomStatusTransition("reprovision_to_inprogress", "reprovision", "in_progress"),
 					new DomStatusTransition("deactivate_to_deactivating", "deactivate", "deactivating"),
 					new DomStatusTransition("deactivating_to_complete", "deactivating", "complete"),
+					new DomStatusTransition("complete_to_ready", "complete", "ready"),
 					new DomStatusTransition("complete_to_draft", "complete", "draft"),
 				};
 
@@ -698,6 +700,8 @@ namespace Script
 					new DomStatusTransition("deactivate_to_deactivating", "deactivate", "deactivating"),
 					new DomStatusTransition("deactivating_to_complete", "deactivating", "complete"),
 					new DomStatusTransition("complete_to_draft", "complete", "draft"),
+					new DomStatusTransition("complete_to_ready", "complete", "ready"),
+					new DomStatusTransition("active_to_complete", "active", "complete"),
 				};
 
 				List<IDomActionDefinition> behaviorActions = GetBehaviorActions("TAG Channel Process", "Channel Name");
