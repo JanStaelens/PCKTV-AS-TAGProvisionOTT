@@ -40,7 +40,7 @@
       <HintPath>..\..\..\Dlls\ExceptionHelper.dll</HintPath>
     </Reference>
     <Reference Include="ProcessAutomation">
-      <HintPath>..\..\..\..\..\..\..\..\Skyline DataMiner\ProtocolScripts\ProcessAutomation.dll</HintPath>
+      <HintPath>..\..\..\Dlls\ProcessAutomation.dll</HintPath>
     </Reference>
     <Reference Include="System" />
   </ItemGroup>

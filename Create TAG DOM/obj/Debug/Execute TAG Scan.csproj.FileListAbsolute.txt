@@ -1,2 +1,0 @@
-C:\GIT\Automation\Customers\NBC Sports\Event Manager Scripts\Execute TAG Scan\obj\Debug\Execute TAG Scan.csproj.AssemblyReference.cache
-C:\GIT\Automation\Customers\NBC Sports\Event Manager Scripts\Execute TAG Scan\obj\Debug\Execute TAG Scan.csproj.CoreCompileInputs.cache
