@@ -71,7 +71,7 @@ namespace Script
 	/// </summary>
 	public class Script
 	{
-		private static PaProfileLoadDomHelper innerHelper;
+		private PaProfileLoadDomHelper innerHelper;
 		private readonly int scanChannelsTable = 1310;
 		private DomHelper innerDomHelper;
 		private SharedMethods sharedMethods;
@@ -185,9 +185,9 @@ namespace Script
 						innerHelper.TransitionState("deactivating_to_complete");
 						innerHelper.SendFinishMessageToTokenHandler();
 					}
-					else if (status == "reprovision")
+					else if (scanner.Action == "reprovision")
 					{
-						innerHelper.TransitionState("complete_to_ready");
+						innerHelper.TransitionState("reprovision_to_inprogress");
 						innerHelper.ReturnSuccess();
 					}
 					else

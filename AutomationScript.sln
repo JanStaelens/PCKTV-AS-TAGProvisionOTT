@@ -105,6 +105,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monitor Scanner Progress", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Generic Classes", "Generic Classes", "{C131B91B-DA68-4239-BB4E-5CD262318CD9}"
 	ProjectSection(SolutionItems) = preProject
+		ExternalRequest.cs = ExternalRequest.cs
 		TAG.cs = TAG.cs
 		TAGScan.cs = TAGScan.cs
 	EndProjectSection

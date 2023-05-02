@@ -70,7 +70,7 @@ namespace Script
     /// </summary>
     public class Script
     {
-        private static PaProfileLoadDomHelper innerHelper;
+        private PaProfileLoadDomHelper innerHelper;
 #pragma warning disable S1450 // Private fields only used as local variables in methods should become local variables
         private DomHelper innerDomHelper;
 #pragma warning restore S1450 // Private fields only used as local variables in methods should become local variables

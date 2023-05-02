@@ -69,7 +69,7 @@ namespace Script
     /// </summary>
     public class Script
     {
-        private static PaProfileLoadDomHelper innerHelper;
+        private PaProfileLoadDomHelper innerHelper;
         private readonly int scanChannelsTable = 1310;
         private DomHelper innerDomHelper;
         private SharedMethods sharedMethods;
@@ -85,7 +85,7 @@ namespace Script
             innerHelper = new PaProfileLoadDomHelper(engine);
             this.innerDomHelper = new DomHelper(engine.SendSLNetMessages, "process_automation");
 
-            var exceptionHelper = new ExceptionHelper(engine, this.innerDomHelper);
+            // var exceptionHelper = new ExceptionHelper(engine, this.innerDomHelper);
             this.sharedMethods = new SharedMethods(innerHelper, this.innerDomHelper);
 
             engine.GenerateInformation("START " + scriptName);
@@ -94,32 +94,32 @@ namespace Script
             var instance = this.innerDomHelper.DomInstances.Read(DomInstanceExposers.Id.Equal(new DomInstanceId(Guid.Parse(instanceId)))).First();
             var status = instance.StatusId;
 
-            if (!status.Equals("ready"))
+            if (!status.Equals("ready") && !status.Equals("in_progress"))
             {
                 innerHelper.SendErrorMessageToTokenHandler();
                 return;
             }
 
-            var scanner = new Scanner
-            {
-                AssetId = innerHelper.GetParameterValue<string>("Asset ID (TAG Scan)"),
-                InstanceId = instanceId,
-                ScanName = innerHelper.GetParameterValue<string>("Scan Name (TAG Scan)"),
-                SourceElement = innerHelper.TryGetParameterValue("Source Element (TAG Scan)", out string sourceElement) ? sourceElement : String.Empty,
-                SourceId = innerHelper.TryGetParameterValue("Source ID (TAG Scan)", out string sourceId) ? sourceId : String.Empty,
-                TagDevice = innerHelper.GetParameterValue<string>("TAG Device (TAG Scan)"),
-                TagElement = innerHelper.GetParameterValue<string>("TAG Element (TAG Scan)"),
-                TagInterface = innerHelper.GetParameterValue<string>("TAG Interface (TAG Scan)"),
-                ScanType = innerHelper.GetParameterValue<string>("Scan Type (TAG Scan)"),
-                Action = innerHelper.GetParameterValue<string>("Action (TAG Scan)"),
-                Channels = innerHelper.TryGetParameterValue("Channels (TAG Scan)", out List<Guid> channels) ? channels : new List<Guid>(),
-            };
-
             try
             {
+                var scanner = new Scanner
+                {
+                    AssetId = innerHelper.GetParameterValue<string>("Asset ID (TAG Scan)"),
+                    InstanceId = instanceId,
+                    ScanName = innerHelper.GetParameterValue<string>("Scan Name (TAG Scan)"),
+                    SourceElement = innerHelper.TryGetParameterValue("Source Element (TAG Scan)", out string sourceElement) ? sourceElement : String.Empty,
+                    SourceId = innerHelper.TryGetParameterValue("Source ID (TAG Scan)", out string sourceId) ? sourceId : String.Empty,
+                    TagDevice = innerHelper.GetParameterValue<string>("TAG Device (TAG Scan)"),
+                    TagElement = innerHelper.GetParameterValue<string>("TAG Element (TAG Scan)"),
+                    TagInterface = innerHelper.GetParameterValue<string>("TAG Interface (TAG Scan)"),
+                    ScanType = innerHelper.GetParameterValue<string>("Scan Type (TAG Scan)"),
+                    Action = innerHelper.GetParameterValue<string>("Action (TAG Scan)"),
+                    Channels = innerHelper.TryGetParameterValue("Channels (TAG Scan)", out List<Guid> channels) ? channels : new List<Guid>(),
+                };
+
                 IDms dms = engine.GetDms();
                 IDmsElement element = dms.GetElement(scanner.TagElement);
-
+                engine.GenerateInformation("Processing scanner on: " + scanner.TagElement);
                 var tagDictionary = new Dictionary<string, TagRequest>();
 
                 var tagRequest = new TagRequest();
@@ -152,27 +152,32 @@ namespace Script
                 if (this.sharedMethods.Retry(VerifyScanCreation, new TimeSpan(0, 5, 0)))
                 {
                     // successfully created filter
-                    innerHelper.TransitionState("ready_to_inprogress");
+                    engine.GenerateInformation("Scan created for " + scanner.TagElement);
+                    if (status == "ready")
+                    {
+                        innerHelper.TransitionState("ready_to_inprogress");
+                    }
+
                     innerHelper.ReturnSuccess();
                 }
                 else
                 {
                     // failed to execute in time
-                    var log = new Log
-                    {
-                        AffectedItem = scriptName,
-                        AffectedService = scanner.ScanName,
-                        Timestamp = DateTime.Now,
-                        ErrorCode = new ErrorCode
-                        {
-                            ConfigurationItem = scanner.ScanName,
-                            ConfigurationType = ErrorCode.ConfigType.Automation,
-                            Severity = ErrorCode.SeverityType.Warning,
-                            Source = scriptName,
-                            Description = "Create Scan failed.",
-                        },
-                    };
-                    exceptionHelper.GenerateLog(log);
+                    //var log = new Log
+                    //{
+                    //    AffectedItem = scriptName,
+                    //    AffectedService = scanner.ScanName,
+                    //    Timestamp = DateTime.Now,
+                    //    ErrorCode = new ErrorCode
+                    //    {
+                    //        ConfigurationItem = scanner.ScanName,
+                    //        ConfigurationType = ErrorCode.ConfigType.Automation,
+                    //        Severity = ErrorCode.SeverityType.Warning,
+                    //        Source = scriptName,
+                    //        Description = "Create Scan failed.",
+                    //    },
+                    //};
+                    //exceptionHelper.GenerateLog(log);
                     innerHelper.SendErrorMessageToTokenHandler();
                 }
             }
@@ -182,20 +187,21 @@ namespace Script
             }
             catch (Exception ex)
             {
-                var log = new Log
-                {
-                    AffectedItem = scriptName,
-                    AffectedService = scanner.ScanName,
-                    Timestamp = DateTime.Now,
-                    ErrorCode = new ErrorCode
-                    {
-                        ConfigurationItem = scanner.ScanName,
-                        ConfigurationType = ErrorCode.ConfigType.Automation,
-                        Severity = ErrorCode.SeverityType.Warning,
-                        Source = scriptName,
-                    },
-                };
-                exceptionHelper.ProcessException(ex, log);
+                engine.GenerateInformation("Error in Create Scanner and KMS: " + ex);
+                //var log = new Log
+                //{
+                //    AffectedItem = scriptName,
+                //    AffectedService = scanner.ScanName,
+                //    Timestamp = DateTime.Now,
+                //    ErrorCode = new ErrorCode
+                //    {
+                //        ConfigurationItem = scanner.ScanName,
+                //        ConfigurationType = ErrorCode.ConfigType.Automation,
+                //        Severity = ErrorCode.SeverityType.Warning,
+                //        Source = scriptName,
+                //    },
+                //};
+                //exceptionHelper.ProcessException(ex, log);
                 innerHelper.SendErrorMessageToTokenHandler();
             }
         }

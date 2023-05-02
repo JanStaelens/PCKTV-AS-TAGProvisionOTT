@@ -53,6 +53,9 @@
     <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\..\..\ExternalRequest.cs">
+      <Link>ExternalRequest.cs</Link>
+    </Compile>
     <Compile Include="PA_TAG_Monitor Scanners.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
