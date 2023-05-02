@@ -215,12 +215,41 @@ namespace Script
 				catch (Exception ex)
 				{
 					engine.GenerateInformation($"Failed to set channel {tagInfo.ChannelMatch} on {layout} layout: " + ex);
+					try
+					{
+						var log = new Log
+						{
+							AffectedItem = scriptName,
+							AffectedService = tagInfo.ChannelMatch,
+							Timestamp = DateTime.Now,
+							ErrorCode = new ErrorCode
+							{
+								ConfigurationItem = tagInfo.Channel,
+								ConfigurationType = ErrorCode.ConfigType.Automation,
+								Source = scriptName,
+								Code = "LayoutNotFound",
+								Severity = ErrorCode.SeverityType.Warning,
+								Description = $"No channels found in channel status with given name: {tagInfo.ChannelMatch}.",
+							},
+						};
+
+						exceptionHelper.GenerateLog(log);
+					}
+					catch (Exception e)
+					{
+						engine.Log("QA|failed to generate exception log DOM: " + e);
+					}
 				}
 			}
 		}
 
 		public static string CheckLayoutIndexes(Engine engine, string scriptName, ExceptionHelper exceptionHelper, TagChannelInfo tagInfo, string layout)
 		{
+			if (String.IsNullOrWhiteSpace(layout))
+			{
+				return String.Empty;
+			}
+
 			IEnumerable<object[]> layoutNoneRows = tagInfo.GetLayoutsFromTable(layout);
 			if (layoutNoneRows.Any())
 			{
@@ -232,24 +261,31 @@ namespace Script
 			}
 			else
 			{
-				var log = new Log
+				engine.GenerateInformation("No layouts found to set");
+				try
 				{
-					AffectedItem = scriptName,
-					AffectedService = tagInfo.ChannelMatch,
-					Timestamp = DateTime.Now,
-					ErrorCode = new ErrorCode
+					var log = new Log
 					{
-						ConfigurationItem = tagInfo.ChannelMatch,
-						ConfigurationType = ErrorCode.ConfigType.Automation,
-						Source = scriptName,
-						Code = "LayoutFull",
-						Severity = ErrorCode.SeverityType.Critical,
-						Description = $"Did not find any suitable position for channel on layout: " + layout,
-					},
-				};
+						AffectedItem = scriptName,
+						AffectedService = tagInfo.Channel,
+						Timestamp = DateTime.Now,
+						ErrorCode = new ErrorCode
+						{
+							ConfigurationItem = tagInfo.Channel,
+							ConfigurationType = ErrorCode.ConfigType.Automation,
+							Source = scriptName,
+							Code = "LayoutNotFound",
+							Severity = ErrorCode.SeverityType.Warning,
+							Description = $"No layouts found to set: {layout}.",
+						},
+					};
 
-				engine.GenerateInformation($"Did not find any suitable position for channel on layout: " + layout);
-				exceptionHelper.GenerateLog(log);
+					exceptionHelper.GenerateLog(log);
+				}
+				catch (Exception e)
+				{
+					engine.Log("QA|failed to generate exception log DOM (LayoutNotFound): " + e);
+				}
 			}
 
 			return String.Empty;

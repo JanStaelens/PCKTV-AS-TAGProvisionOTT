@@ -56,6 +56,8 @@ namespace Script
     using System.Diagnostics;
     using System.Linq;
     using System.Threading;
+    using Helper;
+    using Newtonsoft.Json;
     using Skyline.DataMiner.Automation;
     using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.Logging;
     using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager;
@@ -87,6 +89,7 @@ namespace Script
             engine.GenerateInformation("START " + scriptName);
 
             var channelName = helper.GetParameterValue<string>("Provision Name (TAG Provision)");
+            var tagInstanceId = helper.GetParameterValue<string>("InstanceId (Peacock)");
 
             try
             {
@@ -155,6 +158,34 @@ namespace Script
                         helper.TransitionState("deactivating_to_complete");
                     }
 
+                    var filter = DomInstanceExposers.Id.Equal(new DomInstanceId(Guid.Parse(tagInstanceId)));
+                    var tagInstances = this.innerDomHelper.DomInstances.Read(filter);
+                    var tagInstance = tagInstances.First();
+
+                    // successfully created filter
+                    var sourceElement = helper.GetParameterValue<string>("Source Element (TAG Provision)");
+                    var provisionName = helper.GetParameterValue<string>("Source ID (TAG Provision)");
+
+                    if (!string.IsNullOrWhiteSpace(sourceElement))
+                    {
+                        ExternalRequest evtmgrUpdate = new ExternalRequest
+                        {
+                            Type = "Process Automation",
+                            ProcessResponse = new ProcessResponse
+                            {
+                                EventName = provisionName,
+                                Tag = new TagResponse
+                                {
+                                    Status = tagInstance.StatusId == "active" ? "Active" : "Complete",
+                                },
+                            },
+                        };
+
+                        var elementSplit = sourceElement.Split('/');
+                        var eventManager = engine.FindElement(Convert.ToInt32(elementSplit[0]), Convert.ToInt32(elementSplit[1]));
+                        eventManager.SetParameter(Convert.ToInt32(elementSplit[2]), JsonConvert.SerializeObject(evtmgrUpdate));
+                    }
+
                     helper.SendFinishMessageToTokenHandler();
                 }
                 else
@@ -194,7 +225,7 @@ namespace Script
                 //         Description = "Exception while processing " + scriptName,
                 //     },
                 // };
-				   
+
                 // exceptionHelper.ProcessException(ex, log);
 
                 helper.Log($"An issue occurred while executing {scriptName} activity for {channelName}: {ex}", PaLogLevel.Error);

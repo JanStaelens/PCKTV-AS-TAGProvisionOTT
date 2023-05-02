@@ -80,7 +80,7 @@ namespace Script
             var helper = new PaProfileLoadDomHelper(engine);
             this.innerDomHelper = new DomHelper(engine.SendSLNetMessages, "process_automation");
 
-            var exceptionHelper = new ExceptionHelper(engine, this.innerDomHelper);
+            //var exceptionHelper = new ExceptionHelper(engine, this.innerDomHelper);
 
             engine.GenerateInformation("START " + scriptName);
 
