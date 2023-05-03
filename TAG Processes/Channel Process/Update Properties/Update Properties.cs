@@ -69,6 +69,7 @@ namespace Script
 	public class Script
 	{
 		private DomHelper innerDomHelper;
+		private string tagElementName = "Pre-Code";
 
 		/// <summary>
 		/// The Script entry point.
@@ -79,7 +80,6 @@ namespace Script
 			engine.SetFlag(RunTimeFlags.NoCheckingSets);
 
 			var scriptName = "Update Properties";
-			var tagElementName = "Pre-Code";
 			var channelName = "Pre-Code";
 			var helper = new PaProfileLoadDomHelper(engine);
 			this.innerDomHelper = new DomHelper(engine.SendSLNetMessages, "process_automation");
@@ -102,14 +102,14 @@ namespace Script
 				{
 					var log = new Log
 					{
-						AffectedItem = scriptName,
-						AffectedService = channelName,
+						AffectedItem = tagElementName,
+						AffectedService = "TAG Channel Subprocess",
 						Timestamp = DateTime.Now,
 						ErrorCode = new ErrorCode
 						{
-							ConfigurationItem = channelName,
+							ConfigurationItem = scriptName + "Script",
 							ConfigurationType = ErrorCode.ConfigType.Automation,
-							Source = scriptName,
+							Source = "Run() method",
 							Code = "InvalidStatusForTransition",
 							Severity = ErrorCode.SeverityType.Warning,
 							Description = $"Cannot execute the transition as the current status is unexpected. Current status: {tagInfo.Status}",
@@ -128,14 +128,14 @@ namespace Script
 				engine.GenerateInformation($"An issue occurred while executing {scriptName} activity for {channelName}: {ex}");
 				var log = new Log
 				{
-					AffectedItem = scriptName,
-					AffectedService = channelName,
+					AffectedItem = tagElementName,
+					AffectedService = "TAG Channel Subprocess",
 					Timestamp = DateTime.Now,
 					ErrorCode = new ErrorCode
 					{
-						ConfigurationItem = channelName,
+						ConfigurationItem = scriptName + "Script",
 						ConfigurationType = ErrorCode.ConfigType.Automation,
-						Source = scriptName,
+						Source = "Run() method",
 						Severity = ErrorCode.SeverityType.Critical,
 						Description = "Exception while processing " + scriptName,
 					},
@@ -169,14 +169,14 @@ namespace Script
 			{
 				var log = new Log
 				{
-					AffectedItem = scriptName,
-					AffectedService = tagInfo.ChannelMatch,
+					AffectedItem = tagElementName,
+					AffectedService = "TAG Channel Subprocess",
 					Timestamp = DateTime.Now,
 					ErrorCode = new ErrorCode
 					{
-						ConfigurationItem = tagInfo.ChannelMatch,
+						ConfigurationItem = scriptName + "Script",
 						ConfigurationType = ErrorCode.ConfigType.Automation,
-						Source = scriptName,
+						Source = "ExecuteChannelSets() method",
 						Code = "ChannelNotFound",
 						Severity = ErrorCode.SeverityType.Warning,
 						Description = $"No channels found in channel status with given name: {tagInfo.ChannelMatch}.",
@@ -219,14 +219,14 @@ namespace Script
 					{
 						var log = new Log
 						{
-							AffectedItem = scriptName,
-							AffectedService = tagInfo.ChannelMatch,
+							AffectedItem = tagElementName,
+							AffectedService = "TAG Channel Subprocess",
 							Timestamp = DateTime.Now,
 							ErrorCode = new ErrorCode
 							{
-								ConfigurationItem = tagInfo.Channel,
+								ConfigurationItem = scriptName + "Script",
 								ConfigurationType = ErrorCode.ConfigType.Automation,
-								Source = scriptName,
+								Source = "UpdateLayouts() method",
 								Code = "LayoutNotFound",
 								Severity = ErrorCode.SeverityType.Warning,
 								Description = $"No channels found in channel status with given name: {tagInfo.ChannelMatch}.",
@@ -243,7 +243,7 @@ namespace Script
 			}
 		}
 
-		public static string CheckLayoutIndexes(Engine engine, string scriptName, ExceptionHelper exceptionHelper, TagChannelInfo tagInfo, string layout)
+		public string CheckLayoutIndexes(Engine engine, string scriptName, ExceptionHelper exceptionHelper, TagChannelInfo tagInfo, string layout)
 		{
 			if (String.IsNullOrWhiteSpace(layout))
 			{
@@ -266,14 +266,14 @@ namespace Script
 				{
 					var log = new Log
 					{
-						AffectedItem = scriptName,
-						AffectedService = tagInfo.Channel,
+						AffectedItem = tagElementName,
+						AffectedService = "TAG Channel Subprocess",
 						Timestamp = DateTime.Now,
 						ErrorCode = new ErrorCode
 						{
-							ConfigurationItem = tagInfo.Channel,
+							ConfigurationItem = scriptName + "Script",
 							ConfigurationType = ErrorCode.ConfigType.Automation,
-							Source = scriptName,
+							Source = "CheckLayoutIndexes() method",
 							Code = "LayoutNotFound",
 							Severity = ErrorCode.SeverityType.Warning,
 							Description = $"No layouts found to set: {layout}.",

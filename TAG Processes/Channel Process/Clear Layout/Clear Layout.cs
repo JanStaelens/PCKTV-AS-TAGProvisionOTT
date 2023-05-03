@@ -141,14 +141,14 @@ namespace Script
                 {
                     var log = new Log
                     {
-                        AffectedItem = scriptName,
-                        AffectedService = channelName,
+                        AffectedItem = tagElementName,
+                        AffectedService = "TAG Channel Subprocess",
                         Timestamp = DateTime.Now,
                         ErrorCode = new ErrorCode
                         {
-                            ConfigurationItem = channelName,
+                            ConfigurationItem = scriptName + "Script",
                             ConfigurationType = ErrorCode.ConfigType.Automation,
-                            Source = scriptName,
+                            Source = "Status transition condition",
                             Code = "InvalidStatusForTransition",
                             Severity = ErrorCode.SeverityType.Warning,
                             Description = $"Cannot execute the transition as the current status is unexpected. Current status: {status}",
@@ -167,14 +167,14 @@ namespace Script
                 engine.GenerateInformation("ERROR in clear layout: " + ex);
                 var log = new Log
                 {
-                    AffectedItem = scriptName,
-                    AffectedService = channelName,
+                    AffectedItem = tagElementName,
+                    AffectedService = "TAG Channel Subprocess",
                     Timestamp = DateTime.Now,
                     ErrorCode = new ErrorCode
                     {
-                        ConfigurationItem = channelName,
+                        ConfigurationItem = scriptName + "Script",
                         ConfigurationType = ErrorCode.ConfigType.Automation,
-                        Source = scriptName,
+                        Source = "Run() method - exception",
                         Severity = ErrorCode.SeverityType.Critical,
                         Description = "Exception while processing Clear Layout",
                     },

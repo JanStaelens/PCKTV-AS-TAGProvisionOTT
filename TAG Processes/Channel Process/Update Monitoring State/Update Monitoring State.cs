@@ -68,26 +68,24 @@ namespace Script
 
     internal class Script
     {
-        private DomHelper innerDomHelper;
-
-        /// <summary>
-        /// The Script entry point.
-        /// </summary>
-        /// <param name="engine">The <see cref="Engine" /> instance used to communicate with DataMiner.</param>
+		/// <summary>
+		/// The Script entry point.
+		/// </summary>
+		/// <param name="engine">The <see cref="Engine" /> instance used to communicate with DataMiner.</param>
         public void Run(Engine engine)
         {
             engine.SetFlag(RunTimeFlags.NoCheckingSets);
 
             var scriptName = "Update Monitoring State";
-            var tagElementName = "Pre-Code";
             var channelName = "Pre-Code";
+            var tagElementName = "Pre-Code";
             var helper = new PaProfileLoadDomHelper(engine);
-            this.innerDomHelper = new DomHelper(engine.SendSLNetMessages, "process_automation");
-            var exceptionHelper = new ExceptionHelper(engine, this.innerDomHelper);
+            var innerDomHelper = new DomHelper(engine.SendSLNetMessages, "process_automation");
+            var exceptionHelper = new ExceptionHelper(engine, innerDomHelper);
 
             try
             {
-                TagChannelInfo tagInfo = new TagChannelInfo(engine, helper, this.innerDomHelper);
+                TagChannelInfo tagInfo = new TagChannelInfo(engine, helper, innerDomHelper);
                 channelName = tagInfo.Channel;
                 tagElementName = tagInfo.ElementName;
                 engine.GenerateInformation("START " + scriptName);
@@ -106,17 +104,17 @@ namespace Script
                     var log = new Log
                     {
                         AffectedItem = scriptName,
-                        AffectedService = channelName,
+                        AffectedService = "TAG Channel Subprocess",
                         Timestamp = DateTime.Now,
                         ErrorCode = new ErrorCode
-                        {
-                            ConfigurationItem = channelName,
-                            ConfigurationType = ErrorCode.ConfigType.Automation,
-                            Source = scriptName,
-                            Code = "ChannelNotFound",
-                            Severity = ErrorCode.SeverityType.Warning,
-                            Description = $"No channels found in channel status with given name: {channelName} in Channel Status Table.",
-                        },
+						{
+							ConfigurationItem = scriptName + "Script",
+							ConfigurationType = ErrorCode.ConfigType.Automation,
+							Source = "channel status condition",
+							Code = "ChannelNotFound",
+							Severity = ErrorCode.SeverityType.Warning,
+							Description = $"No channels found in channel status with given name: {channelName} in Channel Status Table.",
+						},
                     };
 
                     helper.Log($"No channels found in channel status with given name: {channelName}.", PaLogLevel.Error);
@@ -143,14 +141,14 @@ namespace Script
                 {
                     var log = new Log
                     {
-                        AffectedItem = scriptName,
-                        AffectedService = channelName,
+                        AffectedItem = tagElementName,
+                        AffectedService = "TAG Channel Subprocess",
                         Timestamp = DateTime.Now,
                         ErrorCode = new ErrorCode
                         {
-                            ConfigurationItem = channelName,
+                            ConfigurationItem = scriptName + "Script",
                             ConfigurationType = ErrorCode.ConfigType.Automation,
-                            Source = scriptName,
+                            Source = "Status transition condition",
                             Code = "InvalidStatusForTransition",
                             Severity = ErrorCode.SeverityType.Warning,
                             Description = $"Cannot execute the transition as the current status is unexpected. Current status: {tagInfo.Status}",
@@ -169,14 +167,14 @@ namespace Script
                 engine.GenerateInformation($"An issue occurred while executing {scriptName} activity for {channelName}: {ex}");
                 var log = new Log
                 {
-                    AffectedItem = scriptName,
-                    AffectedService = channelName,
+                    AffectedItem = tagElementName,
+                    AffectedService = "TAG Channel Subprocess",
                     Timestamp = DateTime.Now,
                     ErrorCode = new ErrorCode
                     {
-                        ConfigurationItem = channelName,
+                        ConfigurationItem = scriptName + "Script",
                         ConfigurationType = ErrorCode.ConfigType.Automation,
-                        Source = scriptName,
+                        Source = "Run() method - exception",
                         Severity = ErrorCode.SeverityType.Critical,
                         Description = "Exception while processing " + scriptName,
                     },
@@ -231,7 +229,7 @@ namespace Script
 
         public string Encryption { get; set; }
 
-        public string KMS { get; set; }
+        public string Kms { get; set; }
 
         public DomInstance Instance { get; set; }
 
@@ -272,7 +270,7 @@ namespace Script
             this.Threshold = helper.GetParameterValue<string>("Threshold (TAG Channel)");
             this.Notification = helper.GetParameterValue<string>("Notification (TAG Channel)");
             this.Encryption = helper.GetParameterValue<string>("Encryption (TAG Channel)");
-            this.KMS = helper.GetParameterValue<string>("KMS (TAG Channel)");
+            this.Kms = helper.GetParameterValue<string>("KMS (TAG Channel)");
 
             var instanceId = helper.GetParameterValue<string>("InstanceId (TAG Channel)");
             this.Instance = domHelper.DomInstances.Read(DomInstanceExposers.Id.Equal(new DomInstanceId(Guid.Parse(instanceId)))).First();

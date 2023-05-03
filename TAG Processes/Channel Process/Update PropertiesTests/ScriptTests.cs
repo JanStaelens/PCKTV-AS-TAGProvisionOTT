@@ -30,10 +30,11 @@ namespace Script.Tests
             tagInfo.Object.ChannelMatch = "Channel Match Test";
 
             string layout = "Layout Test";
+            Script script = new Script();
 
             tagInfo.Setup(tag => tag.GetLayoutsFromTable(layout)).Returns(new List<object[]> { new object[] { "1/1" }, new object[] { "1/2" } });
 
-            var indexToUpdate = Script.CheckLayoutIndexes(fakeEngine.Object, "Update Properties Test", exceptionHelper, tagInfo.Object, layout);
+            var indexToUpdate = script.CheckLayoutIndexes(fakeEngine.Object, "Update Properties Test", exceptionHelper, tagInfo.Object, layout);
 
             Assert.IsTrue(indexToUpdate == "1/1");
         }

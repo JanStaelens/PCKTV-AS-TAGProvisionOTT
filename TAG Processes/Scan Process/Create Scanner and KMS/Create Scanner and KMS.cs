@@ -81,12 +81,13 @@ namespace Script
         public void Run(Engine engine)
         {
             var scriptName = "Create Scanner and KMS";
+			var tagElement = String.Empty;
 
             innerHelper = new PaProfileLoadDomHelper(engine);
             this.innerDomHelper = new DomHelper(engine.SendSLNetMessages, "process_automation");
 
-            // var exceptionHelper = new ExceptionHelper(engine, this.innerDomHelper);
-            this.sharedMethods = new SharedMethods(innerHelper, this.innerDomHelper);
+			var exceptionHelper = new ExceptionHelper(engine, this.innerDomHelper);
+			this.sharedMethods = new SharedMethods(innerHelper, this.innerDomHelper);
 
             engine.GenerateInformation("START " + scriptName);
 
@@ -117,6 +118,7 @@ namespace Script
                     Channels = innerHelper.TryGetParameterValue("Channels (TAG Scan)", out List<Guid> channels) ? channels : new List<Guid>(),
                 };
 
+				tagElement = scanner.TagElement;
                 IDms dms = engine.GetDms();
                 IDmsElement element = dms.GetElement(scanner.TagElement);
                 engine.GenerateInformation("Processing scanner on: " + scanner.TagElement);
@@ -162,23 +164,23 @@ namespace Script
                 }
                 else
                 {
-                    // failed to execute in time
-                    //var log = new Log
-                    //{
-                    //    AffectedItem = scriptName,
-                    //    AffectedService = scanner.ScanName,
-                    //    Timestamp = DateTime.Now,
-                    //    ErrorCode = new ErrorCode
-                    //    {
-                    //        ConfigurationItem = scanner.ScanName,
-                    //        ConfigurationType = ErrorCode.ConfigType.Automation,
-                    //        Severity = ErrorCode.SeverityType.Warning,
-                    //        Source = scriptName,
-                    //        Description = "Create Scan failed.",
-                    //    },
-                    //};
-                    //exceptionHelper.GenerateLog(log);
-                    innerHelper.SendErrorMessageToTokenHandler();
+					// failed to execute in time
+					var log = new Log
+					{
+						AffectedItem = scanner.TagElement,
+						AffectedService = "TAG Scan Subprocess",
+						Timestamp = DateTime.Now,
+						ErrorCode = new ErrorCode
+						{
+							ConfigurationItem = scriptName + "Script",
+							ConfigurationType = ErrorCode.ConfigType.Automation,
+							Severity = ErrorCode.SeverityType.Warning,
+							Source = "Retry condition",
+							Description = "Create Scan failed.",
+						},
+					};
+					exceptionHelper.GenerateLog(log);
+					innerHelper.SendErrorMessageToTokenHandler();
                 }
             }
             catch (ScriptAbortException)
@@ -188,21 +190,21 @@ namespace Script
             catch (Exception ex)
             {
                 engine.GenerateInformation("Error in Create Scanner and KMS: " + ex);
-                //var log = new Log
-                //{
-                //    AffectedItem = scriptName,
-                //    AffectedService = scanner.ScanName,
-                //    Timestamp = DateTime.Now,
-                //    ErrorCode = new ErrorCode
-                //    {
-                //        ConfigurationItem = scanner.ScanName,
-                //        ConfigurationType = ErrorCode.ConfigType.Automation,
-                //        Severity = ErrorCode.SeverityType.Warning,
-                //        Source = scriptName,
-                //    },
-                //};
-                //exceptionHelper.ProcessException(ex, log);
-                innerHelper.SendErrorMessageToTokenHandler();
+				var log = new Log
+				{
+					AffectedItem = tagElement,
+					AffectedService = "TAG Scan Subprocess",
+					Timestamp = DateTime.Now,
+					ErrorCode = new ErrorCode
+					{
+						ConfigurationItem = scriptName + "Script",
+						ConfigurationType = ErrorCode.ConfigType.Automation,
+						Severity = ErrorCode.SeverityType.Warning,
+						Source = "Run() method",
+					},
+				};
+				exceptionHelper.ProcessException(ex, log);
+				innerHelper.SendErrorMessageToTokenHandler();
             }
         }
 

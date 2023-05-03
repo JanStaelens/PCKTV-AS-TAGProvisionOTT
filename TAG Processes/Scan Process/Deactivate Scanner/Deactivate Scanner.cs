@@ -192,22 +192,21 @@ namespace Script
 					}
 					else
 					{
-						//var log = new Log
-						//{
-						//	AffectedItem = scriptName,
-						//	AffectedService = scanner.ScanName,
-						//	Timestamp = DateTime.Now,
-						//	ErrorCode = new ErrorCode
-						//	{
-						//		ConfigurationItem = scanner.ScanName,
-						//		ConfigurationType = ErrorCode.ConfigType.Automation,
-						//		Severity = ErrorCode.SeverityType.Warning,
-						//		Source = scriptName,
-						//		Description = $"Failed to execute transition status. Current status: {status}",
-						//	},
-						//};
-
-						//exceptionHelper.GenerateLog(log);
+						var log = new Log
+						{
+							AffectedItem = scanner.TagElement,
+							AffectedService = "TAG Scan Subprocess",
+							Timestamp = DateTime.Now,
+							ErrorCode = new ErrorCode
+							{
+								ConfigurationItem = scriptName + "Script",
+								ConfigurationType = ErrorCode.ConfigType.Automation,
+								Severity = ErrorCode.SeverityType.Warning,
+								Source = "Status transition condition",
+								Description = $"Failed to execute transition status. Current status: {status}",
+							},
+						};
+						exceptionHelper.GenerateLog(log);
 						innerHelper.SendErrorMessageToTokenHandler();
 					}
 				}
@@ -215,21 +214,21 @@ namespace Script
 				{
 					// failed to execute in time
 					engine.GenerateInformation("Failed to verify the scan was deleted in time");
-					//var log = new Log
-					//{
-					//	AffectedItem = scriptName,
-					//	AffectedService = scanner.ScanName,
-					//	Timestamp = DateTime.Now,
-					//	ErrorCode = new ErrorCode
-					//	{
-					//		ConfigurationItem = scanner.ScanName,
-					//		ConfigurationType = ErrorCode.ConfigType.Automation,
-					//		Severity = ErrorCode.SeverityType.Warning,
-					//		Source = scriptName,
-					//		Description = "Failed to deactivate the scanners within the timeout time.",
-					//	},
-					//};
-					//exceptionHelper.GenerateLog(log);
+					var log = new Log
+					{
+						AffectedItem = scanner.TagElement,
+						AffectedService = "TAG Scan Subprocess",
+						Timestamp = DateTime.Now,
+						ErrorCode = new ErrorCode
+						{
+							ConfigurationItem = scriptName + "Script",
+							ConfigurationType = ErrorCode.ConfigType.Automation,
+							Severity = ErrorCode.SeverityType.Warning,
+							Source = "Retry condition",
+							Description = "Failed to deactivate the scanners within the timeout time.",
+						},
+					};
+					exceptionHelper.GenerateLog(log);
 					innerHelper.SendErrorMessageToTokenHandler();
 				}
 			}
@@ -240,20 +239,20 @@ namespace Script
 			catch (Exception ex)
 			{
 				engine.GenerateInformation("Exception caught in Deactivate Scanner: " + ex);
-				//var log = new Log
-				//{
-				//	AffectedItem = scriptName,
-				//	AffectedService = scanner.ScanName,
-				//	Timestamp = DateTime.Now,
-				//	ErrorCode = new ErrorCode
-				//	{
-				//		ConfigurationItem = scanner.ScanName,
-				//		ConfigurationType = ErrorCode.ConfigType.Automation,
-				//		Severity = ErrorCode.SeverityType.Major,
-				//		Source = scriptName,
-				//	},
-				//};
-				//exceptionHelper.ProcessException(ex, log);
+				var log = new Log
+				{
+					AffectedItem = scanner.TagElement,
+					AffectedService = "TAG Scan Subprocess",
+					Timestamp = DateTime.Now,
+					ErrorCode = new ErrorCode
+					{
+						ConfigurationItem = scriptName + "Script",
+						ConfigurationType = ErrorCode.ConfigType.Automation,
+						Severity = ErrorCode.SeverityType.Warning,
+						Source = "Run() method - exception",
+					},
+				};
+				exceptionHelper.ProcessException(ex, log);
 				innerHelper.SendErrorMessageToTokenHandler();
 			}
 		}

@@ -79,7 +79,7 @@ namespace Script
         /// <param name="engine">Link with SLAutomation process.</param>
         public void Run(Engine engine)
         {
-            var scriptName = "Monitor Scanners";
+            var scriptName = "PA_TAG_Monitor Scanners";
 
             var helper = new PaProfileLoadDomHelper(engine);
             this.innerDomHelper = new DomHelper(engine.SendSLNetMessages, "process_automation");
@@ -129,19 +129,18 @@ namespace Script
                         engine.Log("Exception thrown while verifying the scan subprocess: " + ex);
                         var log = new Log
                         {
-                            AffectedItem = scriptName,
-                            AffectedService = channelName,
+                            AffectedItem = channelName,
+                            AffectedService = "TAG Provision Subprocess",
                             Timestamp = DateTime.Now,
                             ErrorCode = new ErrorCode
                             {
-                                ConfigurationItem = channelName,
+                                ConfigurationItem = scriptName + "Script",
                                 ConfigurationType = ErrorCode.ConfigType.Automation,
                                 Source = scriptName,
                                 Severity = ErrorCode.SeverityType.Critical,
                                 Description = "Exception while verifying scan processes in " + scriptName,
                             },
                         };
-
                         exceptionHelper.ProcessException(ex, log);
                         throw;
                     }
@@ -192,41 +191,39 @@ namespace Script
                 {
                     var log = new Log
                     {
-                        AffectedItem = scriptName,
-                        AffectedService = channelName,
+                        AffectedItem = channelName,
+                        AffectedService = "TAG Provision Subprocess",
                         Timestamp = DateTime.Now,
                         ErrorCode = new ErrorCode
                         {
-                            ConfigurationItem = channelName,
+                            ConfigurationItem = scriptName + "Script",
                             ConfigurationType = ErrorCode.ConfigType.Automation,
-                            Source = scriptName,
+                            Source = "Retry condition",
                             Severity = ErrorCode.SeverityType.Major,
                             Description = "Scanners did not complete in time.",
                         },
                     };
-
                     exceptionHelper.GenerateLog(log);
                 }
             }
             catch (Exception ex)
             {
                 engine.GenerateInformation($"ERROR in {scriptName} " + ex);
-                // var log = new Log
-                // {
-                //     AffectedItem = scriptName,
-                //     AffectedService = channelName,
-                //     Timestamp = DateTime.Now,
-                //     ErrorCode = new ErrorCode
-                //     {
-                //         ConfigurationItem = channelName,
-                //         ConfigurationType = ErrorCode.ConfigType.Automation,
-                //         Source = scriptName,
-                //         Severity = ErrorCode.SeverityType.Critical,
-                //         Description = "Exception while processing " + scriptName,
-                //     },
-                // };
-
-                // exceptionHelper.ProcessException(ex, log);
+                var log = new Log
+				{
+					AffectedItem = channelName,
+					AffectedService = "TAG Provision Subprocess",
+					Timestamp = DateTime.Now,
+					ErrorCode = new ErrorCode
+					{
+						ConfigurationItem = scriptName + "Script",
+						ConfigurationType = ErrorCode.ConfigType.Automation,
+						Source = "Run() method - exception",
+						Severity = ErrorCode.SeverityType.Critical,
+						Description = "Exception while processing " + scriptName,
+					},
+				};
+                exceptionHelper.ProcessException(ex, log);
 
                 helper.Log($"An issue occurred while executing {scriptName} activity for {channelName}: {ex}", PaLogLevel.Error);
                 helper.SendErrorMessageToTokenHandler();

@@ -137,7 +137,23 @@ public class Script
                 }
                 catch (Exception ex)
                 {
-                    innerHelper.Log("Exception thrown while verifying the subprocess: " + ex, PaLogLevel.Error);
+					var log = new Log
+					{
+						AffectedItem = scanner.TagElement,
+						AffectedService = "TAG Scan Subprocess",
+						Timestamp = DateTime.Now,
+						ErrorCode = new ErrorCode
+						{
+							ConfigurationItem = scriptName + "Script",
+							ConfigurationType = ErrorCode.ConfigType.Automation,
+							Source = "verifying the subprocess method",
+							Severity = ErrorCode.SeverityType.Critical,
+							Description = "Exception thrown while verifying the subprocess on script: " + scriptName,
+						},
+					};
+					exceptionHelper.ProcessException(ex, log);
+
+					innerHelper.Log("Exception thrown while verifying the subprocess: " + ex, PaLogLevel.Error);
                     throw;
                 }
             }
@@ -149,21 +165,21 @@ public class Script
             }
             else
             {
-                // failed to execute in time
-                var log = new Log
-                {
-                    AffectedItem = scriptName,
-                    AffectedService = scanner.ScanName,
-                    Timestamp = DateTime.Now,
-                    ErrorCode = new ErrorCode
-                    {
-                        ConfigurationItem = scanner.ScanName,
-                        ConfigurationType = ErrorCode.ConfigType.Automation,
-                        Severity = ErrorCode.SeverityType.Warning,
-                        Source = scriptName,
-                        Description = "Channel subprocess didn't finish (wrong status on linked instances).",
-                    },
-                };
+				// failed to execute in time
+				var log = new Log
+				{
+					AffectedItem = scanner.TagElement,
+					AffectedService = "TAG Scan Subprocess",
+					Timestamp = DateTime.Now,
+					ErrorCode = new ErrorCode
+					{
+						ConfigurationItem = scriptName + "Script",
+						ConfigurationType = ErrorCode.ConfigType.Automation,
+						Severity = ErrorCode.SeverityType.Warning,
+						Source = "Retry condition",
+						Description = "Channel subprocess didn't finish (wrong status on linked instances).",
+					},
+				};
                 exceptionHelper.GenerateLog(log);
                 innerHelper.SendErrorMessageToTokenHandler();
             }
@@ -174,20 +190,20 @@ public class Script
         }
         catch (Exception ex)
         {
-            var log = new Log
-            {
-                AffectedItem = scriptName,
-                AffectedService = scanner.ScanName,
-                Timestamp = DateTime.Now,
-                ErrorCode = new ErrorCode
-                {
-                    ConfigurationItem = scanner.ScanName,
-                    ConfigurationType = ErrorCode.ConfigType.Automation,
-                    Severity = ErrorCode.SeverityType.Warning,
-                    Source = scriptName,
-                },
-            };
-            exceptionHelper.ProcessException(ex, log);
+			var log = new Log
+			{
+				AffectedItem = scanner.TagElement,
+				AffectedService = "TAG Scan Subprocess",
+				Timestamp = DateTime.Now,
+				ErrorCode = new ErrorCode
+				{
+					ConfigurationItem = scriptName + "Script",
+					ConfigurationType = ErrorCode.ConfigType.Automation,
+					Severity = ErrorCode.SeverityType.Warning,
+					Source = "Run() method - exception",
+				},
+			};
+			exceptionHelper.ProcessException(ex, log);
             innerHelper.SendErrorMessageToTokenHandler();
             throw;
         }

@@ -75,13 +75,11 @@ namespace Script
         /// <param name="engine">Link with SLAutomation process.</param>
         public void Run(Engine engine)
         {
-            var scriptName = "Start Scanners";
+            var scriptName = "PA_TAG_Start Scanners";
 
             var helper = new PaProfileLoadDomHelper(engine);
             this.innerDomHelper = new DomHelper(engine.SendSLNetMessages, "process_automation");
-
-            //var exceptionHelper = new ExceptionHelper(engine, this.innerDomHelper);
-
+            var exceptionHelper = new ExceptionHelper(engine, this.innerDomHelper);
             engine.GenerateInformation("START " + scriptName);
 
             var channelName = helper.GetParameterValue<string>("Provision Name (TAG Provision)");
@@ -118,22 +116,21 @@ namespace Script
             {
                 engine.GenerateInformation($"ERROR in {scriptName} " + ex);
 
-                // var log = new Log
-                // {
-                //     AffectedItem = scriptName,
-                //     AffectedService = channelName,
-                //     Timestamp = DateTime.Now,
-                //     ErrorCode = new ErrorCode
-                //     {
-                //         ConfigurationItem = channelName,
-                //         ConfigurationType = ErrorCode.ConfigType.Automation,
-                //         Source = scriptName,
-                //         Severity = ErrorCode.SeverityType.Critical,
-                //         Description = "Exception while processing " + scriptName,
-                //     },
-                // };
-				   
-                // exceptionHelper.ProcessException(ex, log);
+                var log = new Log
+				{
+					AffectedItem = channelName,
+					AffectedService = "TAG Provision Subprocess",
+					Timestamp = DateTime.Now,
+					ErrorCode = new ErrorCode
+					{
+						ConfigurationItem = scriptName + "Script",
+						ConfigurationType = ErrorCode.ConfigType.Automation,
+						Source = "Run() method - exception",
+						Severity = ErrorCode.SeverityType.Critical,
+						Description = "Exception while processing " + scriptName,
+					},
+				};
+                exceptionHelper.ProcessException(ex, log);
 
                 helper.Log($"An issue occurred while executing {scriptName} activity for {channelName}: {ex}", PaLogLevel.Error);
                 helper.SendErrorMessageToTokenHandler();

@@ -186,16 +186,16 @@ namespace Script
                     // failed to execute in time
                     var log = new Log
                     {
-                        AffectedItem = scriptName,
-                        AffectedService = scanner.ScanName,
+                        AffectedItem = scanner.TagElement,
+                        AffectedService = "TAG Scan Subprocess",
                         Timestamp = DateTime.Now,
                         ErrorCode = new ErrorCode
                         {
-                            ConfigurationItem = scanner.ScanName,
-                            ConfigurationType = ErrorCode.ConfigType.Automation,
+                            ConfigurationItem = scriptName + "Script",
+							ConfigurationType = ErrorCode.ConfigType.Automation,
                             Severity = ErrorCode.SeverityType.Warning,
-                            Source = scriptName,
-                            Description = "Scan did not finish due to verify timeout.",
+                            Source = "Retry condition",
+							Description = "Scan did not finish due to verify timeout.",
                         },
                     };
                     exceptionHelper.GenerateLog(log);
@@ -210,15 +210,15 @@ namespace Script
             {
                 var log = new Log
                 {
-                    AffectedItem = scriptName,
-                    AffectedService = scanner.ScanName,
+                    AffectedItem = scanner.TagElement,
+                    AffectedService = "TAG Scan Subprocess",
                     Timestamp = DateTime.Now,
                     ErrorCode = new ErrorCode
                     {
-                        ConfigurationItem = scanner.ScanName,
+                        ConfigurationItem = scriptName + "Script",
                         ConfigurationType = ErrorCode.ConfigType.Automation,
                         Severity = ErrorCode.SeverityType.Warning,
-                        Source = scriptName,
+                        Source = "Run() method - exception",
                     },
                 };
                 exceptionHelper.ProcessException(ex, log);
