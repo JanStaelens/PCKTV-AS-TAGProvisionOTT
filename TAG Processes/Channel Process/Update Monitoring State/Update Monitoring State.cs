@@ -103,12 +103,12 @@ namespace Script
                 {
                     var log = new Log
                     {
-                        AffectedItem = scriptName,
+                        AffectedItem = channelName,
                         AffectedService = "TAG Channel Subprocess",
                         Timestamp = DateTime.Now,
                         ErrorCode = new ErrorCode
 						{
-							ConfigurationItem = scriptName + "Script",
+							ConfigurationItem = scriptName + " Script",
 							ConfigurationType = ErrorCode.ConfigType.Automation,
 							Source = "channel status condition",
 							Code = "ChannelNotFound",
@@ -141,12 +141,12 @@ namespace Script
                 {
                     var log = new Log
                     {
-                        AffectedItem = tagElementName,
+                        AffectedItem = channelName,
                         AffectedService = "TAG Channel Subprocess",
                         Timestamp = DateTime.Now,
                         ErrorCode = new ErrorCode
                         {
-                            ConfigurationItem = scriptName + "Script",
+                            ConfigurationItem = scriptName + " Script",
                             ConfigurationType = ErrorCode.ConfigType.Automation,
                             Source = "Status transition condition",
                             Code = "InvalidStatusForTransition",
@@ -167,12 +167,12 @@ namespace Script
                 engine.GenerateInformation($"An issue occurred while executing {scriptName} activity for {channelName}: {ex}");
                 var log = new Log
                 {
-                    AffectedItem = tagElementName,
+                    AffectedItem = channelName,
                     AffectedService = "TAG Channel Subprocess",
                     Timestamp = DateTime.Now,
                     ErrorCode = new ErrorCode
                     {
-                        ConfigurationItem = scriptName + "Script",
+                        ConfigurationItem = scriptName + " Script",
                         ConfigurationType = ErrorCode.ConfigType.Automation,
                         Source = "Run() method - exception",
                         Severity = ErrorCode.SeverityType.Critical,
