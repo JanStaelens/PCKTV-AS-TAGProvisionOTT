@@ -97,6 +97,7 @@ namespace Script
 
             if (!status.Equals("ready") && !status.Equals("in_progress"))
             {
+				engine.GenerateInformation("Failed to create scanner due to incorrect status: " + status);
                 innerHelper.SendErrorMessageToTokenHandler();
                 return;
             }
@@ -108,9 +109,7 @@ namespace Script
                     AssetId = innerHelper.GetParameterValue<string>("Asset ID (TAG Scan)"),
                     InstanceId = instanceId,
                     ScanName = innerHelper.GetParameterValue<string>("Scan Name (TAG Scan)"),
-                    SourceElement = innerHelper.TryGetParameterValue("Source Element (TAG Scan)", out string sourceElement) ? sourceElement : String.Empty,
-                    SourceId = innerHelper.TryGetParameterValue("Source ID (TAG Scan)", out string sourceId) ? sourceId : String.Empty,
-                    TagDevice = innerHelper.GetParameterValue<string>("TAG Device (TAG Scan)"),
+					TagDevice = innerHelper.GetParameterValue<string>("TAG Device (TAG Scan)"),
                     TagElement = innerHelper.GetParameterValue<string>("TAG Element (TAG Scan)"),
                     TagInterface = innerHelper.GetParameterValue<string>("TAG Interface (TAG Scan)"),
                     ScanType = innerHelper.GetParameterValue<string>("Scan Type (TAG Scan)"),
