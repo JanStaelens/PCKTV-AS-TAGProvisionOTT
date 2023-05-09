@@ -81,7 +81,7 @@ namespace Script
         {
             engine.SetFlag(RunTimeFlags.NoCheckingSets);
 
-            var scriptName = "Clear Layout";
+            var scriptName = "PA_TAG_Clear Layout";
             var tagElementName = "Pre-Code";
             var channelName = "Pre-Code";
             engine.GenerateInformation("START " + scriptName);
@@ -141,8 +141,8 @@ namespace Script
                 {
                     var log = new Log
                     {
-                        AffectedItem = channelName,
-                        AffectedService = "TAG Channel Subprocess",
+                        AffectedItem = scriptName,
+                        AffectedService = channelName,
                         Timestamp = DateTime.Now,
                         ErrorCode = new ErrorCode
                         {
@@ -167,14 +167,14 @@ namespace Script
                 engine.GenerateInformation("ERROR in clear layout: " + ex);
                 var log = new Log
                 {
-                    AffectedItem = channelName,
-                    AffectedService = "TAG Channel Subprocess",
+                    AffectedItem = scriptName,
+                    AffectedService = channelName,
                     Timestamp = DateTime.Now,
                     ErrorCode = new ErrorCode
                     {
                         ConfigurationItem = scriptName + " Script",
                         ConfigurationType = ErrorCode.ConfigType.Automation,
-                        Source = "Run() method - exception",
+                        Source = "Run()",
                         Severity = ErrorCode.SeverityType.Critical,
                         Description = "Exception while processing Clear Layout",
                     },

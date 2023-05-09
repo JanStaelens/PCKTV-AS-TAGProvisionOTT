@@ -71,7 +71,6 @@ namespace Script
 	/// </summary>
 	public class Script
 	{
-		private PaProfileLoadDomHelper innerHelper;
 		private readonly int scanChannelsTable = 1310;
 		private DomHelper innerDomHelper;
 		private SharedMethods sharedMethods;
@@ -82,40 +81,42 @@ namespace Script
 		/// <param name="engine">The <see cref="Engine" /> instance used to communicate with DataMiner.</param>
 		public void Run(Engine engine)
 		{
-			var scriptName = "Deactivate Scanner";
+			var scriptName = "PA_TAG_Deactivate Scanner";
+			var scanName = String.Empty;
 
-			innerHelper = new PaProfileLoadDomHelper(engine);
+			var helper = new PaProfileLoadDomHelper(engine);
 			this.innerDomHelper = new DomHelper(engine.SendSLNetMessages, "process_automation");
 
 			var exceptionHelper = new ExceptionHelper(engine, this.innerDomHelper);
-			this.sharedMethods = new SharedMethods(innerHelper, this.innerDomHelper);
-			var instanceId = innerHelper.GetParameterValue<string>("InstanceId (TAG Scan)");
-
-			var scanner = new Scanner
-			{
-				AssetId = innerHelper.GetParameterValue<string>("Asset ID (TAG Scan)"),
-				InstanceId = instanceId,
-				ScanName = innerHelper.GetParameterValue<string>("Scan Name (TAG Scan)"),
-				SourceElement = innerHelper.TryGetParameterValue("Source Element (TAG Scan)", out string sourceElement) ? sourceElement : String.Empty,
-				SourceId = innerHelper.TryGetParameterValue("Source ID (TAG Scan)", out string sourceId) ? sourceId : String.Empty,
-				TagDevice = innerHelper.GetParameterValue<string>("TAG Device (TAG Scan)"),
-				TagElement = innerHelper.GetParameterValue<string>("TAG Element (TAG Scan)"),
-				TagInterface = innerHelper.GetParameterValue<string>("TAG Interface (TAG Scan)"),
-				ScanType = innerHelper.GetParameterValue<string>("Scan Type (TAG Scan)"),
-				Action = innerHelper.GetParameterValue<string>("Action (TAG Scan)"),
-				Channels = innerHelper.TryGetParameterValue("Channels (TAG Scan)", out List<Guid> channels) ? channels : new List<Guid>(),
-			};
+			this.sharedMethods = new SharedMethods(helper, this.innerDomHelper);
+			var instanceId = helper.GetParameterValue<string>("InstanceId (TAG Scan)");
 
 			try
 			{
 				engine.GenerateInformation("START " + scriptName);
 
+				var scanner = new Scanner
+				{
+					AssetId = helper.GetParameterValue<string>("Asset ID (TAG Scan)"),
+					InstanceId = instanceId,
+					ScanName = helper.GetParameterValue<string>("Scan Name (TAG Scan)"),
+					SourceElement = helper.TryGetParameterValue("Source Element (TAG Scan)", out string sourceElement) ? sourceElement : String.Empty,
+					SourceId = helper.TryGetParameterValue("Source ID (TAG Scan)", out string sourceId) ? sourceId : String.Empty,
+					TagDevice = helper.GetParameterValue<string>("TAG Device (TAG Scan)"),
+					TagElement = helper.GetParameterValue<string>("TAG Element (TAG Scan)"),
+					TagInterface = helper.GetParameterValue<string>("TAG Interface (TAG Scan)"),
+					ScanType = helper.GetParameterValue<string>("Scan Type (TAG Scan)"),
+					Action = helper.GetParameterValue<string>("Action (TAG Scan)"),
+					Channels = helper.TryGetParameterValue("Channels (TAG Scan)", out List<Guid> channels) ? channels : new List<Guid>(),
+				};
+
+				scanName = scanner.ScanName;
 				var instanceFilter = DomInstanceExposers.Id.Equal(new DomInstanceId(Guid.Parse(instanceId)));
 				var scanInstances = this.innerDomHelper.DomInstances.Read(instanceFilter);
 				if (!scanInstances.Any())
 				{
 					engine.GenerateInformation("No TAG Scan Instance found with instanceId: " + instanceId);
-					innerHelper.ReturnSuccess();
+					helper.ReturnSuccess();
 					return;
 				}
 
@@ -125,13 +126,13 @@ namespace Script
 
 				if (!status.Equals("deactivate") && !status.Equals("reprovision"))
 				{
-					innerHelper.ReturnSuccess();
+					helper.ReturnSuccess();
 					return;
 				}
 
 				if (status.Equals("deactivate"))
 				{
-					innerHelper.TransitionState("deactivate_to_deactivating");
+					helper.TransitionState("deactivate_to_deactivating");
 
 					// need to get instance again after a transition is executed
 					instance = this.innerDomHelper.DomInstances.Read(instanceFilter).First();
@@ -179,35 +180,35 @@ namespace Script
 				if (this.sharedMethods.Retry(VerifyScanDeleted, new TimeSpan(0, 5, 0)))
 				{
 					// successfully deleted
-					innerHelper.Log($"Scanner {scanner.ScanName} Deactivated", PaLogLevel.Information);
+					helper.Log($"Scanner {scanner.ScanName} Deactivated", PaLogLevel.Information);
 					if (status == "deactivating")
 					{
-						innerHelper.TransitionState("deactivating_to_complete");
-						innerHelper.SendFinishMessageToTokenHandler();
+						helper.TransitionState("deactivating_to_complete");
+						helper.SendFinishMessageToTokenHandler();
 					}
 					else if (scanner.Action == "reprovision")
 					{
-						innerHelper.TransitionState("reprovision_to_inprogress");
-						innerHelper.ReturnSuccess();
+						helper.TransitionState("reprovision_to_inprogress");
+						helper.ReturnSuccess();
 					}
 					else
 					{
 						var log = new Log
 						{
-							AffectedItem = scanner.TagElement,
-							AffectedService = "TAG Scan Subprocess",
+							AffectedItem = scriptName,
+							AffectedService = scanner.ScanName,
 							Timestamp = DateTime.Now,
 							ErrorCode = new ErrorCode
 							{
-								ConfigurationItem = scriptName + "Script",
+								ConfigurationItem = scriptName + " Script",
 								ConfigurationType = ErrorCode.ConfigType.Automation,
 								Severity = ErrorCode.SeverityType.Warning,
-								Source = "Status transition condition",
+								Source = "Status Transition condition",
 								Description = $"Failed to execute transition status. Current status: {status}",
 							},
 						};
 						exceptionHelper.GenerateLog(log);
-						innerHelper.SendErrorMessageToTokenHandler();
+						helper.SendErrorMessageToTokenHandler();
 					}
 				}
 				else
@@ -216,12 +217,12 @@ namespace Script
 					engine.GenerateInformation("Failed to verify the scan was deleted in time");
 					var log = new Log
 					{
-						AffectedItem = scanner.TagElement,
-						AffectedService = "TAG Scan Subprocess",
+						AffectedItem = scriptName,
+						AffectedService = scanner.ScanName,
 						Timestamp = DateTime.Now,
 						ErrorCode = new ErrorCode
 						{
-							ConfigurationItem = scriptName + "Script",
+							ConfigurationItem = scriptName + " Script",
 							ConfigurationType = ErrorCode.ConfigType.Automation,
 							Severity = ErrorCode.SeverityType.Warning,
 							Source = "Retry condition",
@@ -229,7 +230,7 @@ namespace Script
 						},
 					};
 					exceptionHelper.GenerateLog(log);
-					innerHelper.SendErrorMessageToTokenHandler();
+					helper.SendErrorMessageToTokenHandler();
 				}
 			}
 			catch (ScriptAbortException)
@@ -241,19 +242,19 @@ namespace Script
 				engine.GenerateInformation("Exception caught in Deactivate Scanner: " + ex);
 				var log = new Log
 				{
-					AffectedItem = scanner.TagElement,
-					AffectedService = "TAG Scan Subprocess",
+					AffectedItem = scriptName,
+					AffectedService = scanName,
 					Timestamp = DateTime.Now,
 					ErrorCode = new ErrorCode
 					{
-						ConfigurationItem = scriptName + "Script",
+						ConfigurationItem = scriptName + " Script",
 						ConfigurationType = ErrorCode.ConfigType.Automation,
 						Severity = ErrorCode.SeverityType.Warning,
-						Source = "Run() method - exception",
+						Source = "Run()",
 					},
 				};
 				exceptionHelper.ProcessException(ex, log);
-				innerHelper.SendErrorMessageToTokenHandler();
+				helper.SendErrorMessageToTokenHandler();
 			}
 		}
 

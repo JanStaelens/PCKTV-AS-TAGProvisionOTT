@@ -69,9 +69,7 @@ namespace Script
     /// </summary>
     public class Script
     {
-        private PaProfileLoadDomHelper innerHelper;
         private readonly int scanChannelsTable = 1310;
-        private DomHelper innerDomHelper;
         private SharedMethods sharedMethods;
 
         /// <summary>
@@ -80,24 +78,24 @@ namespace Script
         /// <param name="engine">Link with SLAutomation process.</param>
         public void Run(Engine engine)
         {
-            var scriptName = "Create Scanner and KMS";
-			var tagElement = String.Empty;
+            var scriptName = "PA_TAG_Create Scanner and KMS";
+            var scanName = String.Empty;
 
-            innerHelper = new PaProfileLoadDomHelper(engine);
-            this.innerDomHelper = new DomHelper(engine.SendSLNetMessages, "process_automation");
+            var helper = new PaProfileLoadDomHelper(engine);
+            var domHelper = new DomHelper(engine.SendSLNetMessages, "process_automation");
 
-			var exceptionHelper = new ExceptionHelper(engine, this.innerDomHelper);
-			this.sharedMethods = new SharedMethods(innerHelper, this.innerDomHelper);
+            var exceptionHelper = new ExceptionHelper(engine, domHelper);
+            this.sharedMethods = new SharedMethods(helper, domHelper);
 
             engine.GenerateInformation("START " + scriptName);
 
-            var instanceId = innerHelper.GetParameterValue<string>("InstanceId (TAG Scan)");
-            var instance = this.innerDomHelper.DomInstances.Read(DomInstanceExposers.Id.Equal(new DomInstanceId(Guid.Parse(instanceId)))).First();
+            var instanceId = helper.GetParameterValue<string>("InstanceId (TAG Scan)");
+            var instance = domHelper.DomInstances.Read(DomInstanceExposers.Id.Equal(new DomInstanceId(Guid.Parse(instanceId)))).First();
             var status = instance.StatusId;
 
             if (!status.Equals("ready") && !status.Equals("in_progress"))
             {
-                innerHelper.SendErrorMessageToTokenHandler();
+                helper.SendErrorMessageToTokenHandler();
                 return;
             }
 
@@ -105,20 +103,20 @@ namespace Script
             {
                 var scanner = new Scanner
                 {
-                    AssetId = innerHelper.GetParameterValue<string>("Asset ID (TAG Scan)"),
+                    AssetId = helper.GetParameterValue<string>("Asset ID (TAG Scan)"),
                     InstanceId = instanceId,
-                    ScanName = innerHelper.GetParameterValue<string>("Scan Name (TAG Scan)"),
-                    SourceElement = innerHelper.TryGetParameterValue("Source Element (TAG Scan)", out string sourceElement) ? sourceElement : String.Empty,
-                    SourceId = innerHelper.TryGetParameterValue("Source ID (TAG Scan)", out string sourceId) ? sourceId : String.Empty,
-                    TagDevice = innerHelper.GetParameterValue<string>("TAG Device (TAG Scan)"),
-                    TagElement = innerHelper.GetParameterValue<string>("TAG Element (TAG Scan)"),
-                    TagInterface = innerHelper.GetParameterValue<string>("TAG Interface (TAG Scan)"),
-                    ScanType = innerHelper.GetParameterValue<string>("Scan Type (TAG Scan)"),
-                    Action = innerHelper.GetParameterValue<string>("Action (TAG Scan)"),
-                    Channels = innerHelper.TryGetParameterValue("Channels (TAG Scan)", out List<Guid> channels) ? channels : new List<Guid>(),
+                    ScanName = helper.GetParameterValue<string>("Scan Name (TAG Scan)"),
+                    SourceElement = helper.TryGetParameterValue("Source Element (TAG Scan)", out string sourceElement) ? sourceElement : String.Empty,
+                    SourceId = helper.TryGetParameterValue("Source ID (TAG Scan)", out string sourceId) ? sourceId : String.Empty,
+                    TagDevice = helper.GetParameterValue<string>("TAG Device (TAG Scan)"),
+                    TagElement = helper.GetParameterValue<string>("TAG Element (TAG Scan)"),
+                    TagInterface = helper.GetParameterValue<string>("TAG Interface (TAG Scan)"),
+                    ScanType = helper.GetParameterValue<string>("Scan Type (TAG Scan)"),
+                    Action = helper.GetParameterValue<string>("Action (TAG Scan)"),
+                    Channels = helper.TryGetParameterValue("Channels (TAG Scan)", out List<Guid> channels) ? channels : new List<Guid>(),
                 };
+                scanName = scanner.ScanName;
 
-				tagElement = scanner.TagElement;
                 IDms dms = engine.GetDms();
                 IDmsElement element = dms.GetElement(scanner.TagElement);
                 engine.GenerateInformation("Processing scanner on: " + scanner.TagElement);
@@ -157,30 +155,30 @@ namespace Script
                     engine.GenerateInformation("Scan created for " + scanner.TagElement);
                     if (status == "ready")
                     {
-                        innerHelper.TransitionState("ready_to_inprogress");
+                        helper.TransitionState("ready_to_inprogress");
                     }
 
-                    innerHelper.ReturnSuccess();
+                    helper.ReturnSuccess();
                 }
                 else
                 {
-					// failed to execute in time
-					var log = new Log
-					{
-						AffectedItem = scanner.TagElement,
-						AffectedService = "TAG Scan Subprocess",
-						Timestamp = DateTime.Now,
-						ErrorCode = new ErrorCode
-						{
-							ConfigurationItem = scriptName + "Script",
-							ConfigurationType = ErrorCode.ConfigType.Automation,
-							Severity = ErrorCode.SeverityType.Warning,
-							Source = "Retry condition",
-							Description = "Create Scan failed.",
-						},
-					};
-					exceptionHelper.GenerateLog(log);
-					innerHelper.SendErrorMessageToTokenHandler();
+                    // failed to execute in time
+                    var log = new Log
+                    {
+                        AffectedItem = scriptName,
+                        AffectedService = scanner.ScanName,
+                        Timestamp = DateTime.Now,
+                        ErrorCode = new ErrorCode
+                        {
+                            ConfigurationItem = scriptName + " Script",
+                            ConfigurationType = ErrorCode.ConfigType.Automation,
+                            Severity = ErrorCode.SeverityType.Warning,
+                            Source = "Retry condition",
+                            Description = "Create Scan failed.",
+                        },
+                    };
+                    exceptionHelper.GenerateLog(log);
+                    helper.SendErrorMessageToTokenHandler();
                 }
             }
             catch (ScriptAbortException)
@@ -190,21 +188,21 @@ namespace Script
             catch (Exception ex)
             {
                 engine.GenerateInformation("Error in Create Scanner and KMS: " + ex);
-				var log = new Log
-				{
-					AffectedItem = tagElement,
-					AffectedService = "TAG Scan Subprocess",
-					Timestamp = DateTime.Now,
-					ErrorCode = new ErrorCode
-					{
-						ConfigurationItem = scriptName + "Script",
-						ConfigurationType = ErrorCode.ConfigType.Automation,
-						Severity = ErrorCode.SeverityType.Warning,
-						Source = "Run() method",
-					},
-				};
-				exceptionHelper.ProcessException(ex, log);
-				innerHelper.SendErrorMessageToTokenHandler();
+                var log = new Log
+                {
+                    AffectedItem = scriptName,
+                    AffectedService = scanName,
+                    Timestamp = DateTime.Now,
+                    ErrorCode = new ErrorCode
+                    {
+                        ConfigurationItem = scriptName + " Script",
+                        ConfigurationType = ErrorCode.ConfigType.Automation,
+                        Severity = ErrorCode.SeverityType.Warning,
+                        Source = "Run()",
+                    },
+                };
+                exceptionHelper.ProcessException(ex, log);
+                helper.SendErrorMessageToTokenHandler();
             }
         }
 

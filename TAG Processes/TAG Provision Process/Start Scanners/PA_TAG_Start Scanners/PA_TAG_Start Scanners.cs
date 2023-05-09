@@ -118,16 +118,15 @@ namespace Script
 
                 var log = new Log
 				{
-					AffectedItem = channelName,
-					AffectedService = "TAG Provision Subprocess",
+					AffectedItem = scriptName,
+					AffectedService = channelName,
 					Timestamp = DateTime.Now,
 					ErrorCode = new ErrorCode
 					{
-						ConfigurationItem = scriptName + "Script",
+						ConfigurationItem = scriptName + " Script",
 						ConfigurationType = ErrorCode.ConfigType.Automation,
-						Source = "Run() method - exception",
+						Source = "Run()",
 						Severity = ErrorCode.SeverityType.Critical,
-						Description = "Exception while processing " + scriptName,
 					},
 				};
                 exceptionHelper.ProcessException(ex, log);
