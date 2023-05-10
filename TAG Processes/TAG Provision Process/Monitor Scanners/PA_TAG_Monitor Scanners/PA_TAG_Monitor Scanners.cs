@@ -129,16 +129,15 @@ namespace Script
                         engine.Log("Exception thrown while verifying the scan subprocess: " + ex);
                         var log = new Log
                         {
-                            AffectedItem = channelName,
-                            AffectedService = "TAG Provision Subprocess",
+                            AffectedItem = scriptName,
+                            AffectedService = channelName,
                             Timestamp = DateTime.Now,
                             ErrorCode = new ErrorCode
                             {
-                                ConfigurationItem = scriptName + "Script",
+                                ConfigurationItem = scriptName + " Script",
                                 ConfigurationType = ErrorCode.ConfigType.Automation,
-                                Source = scriptName,
+                                Source = "CheckScanners()",
                                 Severity = ErrorCode.SeverityType.Critical,
-                                Description = "Exception while verifying scan processes in " + scriptName,
                             },
                         };
                         exceptionHelper.ProcessException(ex, log);
@@ -191,12 +190,12 @@ namespace Script
                 {
                     var log = new Log
                     {
-                        AffectedItem = channelName,
-                        AffectedService = "TAG Provision Subprocess",
+                        AffectedItem = scriptName,
+                        AffectedService = channelName,
                         Timestamp = DateTime.Now,
                         ErrorCode = new ErrorCode
                         {
-                            ConfigurationItem = scriptName + "Script",
+                            ConfigurationItem = scriptName + " Script",
                             ConfigurationType = ErrorCode.ConfigType.Automation,
                             Source = "Retry condition",
                             Severity = ErrorCode.SeverityType.Major,
@@ -211,16 +210,15 @@ namespace Script
                 engine.GenerateInformation($"ERROR in {scriptName} " + ex);
                 var log = new Log
 				{
-					AffectedItem = channelName,
-					AffectedService = "TAG Provision Subprocess",
+					AffectedItem = scriptName,
+					AffectedService = channelName,
 					Timestamp = DateTime.Now,
 					ErrorCode = new ErrorCode
 					{
-						ConfigurationItem = scriptName + "Script",
+						ConfigurationItem = scriptName + " Script",
 						ConfigurationType = ErrorCode.ConfigType.Automation,
-						Source = "Run() method - exception",
+						Source = "Run()",
 						Severity = ErrorCode.SeverityType.Critical,
-						Description = "Exception while processing " + scriptName,
 					},
 				};
                 exceptionHelper.ProcessException(ex, log);

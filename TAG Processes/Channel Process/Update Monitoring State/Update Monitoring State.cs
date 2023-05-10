@@ -76,7 +76,7 @@ namespace Script
         {
             engine.SetFlag(RunTimeFlags.NoCheckingSets);
 
-            var scriptName = "Update Monitoring State";
+            var scriptName = "PA_TAG_Update Monitoring State";
             var channelName = "Pre-Code";
             var tagElementName = "Pre-Code";
             var helper = new PaProfileLoadDomHelper(engine);
@@ -104,13 +104,13 @@ namespace Script
                     var log = new Log
                     {
                         AffectedItem = scriptName,
-                        AffectedService = "TAG Channel Subprocess",
+                        AffectedService = channelName,
                         Timestamp = DateTime.Now,
                         ErrorCode = new ErrorCode
 						{
-							ConfigurationItem = scriptName + "Script",
+							ConfigurationItem = scriptName + " Script",
 							ConfigurationType = ErrorCode.ConfigType.Automation,
-							Source = "channel status condition",
+							Source = "Channel Status condition",
 							Code = "ChannelNotFound",
 							Severity = ErrorCode.SeverityType.Warning,
 							Description = $"No channels found in channel status with given name: {channelName} in Channel Status Table.",
@@ -141,12 +141,12 @@ namespace Script
                 {
                     var log = new Log
                     {
-                        AffectedItem = tagElementName,
-                        AffectedService = "TAG Channel Subprocess",
+                        AffectedItem = scriptName,
+                        AffectedService = channelName,
                         Timestamp = DateTime.Now,
                         ErrorCode = new ErrorCode
                         {
-                            ConfigurationItem = scriptName + "Script",
+                            ConfigurationItem = scriptName + " Script",
                             ConfigurationType = ErrorCode.ConfigType.Automation,
                             Source = "Status transition condition",
                             Code = "InvalidStatusForTransition",
@@ -167,14 +167,14 @@ namespace Script
                 engine.GenerateInformation($"An issue occurred while executing {scriptName} activity for {channelName}: {ex}");
                 var log = new Log
                 {
-                    AffectedItem = tagElementName,
-                    AffectedService = "TAG Channel Subprocess",
+                    AffectedItem = scriptName,
+                    AffectedService = channelName,
                     Timestamp = DateTime.Now,
                     ErrorCode = new ErrorCode
                     {
-                        ConfigurationItem = scriptName + "Script",
+                        ConfigurationItem = scriptName + " Script",
                         ConfigurationType = ErrorCode.ConfigType.Automation,
-                        Source = "Run() method - exception",
+                        Source = "Run()",
                         Severity = ErrorCode.SeverityType.Critical,
                         Description = "Exception while processing " + scriptName,
                     },

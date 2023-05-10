@@ -67,53 +67,52 @@ using TagHelperMethods;
 /// </summary>
 public class Script
 {
-    private PaProfileLoadDomHelper innerHelper;
-    private DomHelper innerDomHelper;
-
     /// <summary>
     /// The Script entry point.
     /// </summary>
     /// <param name="engine">Link with SLAutomation process.</param>
     public void Run(Engine engine)
     {
-        var scriptName = "Monitor Channels Progress";
+        var scriptName = "PA_TAG_Monitor Channels Progress";
+		var scanName = String.Empty;
 
-        innerHelper = new PaProfileLoadDomHelper(engine);
-        this.innerDomHelper = new DomHelper(engine.SendSLNetMessages, "process_automation");
+        var helper = new PaProfileLoadDomHelper(engine);
+        var domHelper = new DomHelper(engine.SendSLNetMessages, "process_automation");
 
-        var exceptionHelper = new ExceptionHelper(engine, this.innerDomHelper);
-        var sharedMethods = new SharedMethods(innerHelper, this.innerDomHelper);
+        var exceptionHelper = new ExceptionHelper(engine, domHelper);
+        var sharedMethods = new SharedMethods(helper, domHelper);
 
         engine.GenerateInformation("START " + scriptName);
 
-        var instanceId = innerHelper.GetParameterValue<string>("InstanceId (TAG Scan)");
-        var instance = this.innerDomHelper.DomInstances.Read(DomInstanceExposers.Id.Equal(new DomInstanceId(Guid.Parse(instanceId)))).First();
+        var instanceId = helper.GetParameterValue<string>("InstanceId (TAG Scan)");
+        var instance = domHelper.DomInstances.Read(DomInstanceExposers.Id.Equal(new DomInstanceId(Guid.Parse(instanceId)))).First();
         var status = instance.StatusId;
 
         if (!status.Equals("in_progress"))
         {
-            innerHelper.SendErrorMessageToTokenHandler();
+            helper.SendErrorMessageToTokenHandler();
             return;
         }
 
-        var scanner = new Scanner
-        {
-            AssetId = innerHelper.GetParameterValue<string>("Asset ID (TAG Scan)"),
-            InstanceId = instanceId,
-            ScanName = innerHelper.GetParameterValue<string>("Scan Name (TAG Scan)"),
-            SourceElement = innerHelper.TryGetParameterValue("Source Element (TAG Scan)", out string sourceElement) ? sourceElement : String.Empty,
-            SourceId = innerHelper.TryGetParameterValue("Source ID (TAG Scan)", out string sourceId) ? sourceId : String.Empty,
-            TagDevice = innerHelper.GetParameterValue<string>("TAG Device (TAG Scan)"),
-            TagElement = innerHelper.GetParameterValue<string>("TAG Element (TAG Scan)"),
-            TagInterface = innerHelper.GetParameterValue<string>("TAG Interface (TAG Scan)"),
-            ScanType = innerHelper.GetParameterValue<string>("Scan Type (TAG Scan)"),
-            Action = innerHelper.GetParameterValue<string>("Action (TAG Scan)"),
-            Channels = innerHelper.TryGetParameterValue("Channels (TAG Scan)", out List<Guid> channels) ? channels : new List<Guid>(),
-        };
-
         try
         {
-            var totalChannels = scanner.Channels.Count;
+			var scanner = new Scanner
+			{
+				AssetId = helper.GetParameterValue<string>("Asset ID (TAG Scan)"),
+				InstanceId = instanceId,
+				ScanName = helper.GetParameterValue<string>("Scan Name (TAG Scan)"),
+				SourceElement = helper.TryGetParameterValue("Source Element (TAG Scan)", out string sourceElement) ? sourceElement : String.Empty,
+				SourceId = helper.TryGetParameterValue("Source ID (TAG Scan)", out string sourceId) ? sourceId : String.Empty,
+				TagDevice = helper.GetParameterValue<string>("TAG Device (TAG Scan)"),
+				TagElement = helper.GetParameterValue<string>("TAG Element (TAG Scan)"),
+				TagInterface = helper.GetParameterValue<string>("TAG Interface (TAG Scan)"),
+				ScanType = helper.GetParameterValue<string>("Scan Type (TAG Scan)"),
+				Action = helper.GetParameterValue<string>("Action (TAG Scan)"),
+				Channels = helper.TryGetParameterValue("Channels (TAG Scan)", out List<Guid> channels) ? channels : new List<Guid>(),
+			};
+
+			scanName = scanner.ScanName;
+			var totalChannels = scanner.Channels.Count;
             
             bool CheckStateChange()
             {
@@ -124,7 +123,7 @@ public class Script
 					foreach (var channel in scanner.Channels)
                     {
                         var channelFilter = DomInstanceExposers.Id.Equal(new DomInstanceId(channel));
-                        var subInstance = this.innerDomHelper.DomInstances.Read(channelFilter).First();
+                        var subInstance = domHelper.DomInstances.Read(channelFilter).First();
 
                         if (subInstance.StatusId == "active")
                         {
@@ -139,41 +138,40 @@ public class Script
                 {
 					var log = new Log
 					{
-						AffectedItem = scanner.TagElement,
-						AffectedService = "TAG Scan Subprocess",
+						AffectedItem = scriptName,
+						AffectedService = scanner.ScanName,
 						Timestamp = DateTime.Now,
 						ErrorCode = new ErrorCode
 						{
-							ConfigurationItem = scriptName + "Script",
+							ConfigurationItem = scriptName + " Script",
 							ConfigurationType = ErrorCode.ConfigType.Automation,
-							Source = "verifying the subprocess method",
+							Source = "CheckStateChange()",
 							Severity = ErrorCode.SeverityType.Critical,
-							Description = "Exception thrown while verifying the subprocess on script: " + scriptName,
 						},
 					};
 					exceptionHelper.ProcessException(ex, log);
 
-					innerHelper.Log("Exception thrown while verifying the subprocess: " + ex, PaLogLevel.Error);
+					helper.Log("Exception thrown while verifying the subprocess: " + ex, PaLogLevel.Error);
                     throw;
                 }
             }
 
             if (this.Retry(CheckStateChange, new TimeSpan(0, 5, 0)))
             {
-                innerHelper.TransitionState("inprogress_to_active");
-                innerHelper.SendFinishMessageToTokenHandler();
+                helper.TransitionState("inprogress_to_active");
+                helper.SendFinishMessageToTokenHandler();
             }
             else
             {
 				// failed to execute in time
 				var log = new Log
 				{
-					AffectedItem = scanner.TagElement,
-					AffectedService = "TAG Scan Subprocess",
+					AffectedItem = scriptName,
+					AffectedService = scanner.ScanName,
 					Timestamp = DateTime.Now,
 					ErrorCode = new ErrorCode
 					{
-						ConfigurationItem = scriptName + "Script",
+						ConfigurationItem = scriptName + " Script",
 						ConfigurationType = ErrorCode.ConfigType.Automation,
 						Severity = ErrorCode.SeverityType.Warning,
 						Source = "Retry condition",
@@ -181,7 +179,7 @@ public class Script
 					},
 				};
                 exceptionHelper.GenerateLog(log);
-                innerHelper.SendErrorMessageToTokenHandler();
+                helper.SendErrorMessageToTokenHandler();
             }
         }
         catch (ScriptAbortException)
@@ -192,19 +190,19 @@ public class Script
         {
 			var log = new Log
 			{
-				AffectedItem = scanner.TagElement,
-				AffectedService = "TAG Scan Subprocess",
+				AffectedItem = scriptName,
+				AffectedService = scanName,
 				Timestamp = DateTime.Now,
 				ErrorCode = new ErrorCode
 				{
-					ConfigurationItem = scriptName + "Script",
+					ConfigurationItem = scriptName + " Script",
 					ConfigurationType = ErrorCode.ConfigType.Automation,
 					Severity = ErrorCode.SeverityType.Warning,
 					Source = "Run() method - exception",
 				},
 			};
 			exceptionHelper.ProcessException(ex, log);
-            innerHelper.SendErrorMessageToTokenHandler();
+            helper.SendErrorMessageToTokenHandler();
             throw;
         }
     }
