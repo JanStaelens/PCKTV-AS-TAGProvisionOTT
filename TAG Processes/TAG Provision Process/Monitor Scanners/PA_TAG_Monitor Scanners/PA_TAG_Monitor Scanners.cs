@@ -89,7 +89,7 @@ namespace Script
             engine.GenerateInformation("START " + scriptName);
 
             var channelName = helper.GetParameterValue<string>("Provision Name (TAG Provision)");
-            var tagInstanceId = helper.GetParameterValue<string>("InstanceId (Peacock)");
+            var tagInstanceId = helper.GetParameterValue<string>("InstanceId (TAG Provision)");
 
             try
             {
