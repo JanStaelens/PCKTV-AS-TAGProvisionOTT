@@ -68,10 +68,10 @@ namespace Script
 
     internal class Script
     {
-		/// <summary>
-		/// The Script entry point.
-		/// </summary>
-		/// <param name="engine">The <see cref="Engine" /> instance used to communicate with DataMiner.</param>
+        /// <summary>
+        /// The Script entry point.
+        /// </summary>
+        /// <param name="engine">The <see cref="Engine" /> instance used to communicate with DataMiner.</param>
         public void Run(Engine engine)
         {
             engine.SetFlag(RunTimeFlags.NoCheckingSets);
@@ -107,14 +107,14 @@ namespace Script
                         AffectedService = channelName,
                         Timestamp = DateTime.Now,
                         ErrorCode = new ErrorCode
-						{
-							ConfigurationItem = scriptName + " Script",
-							ConfigurationType = ErrorCode.ConfigType.Automation,
-							Source = "Channel Status condition",
-							Code = "ChannelNotFound",
-							Severity = ErrorCode.SeverityType.Warning,
-							Description = $"No channels found in channel status with given name: {channelName} in Channel Status Table.",
-						},
+                        {
+                            ConfigurationItem = scriptName + " Script",
+                            ConfigurationType = ErrorCode.ConfigType.Automation,
+                            Source = "Channel Status condition",
+                            Code = "ChannelNotFound",
+                            Severity = ErrorCode.SeverityType.Warning,
+                            Description = $"No channels found in Channel Status Overview Table.",
+                        },
                     };
 
                     helper.Log($"No channels found in channel status with given name: {channelName}.", PaLogLevel.Error);
@@ -151,7 +151,7 @@ namespace Script
                             Source = "Status transition condition",
                             Code = "InvalidStatusForTransition",
                             Severity = ErrorCode.SeverityType.Warning,
-                            Description = $"Cannot execute the transition as the current status is unexpected. Current status: {tagInfo.Status}",
+                            Description = $"Cannot execute the transition as the current status is unexpected.",
                         },
                     };
 

@@ -198,7 +198,7 @@ public class Script
 					ConfigurationItem = scriptName + " Script",
 					ConfigurationType = ErrorCode.ConfigType.Automation,
 					Severity = ErrorCode.SeverityType.Warning,
-					Source = "Run() method - exception",
+					Source = "Run() ",
 				},
 			};
 			exceptionHelper.ProcessException(ex, log);

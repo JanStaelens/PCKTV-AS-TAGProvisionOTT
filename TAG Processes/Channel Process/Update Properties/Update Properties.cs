@@ -179,7 +179,7 @@ namespace Script
 						Source = "ExecuteChannelSets()",
 						Code = "ChannelNotFound",
 						Severity = ErrorCode.SeverityType.Warning,
-						Description = $"No channels found in channel status with given name: {tagInfo.ChannelMatch}.",
+						Description = $"No channels found in All Channel Profiles table.",
 					},
 				};
 
@@ -229,7 +229,7 @@ namespace Script
 								Source = "UpdateLayouts()",
 								Code = "LayoutNotFound",
 								Severity = ErrorCode.SeverityType.Warning,
-								Description = $"No channels found in channel status with given name: {tagInfo.ChannelMatch}.",
+								Description = $"Failed to set channel on layout.",
 							},
 						};
 
@@ -276,7 +276,7 @@ namespace Script
 							Source = "CheckLayoutIndexes()",
 							Code = "LayoutNotFound",
 							Severity = ErrorCode.SeverityType.Warning,
-							Description = $"No layouts found to set: {layout}.",
+							Description = $"No layouts found to set.",
 						},
 					};
 

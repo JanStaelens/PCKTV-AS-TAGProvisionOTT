@@ -209,18 +209,18 @@ namespace Script
             {
                 engine.GenerateInformation($"ERROR in {scriptName} " + ex);
                 var log = new Log
-				{
-					AffectedItem = scriptName,
-					AffectedService = channelName,
-					Timestamp = DateTime.Now,
-					ErrorCode = new ErrorCode
-					{
-						ConfigurationItem = scriptName + " Script",
-						ConfigurationType = ErrorCode.ConfigType.Automation,
-						Source = "Run()",
-						Severity = ErrorCode.SeverityType.Critical,
-					},
-				};
+                {
+                    AffectedItem = scriptName,
+                    AffectedService = channelName,
+                    Timestamp = DateTime.Now,
+                    ErrorCode = new ErrorCode
+                    {
+                        ConfigurationItem = scriptName + " Script",
+                        ConfigurationType = ErrorCode.ConfigType.Automation,
+                        Source = "Run()",
+                        Severity = ErrorCode.SeverityType.Critical,
+                    },
+                };
                 exceptionHelper.ProcessException(ex, log);
 
                 helper.Log($"An issue occurred while executing {scriptName} activity for {channelName}: {ex}", PaLogLevel.Error);
