@@ -21,7 +21,7 @@ jobs:
       referenceType: ${{ github.ref_type }}
       repository: ${{ github.repository }}
       owner: ${{ github.repository_owner }}
-      sonarCloudProjectName: SkylineCommunications_PCKTV-AS-TAGProvisionOTT
+      sonarCloudProjectName: SkylineCommunications_PCKTV-AS-TouchstreamProvisionOTT
       # The API-key: generated in the DCP Admin app (https://admin.dataminer.services/) as authentication for a certain DataMiner System.
     secrets:
       api-key: ${{ secrets.PRODUCTION_DEPLOY_KEY }}
@@ -35,10 +35,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-
+      - name: Check Data
+        run: echo ${{ github.ref_name }}
       - name: Skyline DataMiner Deploy Action
         uses: SkylineCommunications/Skyline-DataMiner-Deploy-Action@v1
         with:
+          referenceName: ${{ github.ref_name }}
+          referenceType: ${{ github.ref_type }}
           # Stage deploy
           stage: Deploy
           # The API-key: generated in the DCP Admin app (https://admin.dataminer.services/) as authentication for a certain DataMiner System.
