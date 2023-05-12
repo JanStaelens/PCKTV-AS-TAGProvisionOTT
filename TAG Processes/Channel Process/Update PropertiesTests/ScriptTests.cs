@@ -23,9 +23,6 @@ namespace Script.Tests
         {
             var fakeEngine = new Mock<Engine>();
 
-            var domHelper = new DomHelper(fakeEngine.Object.SendSLNetMessages, "process_automation");
-            var exceptionHelper = new ExceptionHelper(fakeEngine.Object, domHelper);
-
             var tagInfo = new Mock<TagChannelInfo>();
             tagInfo.Object.ChannelMatch = "Channel Match Test";
 
@@ -34,7 +31,7 @@ namespace Script.Tests
 
             tagInfo.Setup(tag => tag.GetLayoutsFromTable(layout)).Returns(new List<object[]> { new object[] { "1/1" }, new object[] { "1/2" } });
 
-            var indexToUpdate = script.CheckLayoutIndexes(fakeEngine.Object, "Update Properties Test", exceptionHelper, tagInfo.Object, layout);
+            var indexToUpdate = script.CheckLayoutIndexes(fakeEngine.Object, "Update Properties Test", null, tagInfo.Object, layout);
 
             Assert.IsTrue(indexToUpdate == "1/1");
         }

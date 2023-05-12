@@ -54,14 +54,23 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="MSTest.TestFramework">
+      <Version>3.0.2</Version>
+    </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.3</Version>
     </PackageReference>
     <PackageReference Include="Skyline.DataMiner.Core.DataMinerSystem.Automation">
-      <Version>1.1.0.2</Version>
+      <Version>1.1.0.5</Version>
     </PackageReference>
     <PackageReference Include="Skyline.DataMiner.Dev.Automation">
-      <Version>10.3.3.1</Version>
+      <Version>10.3.5</Version>
+    </PackageReference>
+    <PackageReference Include="Skyline.DataMiner.Files.SLManagedAutomation">
+      <Version>10.3.5</Version>
+    </PackageReference>
+    <PackageReference Include="Skyline.DataMiner.Files.SLManagedScripting">
+      <Version>10.3.5</Version>
     </PackageReference>
     <PackageReference Include="StyleCop.Analyzers">
       <Version>1.1.118</Version>
@@ -72,7 +81,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties DisLinkedXmlFile="..\Conviva Scripts.xml" DisProjectType="automationScriptProject" DisLinkId="1" />
+      <UserProperties DisLinkId="1" DisProjectType="automationScriptProject" DisLinkedXmlFile="..\Conviva Scripts.xml" />
     </VisualStudio>
   </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
