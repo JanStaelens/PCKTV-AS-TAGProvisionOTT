@@ -139,19 +139,9 @@ namespace Script
 					status = instance.StatusId;
 				}
 
-				IDms dms = engine.GetDms();
-				IDmsElement element = dms.GetElement(scanner.TagElement);
-
-				var tagDictionary = new Dictionary<string, TagRequest>();
-
-				var tagRequest = new TagRequest();
-				var scanList = this.CreateScanRequestJson(instance, scanner);
-				tagRequest.ScanRequests = scanList;
-				tagDictionary.Add(scanner.TagDevice, tagRequest);
-
-				element.GetStandaloneParameter<string>(3).SetValue(JsonConvert.SerializeObject(tagDictionary));
-
-				this.ExecuteChannelsTransition(scanner.Channels, status);
+				IDmsElement element;
+				List<Scan> scanList;
+				DeactivateScans(engine, scanner, instance, status, out element, out scanList);
 
 				bool VerifyScanDeleted()
 				{
@@ -181,35 +171,7 @@ namespace Script
 				{
 					// successfully deleted
 					helper.Log($"Scanner {scanner.ScanName} Deactivated", PaLogLevel.Information);
-					if (status == "deactivating")
-					{
-						helper.TransitionState("deactivating_to_complete");
-						helper.SendFinishMessageToTokenHandler();
-					}
-					else if (scanner.Action == "reprovision")
-					{
-						helper.TransitionState("reprovision_to_inprogress");
-						helper.ReturnSuccess();
-					}
-					else
-					{
-						var log = new Log
-						{
-							AffectedItem = scriptName,
-							AffectedService = scanner.ScanName,
-							Timestamp = DateTime.Now,
-							ErrorCode = new ErrorCode
-							{
-								ConfigurationItem = scriptName + " Script",
-								ConfigurationType = ErrorCode.ConfigType.Automation,
-								Severity = ErrorCode.SeverityType.Warning,
-								Source = "Status Transition condition",
-								Description = $"Failed to execute transition status. Current status: {status}",
-							},
-						};
-						exceptionHelper.GenerateLog(log);
-						helper.SendErrorMessageToTokenHandler();
-					}
+					PostActions(scriptName, helper, exceptionHelper, scanner, status);
 				}
 				else
 				{
@@ -254,6 +216,55 @@ namespace Script
 					},
 				};
 				exceptionHelper.ProcessException(ex, log);
+				helper.SendErrorMessageToTokenHandler();
+			}
+		}
+
+		private void DeactivateScans(Engine engine, Scanner scanner, DomInstance instance, string status, out IDmsElement element, out List<Scan> scanList)
+		{
+			IDms dms = engine.GetDms();
+			element = dms.GetElement(scanner.TagElement);
+			var tagDictionary = new Dictionary<string, TagRequest>();
+
+			var tagRequest = new TagRequest();
+			scanList = this.CreateScanRequestJson(instance, scanner);
+			tagRequest.ScanRequests = scanList;
+			tagDictionary.Add(scanner.TagDevice, tagRequest);
+
+			element.GetStandaloneParameter<string>(3).SetValue(JsonConvert.SerializeObject(tagDictionary));
+
+			this.ExecuteChannelsTransition(scanner.Channels, status);
+		}
+
+		private static void PostActions(string scriptName, PaProfileLoadDomHelper helper, ExceptionHelper exceptionHelper, Scanner scanner, string status)
+		{
+			if (status == "deactivating")
+			{
+				helper.TransitionState("deactivating_to_complete");
+				helper.SendFinishMessageToTokenHandler();
+			}
+			else if (scanner.Action == "reprovision")
+			{
+				helper.TransitionState("reprovision_to_inprogress");
+				helper.ReturnSuccess();
+			}
+			else
+			{
+				var log = new Log
+				{
+					AffectedItem = scriptName,
+					AffectedService = scanner.ScanName,
+					Timestamp = DateTime.Now,
+					ErrorCode = new ErrorCode
+					{
+						ConfigurationItem = scriptName + " Script",
+						ConfigurationType = ErrorCode.ConfigType.Automation,
+						Severity = ErrorCode.SeverityType.Warning,
+						Source = "Status Transition condition",
+						Description = $"Failed to execute transition status. Current status: {status}",
+					},
+				};
+				exceptionHelper.GenerateLog(log);
 				helper.SendErrorMessageToTokenHandler();
 			}
 		}

@@ -147,42 +147,7 @@ namespace Script
 
                 if (Retry(CheckScanners, new TimeSpan(0, 10, 0)))
                 {
-                    if (action == "provision" || action == "reprovision" || action == "complete-provision")
-                    {
-                        helper.TransitionState("inprogress_to_active");
-                    }
-                    else if (action == "deactivate")
-                    {
-                        helper.TransitionState("deactivating_to_complete");
-                    }
-
-                    var filter = DomInstanceExposers.Id.Equal(new DomInstanceId(Guid.Parse(tagInstanceId)));
-                    var tagInstances = this.innerDomHelper.DomInstances.Read(filter);
-                    var tagInstance = tagInstances.First();
-
-                    // successfully created filter
-                    var sourceElement = helper.GetParameterValue<string>("Source Element (TAG Provision)");
-                    var provisionName = helper.GetParameterValue<string>("Source ID (TAG Provision)");
-
-                    if (!string.IsNullOrWhiteSpace(sourceElement))
-                    {
-                        ExternalRequest evtmgrUpdate = new ExternalRequest
-                        {
-                            Type = "Process Automation",
-                            ProcessResponse = new ProcessResponse
-                            {
-                                EventName = provisionName,
-                                Tag = new TagResponse
-                                {
-                                    Status = tagInstance.StatusId == "active" ? "Active" : "Complete",
-                                },
-                            },
-                        };
-
-                        var elementSplit = sourceElement.Split('/');
-                        var eventManager = engine.FindElement(Convert.ToInt32(elementSplit[0]), Convert.ToInt32(elementSplit[1]));
-                        eventManager.SetParameter(Convert.ToInt32(elementSplit[2]), JsonConvert.SerializeObject(evtmgrUpdate));
-                    }
+                    PostActions(engine, helper, tagInstanceId, action);
 
                     helper.SendFinishMessageToTokenHandler();
                 }
@@ -225,6 +190,46 @@ namespace Script
 
                 helper.Log($"An issue occurred while executing {scriptName} activity for {channelName}: {ex}", PaLogLevel.Error);
                 helper.SendErrorMessageToTokenHandler();
+            }
+        }
+
+        private void PostActions(Engine engine, PaProfileLoadDomHelper helper, string tagInstanceId, string action)
+        {
+            if (action == "provision" || action == "reprovision" || action == "complete-provision")
+            {
+                helper.TransitionState("inprogress_to_active");
+            }
+            else if (action == "deactivate")
+            {
+                helper.TransitionState("deactivating_to_complete");
+            }
+
+            var filter = DomInstanceExposers.Id.Equal(new DomInstanceId(Guid.Parse(tagInstanceId)));
+            var tagInstances = this.innerDomHelper.DomInstances.Read(filter);
+            var tagInstance = tagInstances.First();
+
+            // successfully created filter
+            var sourceElement = helper.GetParameterValue<string>("Source Element (TAG Provision)");
+            var provisionName = helper.GetParameterValue<string>("Source ID (TAG Provision)");
+
+            if (!string.IsNullOrWhiteSpace(sourceElement))
+            {
+                ExternalRequest evtmgrUpdate = new ExternalRequest
+                {
+                    Type = "Process Automation",
+                    ProcessResponse = new ProcessResponse
+                    {
+                        EventName = provisionName,
+                        Tag = new TagResponse
+                        {
+                            Status = tagInstance.StatusId == "active" ? "Active" : "Complete",
+                        },
+                    },
+                };
+
+                var elementSplit = sourceElement.Split('/');
+                var eventManager = engine.FindElement(Convert.ToInt32(elementSplit[0]), Convert.ToInt32(elementSplit[1]));
+                eventManager.SetParameter(Convert.ToInt32(elementSplit[2]), JsonConvert.SerializeObject(evtmgrUpdate));
             }
         }
 

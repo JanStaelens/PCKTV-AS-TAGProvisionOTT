@@ -1,7 +1,9 @@
 #pragma warning disable SA1633 // File should have header
 namespace Helper
+#pragma warning disable IDE0079 // Remove unnecessary suppression
 #pragma warning restore SA1633 // File should have header
 {
+#pragma warning restore IDE0079 // Remove unnecessary suppression
     using Newtonsoft.Json;
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:Elements should be documented", Justification = "ignored")]

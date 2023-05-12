@@ -58,7 +58,22 @@ namespace Script
 
 			SectionDefinition sectionToUpdate = null;
 			FieldDescriptor fieldToUpdate = null;
+			SearchSections(keyField, ref businessKey, instance, ref instanceSet, ref keyFound, ref sectionToUpdate, ref fieldToUpdate);
 
+			if (sectionToUpdate == null || fieldToUpdate == null)
+			{
+				engine.GenerateInformation("Failed to find section/field for updating InstanceId");
+				return null;
+			}
+
+			instance.AddOrUpdateFieldValue(sectionToUpdate, fieldToUpdate, instanceId.Id.ToString());
+			innerDomHelper.DomInstances.Update(instance);
+
+			return businessKey;
+		}
+
+		private void SearchSections(string keyField, ref string businessKey, DomInstance instance, ref bool instanceSet, ref bool keyFound, ref SectionDefinition sectionToUpdate, ref FieldDescriptor fieldToUpdate)
+		{
 			foreach (var section in instance.Sections)
 			{
 				Func<SectionDefinitionID, SectionDefinition> sectionDefinitionFunc = SetSectionDefinitionById;
@@ -90,17 +105,6 @@ namespace Script
 					break;
 				}
 			}
-
-			if (sectionToUpdate == null || fieldToUpdate == null)
-			{
-				engine.GenerateInformation("Failed to find section/field for updating InstanceId");
-				return null;
-			}
-
-			instance.AddOrUpdateFieldValue(sectionToUpdate, fieldToUpdate, instanceId.Id.ToString());
-			innerDomHelper.DomInstances.Update(instance);
-
-			return businessKey;
 		}
 
 		private SectionDefinition SetSectionDefinitionById(SectionDefinitionID sectionDefinitionId)

@@ -122,50 +122,33 @@ namespace Script
                 bool VerifyScan()
                 {
                     try
-                    {
-                        int iTotalExpected = 0;
-                        int iScanRequestChecked = 0;
+					{
+						int iTotalExpected = 0;
+						int iScanRequestChecked = 0;
 
-                        iTotalExpected = manifests.Count;
+						iTotalExpected = manifests.Count;
 
-                        object[][] scanChannelsRows = null;
-                        var scanChannelTable = element.GetTable(1310);
-                        scanChannelsRows = scanChannelTable.GetRows();
+						object[][] scanChannelsRows = null;
+						var scanChannelTable = element.GetTable(1310);
+						scanChannelsRows = scanChannelTable.GetRows();
 
-                        if (scanChannelsRows == null)
-                        {
-                            helper.Log("No Scan Channel Rows found", PaLogLevel.Information);
-                            return false;
-                        }
+						if (scanChannelsRows == null)
+						{
+							helper.Log("No Scan Channel Rows found", PaLogLevel.Information);
+							return false;
+						}
 
-                        foreach (var manifest in manifests)
-                        {
-                            foreach (var row in scanChannelsRows)
-                            {
-                                // Tried to refactor, but QueryData can't check for contains or a column equals two different values
-                                // Though ideally we can get around getting all rows in the table
-                                string[] urls = Convert.ToString(row[14]).Split('|');
-                                string title = HttpUtility.HtmlDecode(Convert.ToString(row[13]));
-                                var mode = (ModeState)Convert.ToInt32(row[2]);
+						iScanRequestChecked = ValidateScans(scanner, manifests, iScanRequestChecked, scanChannelsRows);
 
-                                bool isScanFinished = mode == ModeState.Finished || mode == ModeState.FinishedRemoved;
-                                if (title.Contains(scanner.ScanName.Split(' ')[0]) && urls.Contains(manifest.Url) && isScanFinished)
-                                {
-                                    iScanRequestChecked++;
-                                    break;
-                                }
-                            }
-                        }
+						if (iTotalExpected == iScanRequestChecked)
+						{
+							// done
+							return true;
+						}
 
-                        if (iTotalExpected == iScanRequestChecked)
-                        {
-                            // done
-                            return true;
-                        }
-
-                        return false;
-                    }
-                    catch (Exception ex)
+						return false;
+					}
+					catch (Exception ex)
                     {
                         engine.Log("Exception thrown while checking TAG Scan status: " + ex);
 
@@ -237,5 +220,29 @@ namespace Script
                 throw;
             }
         }
-    }
+
+		private static int ValidateScans(Scanner scanner, List<Manifest> manifests, int iScanRequestChecked, object[][] scanChannelsRows)
+		{
+			foreach (var manifest in manifests)
+			{
+				foreach (var row in scanChannelsRows)
+				{
+					// Tried to refactor, but QueryData can't check for contains or a column equals two different values
+					// Though ideally we can get around getting all rows in the table
+					string[] urls = Convert.ToString(row[14]).Split('|');
+					string title = HttpUtility.HtmlDecode(Convert.ToString(row[13]));
+					var mode = (ModeState)Convert.ToInt32(row[2]);
+
+					bool isScanFinished = mode == ModeState.Finished || mode == ModeState.FinishedRemoved;
+					if (title.Contains(scanner.ScanName.Split(' ')[0]) && urls.Contains(manifest.Url) && isScanFinished)
+					{
+						iScanRequestChecked++;
+						break;
+					}
+				}
+			}
+
+			return iScanRequestChecked;
+		}
+	}
 }
