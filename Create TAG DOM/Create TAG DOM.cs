@@ -507,6 +507,8 @@ namespace Script
 					new DomStatus("deactivate", "Deactivate"),
 					new DomStatus("deactivating", "Deactivating"),
 					new DomStatus("complete", "Complete"),
+					new DomStatus("error", "Error"),
+					new DomStatus("active_with_errors", "Active with Errors"),
 				};
 
 				var transitions = new List<DomStatusTransition>
@@ -521,6 +523,14 @@ namespace Script
 					new DomStatusTransition("deactivating_to_complete", "deactivating", "complete"),
 					new DomStatusTransition("complete_to_ready", "complete", "ready"),
 					new DomStatusTransition("complete_to_draft", "complete", "draft"),
+					new DomStatusTransition("inprogress_to_error", "in_progress", "error"),
+					new DomStatusTransition("deactivating_to_error", "deactivating", "error"),
+					new DomStatusTransition("error_to_reprovision", "error", "reprovision"),
+					new DomStatusTransition("error_to_deactivate", "error", "deactivate"),
+					new DomStatusTransition("inprogress_to_activewitherrors", "in_progress", "active_with_errors"),
+					new DomStatusTransition("deactivating_to_activewitherrors", "deactivating", "active_with_errors"),
+					new DomStatusTransition("activewitherrors_to_reprovision", "active_with_errors", "reprovision"),
+					new DomStatusTransition("activewitherrors_to_deactivating", "active_with_errors", "deactivate"),
 				};
 
 				List<IDomActionDefinition> behaviorActions = GetBehaviorActions("TAG Process", "Provision Name");
@@ -551,6 +561,8 @@ namespace Script
 					new DomStatus("deactivate", "Deactivate"),
 					new DomStatus("deactivating", "Deactivating"),
 					new DomStatus("complete", "Complete"),
+					new DomStatus("error", "Error"),
+					new DomStatus("active_with_errors", "Active with Errors"),
 				};
 
 				var transitions = new List<DomStatusTransition>
@@ -565,6 +577,14 @@ namespace Script
 					new DomStatusTransition("deactivating_to_complete", "deactivating", "complete"),
 					new DomStatusTransition("complete_to_ready", "complete", "ready"),
 					new DomStatusTransition("complete_to_draft", "complete", "draft"),
+					new DomStatusTransition("inprogress_to_error", "in_progress", "error"),
+					new DomStatusTransition("deactivating_to_error", "deactivating", "error"),
+					new DomStatusTransition("error_to_reprovision", "error", "reprovision"),
+					new DomStatusTransition("error_to_deactivate", "error", "deactivate"),
+					new DomStatusTransition("inprogress_to_activewitherrors", "in_progress", "active_with_errors"),
+					new DomStatusTransition("deactivating_to_activewitherrors", "deactivating", "active_with_errors"),
+					new DomStatusTransition("activewitherrors_to_reprovision", "active_with_errors", "reprovision"),
+					new DomStatusTransition("activewitherrors_to_deactivating", "active_with_errors", "deactivate"),
 				};
 
 				List<IDomActionDefinition> behaviorActions = GetBehaviorActions("TAG Scan Process", "Scan Name");
@@ -613,7 +633,103 @@ namespace Script
 					Layout = new DomButtonDefinitionLayout { Text = "Provision" },
 				};
 
-				List<IDomButtonDefinition> domButtons = new List<IDomButtonDefinition> { provisionButton, deactivateButton, reprovisionButton, completeProvision };
+				DomInstanceButtonDefinition errorReprovisionButton = new DomInstanceButtonDefinition("error-reprovision")
+				{
+					VisibilityCondition = new StatusCondition(new List<string> { "error" }),
+					ActionDefinitionIds = new List<string> { "error-reprovision" },
+					Layout = new DomButtonDefinitionLayout { Text = "Reprovision" },
+				};
+
+				DomInstanceButtonDefinition errorDeactivateButton = new DomInstanceButtonDefinition("error-deactivate")
+				{
+					VisibilityCondition = new StatusCondition(new List<string> { "error" }),
+					ActionDefinitionIds = new List<string> { "error-deactivate" },
+					Layout = new DomButtonDefinitionLayout { Text = "Deactivate" },
+				};
+
+				DomInstanceButtonDefinition activeErrorReprovisionButton = new DomInstanceButtonDefinition("activeerror-reprovision")
+				{
+					VisibilityCondition = new StatusCondition(new List<string> { "active_with_errors" }),
+					ActionDefinitionIds = new List<string> { "activeerror-reprovision" },
+					Layout = new DomButtonDefinitionLayout { Text = "Reprovision" },
+				};
+
+				DomInstanceButtonDefinition activeErrorDeactivateButton = new DomInstanceButtonDefinition("activeerror-deactivate")
+				{
+					VisibilityCondition = new StatusCondition(new List<string> { "active_with_errors" }),
+					ActionDefinitionIds = new List<string> { "activeerror-deactivate" },
+					Layout = new DomButtonDefinitionLayout { Text = "Deactivate" },
+				};
+
+				List<IDomButtonDefinition> domButtons = new List<IDomButtonDefinition>
+				{
+					provisionButton,
+					deactivateButton,
+					reprovisionButton,
+					completeProvision,
+					errorReprovisionButton,
+					errorDeactivateButton,
+					activeErrorReprovisionButton,
+					activeErrorDeactivateButton,
+				};
+
+				return domButtons;
+			}
+
+			private static List<IDomButtonDefinition> GetChannelBehaviorButtons()
+			{
+				DomInstanceButtonDefinition provisionButton = new DomInstanceButtonDefinition("provision")
+				{
+					VisibilityCondition = new StatusCondition(new List<string> { "draft" }),
+					ActionDefinitionIds = new List<string> { "provision" },
+					Layout = new DomButtonDefinitionLayout { Text = "Provision" },
+				};
+
+				DomInstanceButtonDefinition deactivateButton = new DomInstanceButtonDefinition("deactivate")
+				{
+					VisibilityCondition = new StatusCondition(new List<string> { "active" }),
+					ActionDefinitionIds = new List<string> { "deactivate" },
+					Layout = new DomButtonDefinitionLayout { Text = "Deactivate" },
+				};
+
+				DomInstanceButtonDefinition reprovisionButton = new DomInstanceButtonDefinition("reprovision")
+				{
+					VisibilityCondition = new StatusCondition(new List<string> { "active" }),
+					ActionDefinitionIds = new List<string> { "reprovision" },
+					Layout = new DomButtonDefinitionLayout { Text = "Reprovision" },
+				};
+
+				DomInstanceButtonDefinition completeProvision = new DomInstanceButtonDefinition("complete-provision")
+				{
+					VisibilityCondition = new StatusCondition(new List<string> { "complete" }),
+					ActionDefinitionIds = new List<string> { "complete-provision" },
+					Layout = new DomButtonDefinitionLayout { Text = "Provision" },
+				};
+
+				DomInstanceButtonDefinition errorReprovisionButton = new DomInstanceButtonDefinition("error-reprovision")
+				{
+					VisibilityCondition = new StatusCondition(new List<string> { "error" }),
+					ActionDefinitionIds = new List<string> { "error-reprovision" },
+					Layout = new DomButtonDefinitionLayout { Text = "Reprovision" },
+				};
+
+				DomInstanceButtonDefinition errorDeactivateButton = new DomInstanceButtonDefinition("error-deactivate")
+				{
+					VisibilityCondition = new StatusCondition(new List<string> { "error" }),
+					ActionDefinitionIds = new List<string> { "error-deactivate" },
+					Layout = new DomButtonDefinitionLayout { Text = "Deactivate" },
+				};
+
+				List<IDomButtonDefinition> domButtons = new List<IDomButtonDefinition>
+				{
+					provisionButton,
+					deactivateButton,
+					reprovisionButton,
+					completeProvision,
+					errorReprovisionButton,
+					errorDeactivateButton,
+				};
+
 				return domButtons;
 			}
 
@@ -671,7 +787,74 @@ namespace Script
 					},
 				};
 
-				var behaviorActions = new List<IDomActionDefinition> { provisionAction, deactivateAction, reprovisionAction, completeProvisionAction, };
+				var errorReprovisionAction = new ExecuteScriptDomActionDefinition("error-reprovision")
+				{
+					Script = "start_process",
+					IsInteractive = false,
+					ScriptOptions = new List<string>
+					{
+						$"PARAMETER:1:{processName}",
+						"PARAMETER:2:error_to_reprovision",
+						$"PARAMETER:3:{businessKeyField}",
+						"PARAMETER:4:error-reprovision",
+					},
+				};
+
+				var errorDeactivateAction = new ExecuteScriptDomActionDefinition("error-deactivate")
+				{
+					Script = "start_process",
+					IsInteractive = false,
+					ScriptOptions = new List<string>
+					{
+						$"PARAMETER:1:{processName}",
+						"PARAMETER:2:error_to_deactivate",
+						$"PARAMETER:3:{businessKeyField}",
+						"PARAMETER:4:error-deactivate",
+					},
+				};
+
+				var behaviorActions = new List<IDomActionDefinition>
+				{
+					provisionAction,
+					deactivateAction,
+					reprovisionAction,
+					completeProvisionAction,
+					errorReprovisionAction,
+					errorDeactivateAction,
+				};
+
+				if (!processName.Contains("Channel"))
+				{
+					var activeErrorReprovisionAction = new ExecuteScriptDomActionDefinition("activeerror-reprovision")
+					{
+						Script = "start_process",
+						IsInteractive = false,
+						ScriptOptions = new List<string>
+						{
+							$"PARAMETER:1:{processName}",
+							"PARAMETER:2:activewitherrors_to_reprovision",
+							$"PARAMETER:3:{businessKeyField}",
+							"PARAMETER:4:activeerror-reprovision",
+						},
+					};
+
+					var activeErrorDeactivateAction = new ExecuteScriptDomActionDefinition("activeerror-deactivate")
+					{
+						Script = "start_process",
+						IsInteractive = false,
+						ScriptOptions = new List<string>
+						{
+							$"PARAMETER:1:{processName}",
+							"PARAMETER:2:activewitherrors_to_deactivate",
+							$"PARAMETER:3:{businessKeyField}",
+							"PARAMETER:4:activeerror-deactivate",
+						},
+					};
+
+					behaviorActions.Add(activeErrorDeactivateAction);
+					behaviorActions.Add(activeErrorReprovisionAction);
+				}
+
 				return behaviorActions;
 			}
 
@@ -687,6 +870,7 @@ namespace Script
 					new DomStatus("deactivate", "Deactivate"),
 					new DomStatus("deactivating", "Deactivating"),
 					new DomStatus("complete", "Complete"),
+					new DomStatus("error", "Error"),
 				};
 
 				var transitions = new List<DomStatusTransition>
@@ -702,11 +886,15 @@ namespace Script
 					new DomStatusTransition("complete_to_draft", "complete", "draft"),
 					new DomStatusTransition("complete_to_ready", "complete", "ready"),
 					new DomStatusTransition("active_to_complete", "active", "complete"),
+					new DomStatusTransition("inprogress_to_error", "in_progress", "error"),
+					new DomStatusTransition("deactivating_to_error", "deactivating", "error"),
+					new DomStatusTransition("error_to_reprovision", "error", "reprovision"),
+					new DomStatusTransition("error_to_deactivate", "error", "deactivate"),
 				};
 
 				List<IDomActionDefinition> behaviorActions = GetBehaviorActions("TAG Channel Process", "Channel Name");
 
-				List<IDomButtonDefinition> domButtons = GetBehaviorButtons();
+				List<IDomButtonDefinition> domButtons = GetChannelBehaviorButtons();
 
 				return new DomBehaviorDefinition
 				{
@@ -735,8 +923,23 @@ namespace Script
 					var deactivateStatusLink = StatusSectionDefinitions.GetTagProvisionSectionDefinitionLinks(section, fieldsList, "deactivate");
 					var deactivatingStatusLink = StatusSectionDefinitions.GetTagProvisionSectionDefinitionLinks(section, fieldsList, "deactivating");
 					var completeStatusLink = StatusSectionDefinitions.GetTagProvisionSectionDefinitionLinks(section, fieldsList, "complete");
+					var errorStatusLink = StatusSectionDefinitions.GetTagProvisionSectionDefinitionLinks(section, fieldsList, "error");
+					var activeWithErrorsStatusLink = StatusSectionDefinitions.GetTagProvisionSectionDefinitionLinks(section, fieldsList, "active_with_errors");
 
-					var links = new List<DomStatusSectionDefinitionLink> { draftStatusLink, readyStatusLink, inprogressStatusLink, activeStatusLink, reprovisionStatusLink, deactivateStatusLink, deactivatingStatusLink, completeStatusLink };
+					var links = new List<DomStatusSectionDefinitionLink>
+					{
+						draftStatusLink,
+						readyStatusLink,
+						inprogressStatusLink,
+						activeStatusLink,
+						reprovisionStatusLink,
+						deactivateStatusLink,
+						deactivatingStatusLink,
+						completeStatusLink,
+						errorStatusLink,
+						activeWithErrorsStatusLink,
+					};
+
 					list.AddRange(links);
 				}
 
@@ -758,8 +961,23 @@ namespace Script
 					var deactivateStatusLink = StatusSectionDefinitions.GetTagScanSectionDefinitionLink(section, fieldsList, "deactivate");
 					var deactivatingStatusLink = StatusSectionDefinitions.GetTagScanSectionDefinitionLink(section, fieldsList, "deactivating");
 					var completeStatusLink = StatusSectionDefinitions.GetTagScanSectionDefinitionLink(section, fieldsList, "complete");
+					var errorStatusLink = StatusSectionDefinitions.GetTagScanSectionDefinitionLink(section, fieldsList, "error");
+					var activeWithErrorsStatusLink = StatusSectionDefinitions.GetTagScanSectionDefinitionLink(section, fieldsList, "active_with_errors");
 
-					var links = new List<DomStatusSectionDefinitionLink> { draftStatusLink, readyStatusLink, inprogressStatusLink, activeStatusLink, reprovisionStatusLink, deactivateStatusLink, deactivatingStatusLink, completeStatusLink };
+					var links = new List<DomStatusSectionDefinitionLink>
+					{
+						draftStatusLink,
+						readyStatusLink,
+						inprogressStatusLink,
+						activeStatusLink,
+						reprovisionStatusLink,
+						deactivateStatusLink,
+						deactivatingStatusLink,
+						completeStatusLink,
+						errorStatusLink,
+						activeWithErrorsStatusLink,
+					};
+
 					list.AddRange(links);
 				}
 
@@ -773,8 +991,6 @@ namespace Script
 				{
 					Dictionary<string, FieldDescriptorID> fieldsList = GetFieldDescriptorDictionary(section);
 
-					internalEngine.GenerateInformation($"fieldsList: {JsonConvert.SerializeObject(fieldsList)}");
-
 					var draftStatusLink = StatusSectionDefinitions.GetTagChannelSectionDefinitionLinkDraft(section, fieldsList);
 					var readyStatusLink = StatusSectionDefinitions.GetTagChannelSectionDefinitionLink(section, fieldsList, "ready");
 					var inprogressStatusLink = StatusSectionDefinitions.GetTagChannelSectionDefinitionLink(section, fieldsList, "in_progress");
@@ -783,8 +999,21 @@ namespace Script
 					var deactivateStatusLink = StatusSectionDefinitions.GetTagChannelSectionDefinitionLink(section, fieldsList, "deactivate");
 					var deactivatingStatusLink = StatusSectionDefinitions.GetTagChannelSectionDefinitionLink(section, fieldsList, "deactivating");
 					var completeStatusLink = StatusSectionDefinitions.GetTagChannelSectionDefinitionLink(section, fieldsList, "complete");
+					var errorStatusLink = StatusSectionDefinitions.GetTagChannelSectionDefinitionLink(section, fieldsList, "error");
 
-					var links = new List<DomStatusSectionDefinitionLink> { draftStatusLink, readyStatusLink, inprogressStatusLink, activeStatusLink, reprovisionStatusLink, deactivateStatusLink, deactivatingStatusLink, completeStatusLink };
+					var links = new List<DomStatusSectionDefinitionLink>
+					{
+						draftStatusLink,
+						readyStatusLink,
+						inprogressStatusLink,
+						activeStatusLink,
+						reprovisionStatusLink,
+						deactivateStatusLink,
+						deactivatingStatusLink,
+						completeStatusLink,
+						errorStatusLink,
+					};
+
 					list.AddRange(links);
 				}
 
@@ -818,13 +1047,13 @@ namespace Script
 						{
 							new DomStatusFieldDescriptorLink(fieldsList["Source Element (TAG Provision)"])
 							{
-								Visible = true,
+								Visible = false,
 								ReadOnly = false,
 								RequiredForStatus = false,
 							},
 							new DomStatusFieldDescriptorLink(fieldsList["Source ID (TAG Provision)"])
 							{
-								Visible = true,
+								Visible = false,
 								ReadOnly = false,
 								RequiredForStatus = false,
 							},
@@ -842,13 +1071,13 @@ namespace Script
 							},
 							new DomStatusFieldDescriptorLink(fieldsList["InstanceId (TAG Provision)"])
 							{
-								Visible = true,
+								Visible = false,
 								ReadOnly = false,
 								RequiredForStatus = false,
 							},
 							new DomStatusFieldDescriptorLink(fieldsList["Action (TAG Provision)"])
 							{
-								Visible = true,
+								Visible = false,
 								ReadOnly = false,
 								RequiredForStatus = false,
 							},
@@ -868,13 +1097,13 @@ namespace Script
 						{
 							new DomStatusFieldDescriptorLink(fieldsList["Source Element (TAG Provision)"])
 							{
-								Visible = true,
+								Visible = false,
 								ReadOnly = true,
 								RequiredForStatus = false,
 							},
 							new DomStatusFieldDescriptorLink(fieldsList["Source ID (TAG Provision)"])
 							{
-								Visible = true,
+								Visible = false,
 								ReadOnly = true,
 								RequiredForStatus = false,
 							},
@@ -892,13 +1121,13 @@ namespace Script
 							},
 							new DomStatusFieldDescriptorLink(fieldsList["InstanceId (TAG Provision)"])
 							{
-								Visible = true,
+								Visible = false,
 								ReadOnly = true,
 								RequiredForStatus = true,
 							},
 							new DomStatusFieldDescriptorLink(fieldsList["Action (TAG Provision)"])
 							{
-								Visible = true,
+								Visible = false,
 								ReadOnly = false,
 								RequiredForStatus = true,
 							},
@@ -922,13 +1151,13 @@ namespace Script
 								{
 									new DomStatusFieldDescriptorLink(fieldsList["Source Element (TAG Scan)"])
 									{
-										Visible = true,
+										Visible = false,
 										ReadOnly = false,
 										RequiredForStatus = false,
 									},
 									new DomStatusFieldDescriptorLink(fieldsList["Source ID (TAG Scan)"])
 									{
-										Visible = true,
+										Visible = false,
 										ReadOnly = false,
 										RequiredForStatus = false,
 									},
@@ -976,13 +1205,13 @@ namespace Script
 									},
 									new DomStatusFieldDescriptorLink(fieldsList["InstanceId (TAG Scan)"])
 									{
-										Visible = true,
+										Visible = false,
 										ReadOnly = false,
 										RequiredForStatus = false,
 									},
 									new DomStatusFieldDescriptorLink(fieldsList["Action (TAG Scan)"])
 									{
-										Visible = true,
+										Visible = false,
 										ReadOnly = false,
 										RequiredForStatus = false,
 									},
@@ -1032,13 +1261,13 @@ namespace Script
 								{
 									new DomStatusFieldDescriptorLink(fieldsList["Source Element (TAG Scan)"])
 									{
-										Visible = true,
+										Visible = false,
 										ReadOnly = true,
 										RequiredForStatus = false,
 									},
 									new DomStatusFieldDescriptorLink(fieldsList["Source ID (TAG Scan)"])
 									{
-										Visible = true,
+										Visible = false,
 										ReadOnly = true,
 										RequiredForStatus = false,
 									},
@@ -1086,13 +1315,13 @@ namespace Script
 									},
 									new DomStatusFieldDescriptorLink(fieldsList["InstanceId (TAG Scan)"])
 									{
-										Visible = true,
+										Visible = false,
 										ReadOnly = true,
 										RequiredForStatus = true,
 									},
 									new DomStatusFieldDescriptorLink(fieldsList["Action (TAG Scan)"])
 									{
-										Visible = true,
+										Visible = false,
 										ReadOnly = false,
 										RequiredForStatus = true,
 									},
@@ -1191,7 +1420,7 @@ namespace Script
 									},
 									new DomStatusFieldDescriptorLink(fieldsList["InstanceId (TAG Channel)"])
 									{
-										Visible = true,
+										Visible = false,
 										ReadOnly = false,
 										RequiredForStatus = false,
 									},
@@ -1285,7 +1514,7 @@ namespace Script
 									},
 									new DomStatusFieldDescriptorLink(fieldsList["InstanceId (TAG Channel)"])
 									{
-										Visible = true,
+										Visible = false,
 										ReadOnly = false,
 										RequiredForStatus = true,
 									},
