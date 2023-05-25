@@ -12,6 +12,7 @@ namespace Script
 	public class Script
 	{
 		private DomHelper innerDomHelper;
+		private Field actionField;
 
 		/// <summary>
 		/// The Script entry point.
@@ -30,6 +31,7 @@ namespace Script
 				var process = engine.GetScriptParam("process").Value;
 				var transition = engine.GetScriptParam("transition").Value;
 				var keyField = engine.GetScriptParam("key").Value;
+				var actionValue = engine.GetScriptParam("action").Value;
 
 				var instanceId = context.ContextId as DomInstanceId;
 				innerDomHelper = new DomHelper(engine.SendSLNetMessages, instanceId.ModuleId);
@@ -38,6 +40,7 @@ namespace Script
 				if (!String.IsNullOrWhiteSpace(businessKey))
 				{
 					innerDomHelper.DomInstances.DoStatusTransition(instanceId, transition);
+					UpdateAction(instanceId, actionValue);
 					ProcessHelper.PushToken(process, businessKey, instanceId);
 				}
 			}
@@ -45,6 +48,19 @@ namespace Script
 			{
 				engine.GenerateInformation("Exception starting process: " + ex);
 			}
+		}
+
+		private void UpdateAction(DomInstanceId instanceId, string actionValue)
+		{
+			if (this.actionField == null)
+			{
+				return;
+			}
+
+			var dominstance = DomInstanceExposers.Id.Equal(instanceId);
+			var instance = this.innerDomHelper.DomInstances.Read(dominstance).First();
+			instance.AddOrUpdateFieldValue(this.actionField.SectionDefinition, this.actionField.FieldDescriptor, actionValue);
+			this.innerDomHelper.DomInstances.Update(instance);
 		}
 
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1101:Prefix local calls with this", Justification = "Ignored")]
@@ -58,39 +74,36 @@ namespace Script
 
 			SectionDefinition sectionToUpdate = null;
 			FieldDescriptor fieldToUpdate = null;
-			SearchSections(keyField, ref businessKey, instance, ref instanceSet, ref keyFound, ref sectionToUpdate, ref fieldToUpdate);
 
-			if (sectionToUpdate == null || fieldToUpdate == null)
-			{
-				engine.GenerateInformation("Failed to find section/field for updating InstanceId");
-				return null;
-			}
-
-			instance.AddOrUpdateFieldValue(sectionToUpdate, fieldToUpdate, instanceId.Id.ToString());
-			innerDomHelper.DomInstances.Update(instance);
-
-			return businessKey;
-		}
-
-		private void SearchSections(string keyField, ref string businessKey, DomInstance instance, ref bool instanceSet, ref bool keyFound, ref SectionDefinition sectionToUpdate, ref FieldDescriptor fieldToUpdate)
-		{
 			foreach (var section in instance.Sections)
 			{
 				Func<SectionDefinitionID, SectionDefinition> sectionDefinitionFunc = SetSectionDefinitionById;
 				section.Stitch(sectionDefinitionFunc);
 
-				foreach (var field in section.FieldValues)
+				var sectionDefinition = section.GetSectionDefinition();
+				var fields = sectionDefinition.GetAllFieldDescriptors();
+
+				foreach (var field in fields)
 				{
-					if (field.GetFieldDescriptor().Name.Contains("InstanceId"))
+					if (field.Name.Contains("InstanceId"))
 					{
-						sectionToUpdate = section.GetSectionDefinition();
-						fieldToUpdate = field.GetFieldDescriptor();
+						sectionToUpdate = sectionDefinition;
+						fieldToUpdate = field;
 						instanceSet = true;
 					}
 
-					if (field.GetFieldDescriptor().Name.Contains(keyField))
+					if (field.Name.Contains("Action"))
 					{
-						businessKey = field.Value.ToString();
+						this.actionField = new Field
+						{
+							SectionDefinition = section.GetSectionDefinition(),
+							FieldDescriptor = field,
+						};
+					}
+
+					if (field.Name.Contains(keyField))
+					{
+						businessKey = Convert.ToString(section.GetFieldValueById(field.ID).Value.Value);
 						keyFound = true;
 					}
 
@@ -105,11 +118,29 @@ namespace Script
 					break;
 				}
 			}
+
+			if (sectionToUpdate == null || fieldToUpdate == null)
+			{
+				engine.GenerateInformation("Failed to find section/field for updating InstanceId");
+				return null;
+			}
+
+			instance.AddOrUpdateFieldValue(sectionToUpdate, fieldToUpdate, instanceId.Id.ToString());
+			innerDomHelper.DomInstances.Update(instance);
+
+			return businessKey;
 		}
 
 		private SectionDefinition SetSectionDefinitionById(SectionDefinitionID sectionDefinitionId)
 		{
 			return this.innerDomHelper.SectionDefinitions.Read(SectionDefinitionExposers.ID.Equal(sectionDefinitionId)).First();
+		}
+
+		public class Field
+		{
+			public SectionDefinition SectionDefinition { get; set; }
+
+			public FieldDescriptor FieldDescriptor { get; set; }
 		}
 	}
 }
