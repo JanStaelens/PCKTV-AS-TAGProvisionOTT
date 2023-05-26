@@ -162,6 +162,7 @@ namespace Script
                         {
                             ConfigurationItem = scriptName + " Script",
                             ConfigurationType = ErrorCode.ConfigType.Automation,
+                            Code = "ActivityNotFinished",
                             Source = "Retry condition",
                             Severity = ErrorCode.SeverityType.Major,
                             Description = "Scanners did not complete in time.",

@@ -174,6 +174,7 @@ public class Script
 						ConfigurationItem = scriptName + " Script",
 						ConfigurationType = ErrorCode.ConfigType.Automation,
 						Severity = ErrorCode.SeverityType.Warning,
+						Code = "ActivityNotFinished",
 						Source = "Retry condition",
 						Description = "Channel subprocess didn't finish (wrong status on linked instances).",
 					},

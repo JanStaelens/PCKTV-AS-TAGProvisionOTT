@@ -95,7 +95,7 @@ namespace Script
 
             if (!status.Equals("ready") && !status.Equals("in_progress"))
             {
-				engine.GenerateInformation("Failed to create scanner due to incorrect status: " + status);
+                engine.GenerateInformation("Failed to create scanner due to incorrect status: " + status);
                 helper.SendErrorMessageToTokenHandler();
                 return;
             }
@@ -174,6 +174,7 @@ namespace Script
                             ConfigurationItem = scriptName + " Script",
                             ConfigurationType = ErrorCode.ConfigType.Automation,
                             Severity = ErrorCode.SeverityType.Warning,
+                            Code = "ActivityNotFinished",
                             Source = "Retry condition",
                             Description = "Create Scan failed.",
                         },
