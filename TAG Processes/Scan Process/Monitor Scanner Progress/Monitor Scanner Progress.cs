@@ -188,7 +188,8 @@ namespace Script
                             ConfigurationItem = scriptName + " Script",
 							ConfigurationType = ErrorCode.ConfigType.Automation,
                             Severity = ErrorCode.SeverityType.Warning,
-                            Source = "Retry condition",
+							Code = "ActivityNotFinished",
+							Source = "Retry condition",
 							Description = "Scan did not finish due to verify timeout.",
                         },
                     };
