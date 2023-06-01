@@ -394,6 +394,11 @@ namespace Script
 		{
 			try
 			{
+				if (Convert.ToString(EngineElement.GetParameterByPrimaryKey(columnPid - 50, key)) == updatedValue)
+				{
+					return true;
+				}
+
 				EngineElement.SetParameterByPrimaryKey(columnPid, key, updatedValue);
 
 				bool VerifySet()
