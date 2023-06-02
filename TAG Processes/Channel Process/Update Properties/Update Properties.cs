@@ -56,7 +56,9 @@ namespace Script
 	using System.Collections.Generic;
 	using System.Diagnostics;
 	using System.Linq;
+	using System.Runtime.InteropServices.WindowsRuntime;
 	using System.Threading;
+	using Newtonsoft.Json;
 	using Skyline.DataMiner.Automation;
 	using Skyline.DataMiner.Core.DataMinerSystem.Automation;
 	using Skyline.DataMiner.Core.DataMinerSystem.Common;
@@ -70,6 +72,7 @@ namespace Script
 	{
 		private DomHelper innerDomHelper;
 		private string channelName = "Pre-Code";
+		private List<string> errorLayoutsList = new List<string>();
 
 		/// <summary>
 		/// The Script entry point.
@@ -92,11 +95,40 @@ namespace Script
 				tagElementName = tagInfo.ElementName;
 				engine.GenerateInformation("START " + scriptName);
 
-				this.ExecuteChannelSets(engine, scriptName, helper, exceptionHelper, tagInfo);
+				var newStatus = this.ExecuteChannelSets(engine, scriptName, helper, exceptionHelper, tagInfo);
 
-				if (tagInfo.Status.Equals("in_progress"))
+				//if (tagInfo.Status.Equals("in_progress"))
+				//{
+				//	helper.TransitionState("inprogress_to_active");
+				//}
+				if (newStatus == "active")
 				{
 					helper.TransitionState("inprogress_to_active");
+					engine.GenerateInformation("Successfully executed " + scriptName + " for: " + tagElementName);
+				}
+				else if (newStatus == "error")
+				{
+					helper.TransitionState("inprogress_to_error");
+
+					var log = new Log
+					{
+						AffectedItem = scriptName,
+						AffectedService = channelName,
+						Timestamp = DateTime.Now,
+						SummaryFlag = false,
+						ErrorCode = new ErrorCode
+						{
+							ConfigurationItem = scriptName + " Script",
+							ConfigurationType = ErrorCode.ConfigType.Automation,
+							Source = "Run()",
+							Code = "ErrorWhileProvision",
+							Severity = ErrorCode.SeverityType.Warning,
+							Description = $"Cannot update properties for channel: {tagInfo.ChannelMatch}",
+						},
+					};
+
+					helper.Log($"Cannot update properties. Missing Channels: {JsonConvert.SerializeObject(errorLayoutsList)}", PaLogLevel.Error);
+					exceptionHelper.GenerateLog(log);
 				}
 				else
 				{
@@ -116,11 +148,11 @@ namespace Script
 						},
 					};
 
-					helper.Log($"Cannot execute the transition as the status. Current status: {tagInfo.ChannelMatch}", PaLogLevel.Error);
+					helper.Log($"Cannot execute the transition as the status. Current status: {tagInfo.Status}", PaLogLevel.Error);
 					exceptionHelper.GenerateLog(log);
 				}
 
-				engine.GenerateInformation("Successfully executed " + scriptName + " for: " + tagElementName);
+				//engine.GenerateInformation("Successfully executed " + scriptName + " for: " + tagElementName);
 				helper.ReturnSuccess();
 			}
 			catch (Exception ex)
@@ -147,7 +179,7 @@ namespace Script
 			}
 		}
 
-		private void ExecuteChannelSets(Engine engine, string scriptName, PaProfileLoadDomHelper helper, ExceptionHelper exceptionHelper, TagChannelInfo tagInfo)
+		private string ExecuteChannelSets(Engine engine, string scriptName, PaProfileLoadDomHelper helper, ExceptionHelper exceptionHelper, TagChannelInfo tagInfo)
 		{
 			var filterColumn = new ColumnFilter { ComparisonOperator = ComparisonOperator.Equal, Value = tagInfo.ChannelMatch, Pid = 8010 };
 			var channelRows = tagInfo.ChannelProfileTable.QueryData(new List<ColumnFilter> { filterColumn });
@@ -163,7 +195,7 @@ namespace Script
 
 				// Can generate a log displaying which sets failed
 
-				this.UpdateLayouts(engine, scriptName, helper, exceptionHelper, tagInfo);
+				return this.UpdateLayouts(engine, scriptName, helper, exceptionHelper, tagInfo);
 			}
 			else
 			{
@@ -186,11 +218,14 @@ namespace Script
 				helper.Log($"No channels found in channel status with given name: {tagInfo.ChannelMatch}.", PaLogLevel.Error);
 				engine.GenerateInformation("Did not find any channels with match: " + tagInfo.ChannelMatch);
 				exceptionHelper.GenerateLog(log);
+
+				return "error";
 			}
 		}
 
-		private void UpdateLayouts(Engine engine, string scriptName, PaProfileLoadDomHelper helper, ExceptionHelper exceptionHelper, TagChannelInfo tagInfo)
+		private string UpdateLayouts(Engine engine, string scriptName, PaProfileLoadDomHelper helper, ExceptionHelper exceptionHelper, TagChannelInfo tagInfo)
 		{
+			int errorLayout = 0;
 			foreach (var section in tagInfo.Instance.Sections)
 			{
 				string layout = "Empty";
@@ -210,6 +245,10 @@ namespace Script
 					if (!String.IsNullOrWhiteSpace(index))
 					{
 						tagInfo.EngineElement.SetParameterByPrimaryKey(10353, index, tagInfo.ChannelMatch);
+					}
+					else
+					{
+						errorLayout++;
 					}
 				}
 				catch (Exception ex)
@@ -241,6 +280,8 @@ namespace Script
 					}
 				}
 			}
+
+			return errorLayout > 0 ? "error" : "active";
 		}
 
 		public string CheckLayoutIndexes(Engine engine, string scriptName, ExceptionHelper exceptionHelper, TagChannelInfo tagInfo, string layout)

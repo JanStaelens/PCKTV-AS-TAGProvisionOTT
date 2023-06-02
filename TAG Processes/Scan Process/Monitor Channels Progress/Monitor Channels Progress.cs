@@ -113,6 +113,7 @@ public class Script
 
 			scanName = scanner.ScanName;
 			var totalChannels = scanner.Channels.Count;
+			bool isActiveWithErrors = false;
             
             bool CheckStateChange()
             {
@@ -127,9 +128,15 @@ public class Script
 
                         if (subInstance.StatusId == "active")
                         {
-                            finishedChannels++;
-                        }
-                    }
+							finishedChannels++;
+						}
+
+						if (subInstance.StatusId == "error")
+						{
+							isActiveWithErrors = true;
+							finishedChannels++;
+						}
+					}
 
 					engine.GenerateInformation($"finished channels: {finishedChannels} vs total: {totalChannels}");
                     return finishedChannels == totalChannels;
@@ -158,7 +165,15 @@ public class Script
 
             if (this.Retry(CheckStateChange, new TimeSpan(0, 5, 0)))
             {
-                helper.TransitionState("inprogress_to_active");
+				if (isActiveWithErrors)
+				{
+					helper.TransitionState("inprogress_to_activewitherrors");
+				}
+				else
+				{
+					helper.TransitionState("inprogress_to_active");
+				}
+
                 helper.SendFinishMessageToTokenHandler();
             }
             else
@@ -174,7 +189,7 @@ public class Script
 						ConfigurationItem = scriptName + " Script",
 						ConfigurationType = ErrorCode.ConfigType.Automation,
 						Severity = ErrorCode.SeverityType.Warning,
-						Code = "ActivityNotFinished",
+						Code = "PAActivityFailed",
 						Source = "Retry condition",
 						Description = "Channel subprocess didn't finish (wrong status on linked instances).",
 					},
