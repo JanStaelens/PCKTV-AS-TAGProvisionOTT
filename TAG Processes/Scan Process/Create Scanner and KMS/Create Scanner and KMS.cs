@@ -71,6 +71,9 @@ namespace Script
     {
         private readonly int scanChannelsTable = 1310;
         private SharedMethods sharedMethods;
+        private PaProfileLoadDomHelper helper;
+        private DomHelper domHelper;
+        private ExceptionHelper exceptionHelper;
 
         /// <summary>
         /// The Script entry point.
@@ -81,10 +84,10 @@ namespace Script
             var scriptName = "PA_TAG_Create Scanner and KMS";
             var scanName = String.Empty;
 
-            var helper = new PaProfileLoadDomHelper(engine);
-            var domHelper = new DomHelper(engine.SendSLNetMessages, "process_automation");
+            this.helper = new PaProfileLoadDomHelper(engine);
+            this.domHelper = new DomHelper(engine.SendSLNetMessages, "process_automation");
 
-            var exceptionHelper = new ExceptionHelper(engine, domHelper);
+            this.exceptionHelper = new ExceptionHelper(engine, domHelper);
             this.sharedMethods = new SharedMethods(helper, domHelper);
 
             engine.GenerateInformation("START " + scriptName);
@@ -128,7 +131,7 @@ namespace Script
                 tagRequest.ScanRequests = scanList;
                 tagDictionary.Add(scanner.TagDevice, tagRequest);
 
-                element.GetStandaloneParameter<string>(3).SetValue(JsonConvert.SerializeObject(tagDictionary));
+                SendJsonToTagDevice(scriptName, status, scanner, element, tagDictionary);
 
                 bool VerifyScanCreation()
                 {
@@ -167,19 +170,26 @@ namespace Script
                     var log = new Log
                     {
                         AffectedItem = scriptName,
-                        AffectedService = scanner.ScanName,
+                        AffectedService = scanName,
                         Timestamp = DateTime.Now,
+                        //SummaryFlag = false,
                         ErrorCode = new ErrorCode
                         {
                             ConfigurationItem = scriptName + " Script",
                             ConfigurationType = ErrorCode.ConfigType.Automation,
                             Severity = ErrorCode.SeverityType.Warning,
-                            Code = "ActivityNotFinished",
+                            Code = "PAActivityFailed",
                             Source = "Retry condition",
-                            Description = "Create Scan failed.",
+                            Description = $"Create Scan failed for event {scanName}. TAG Element: {scanner.TagElement}",
                         },
                     };
                     exceptionHelper.GenerateLog(log);
+                    if (status == "ready")
+                    {
+                        helper.TransitionState("ready_to_inprogress");
+                    }
+
+                    helper.TransitionState("inprogress_to_error");
                     helper.SendErrorMessageToTokenHandler();
                 }
             }
@@ -205,6 +215,41 @@ namespace Script
                 };
                 exceptionHelper.ProcessException(ex, log);
                 helper.SendErrorMessageToTokenHandler();
+            }
+        }
+
+        private void SendJsonToTagDevice(string scriptName, string status, Scanner scanner, IDmsElement element, Dictionary<string, TagRequest> tagDictionary)
+        {
+            try
+            {
+                element.GetStandaloneParameter<string>(3).SetValue(JsonConvert.SerializeObject(tagDictionary));
+            }
+            catch (Exception ex)
+            {
+                var log = new Log
+                {
+                    AffectedItem = scriptName,
+                    AffectedService = scanner.ScanName,
+                    Timestamp = DateTime.Now,
+                    //SummaryFlag = false,
+                    ErrorCode = new ErrorCode
+                    {
+                        ConfigurationItem = scriptName + " Script",
+                        ConfigurationType = ErrorCode.ConfigType.Automation,
+                        Severity = ErrorCode.SeverityType.Warning,
+                        Source = "SendJsonToTagDevice method",
+                    },
+                };
+                exceptionHelper.ProcessException(ex, log);
+
+                if (status == "ready")
+                {
+                    helper.TransitionState("ready_to_inprogress");
+                }
+
+                helper.TransitionState("inprogress_to_error");
+                helper.SendErrorMessageToTokenHandler();
+                throw;
             }
         }
 

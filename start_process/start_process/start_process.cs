@@ -6,6 +6,7 @@ namespace Script
 	using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.MessageHandler;
 	using Skyline.DataMiner.Net.Apps.DataMinerObjectModel;
 	using Skyline.DataMiner.Net.Apps.DataMinerObjectModel.Actions;
+	using Skyline.DataMiner.Net.Apps.DataMinerObjectModel.Settings;
 	using Skyline.DataMiner.Net.Messages.SLDataGateway;
 	using Skyline.DataMiner.Net.Sections;
 
@@ -71,6 +72,7 @@ namespace Script
 			var instance = innerDomHelper.DomInstances.Read(dominstance).First();
 			var instanceSet = false;
 			var keyFound = false;
+			var actionSet = false;
 
 			SectionDefinition sectionToUpdate = null;
 			FieldDescriptor fieldToUpdate = null;
@@ -99,6 +101,7 @@ namespace Script
 							SectionDefinition = section.GetSectionDefinition(),
 							FieldDescriptor = field,
 						};
+						actionSet = true;
 					}
 
 					if (field.Name.Contains(keyField))
@@ -113,7 +116,7 @@ namespace Script
 					}
 				}
 
-				if (keyFound && instanceSet)
+				if (keyFound && instanceSet && actionSet)
 				{
 					break;
 				}

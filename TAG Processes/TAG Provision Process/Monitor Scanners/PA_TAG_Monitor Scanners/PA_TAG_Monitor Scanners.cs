@@ -59,6 +59,7 @@ namespace Script
     using Helper;
     using Newtonsoft.Json;
     using Skyline.DataMiner.Automation;
+    using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Common.Objects.Exceptions;
     using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.Logging;
     using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager;
     using Skyline.DataMiner.ExceptionHelper;
@@ -72,6 +73,9 @@ namespace Script
     public class Script
     {
         private DomHelper innerDomHelper;
+        private ExceptionHelper exceptionHelper;
+        private string scriptName;
+        private string channelName;
 
         /// <summary>
         /// The Script entry point.
@@ -79,16 +83,16 @@ namespace Script
         /// <param name="engine">Link with SLAutomation process.</param>
         public void Run(Engine engine)
         {
-            var scriptName = "PA_TAG_Monitor Scanners";
+            this.scriptName = "PA_TAG_Monitor Scanners";
 
             var helper = new PaProfileLoadDomHelper(engine);
             this.innerDomHelper = new DomHelper(engine.SendSLNetMessages, "process_automation");
 
-            var exceptionHelper = new ExceptionHelper(engine, this.innerDomHelper);
+            this.exceptionHelper = new ExceptionHelper(engine, this.innerDomHelper);
 
-            engine.GenerateInformation("START " + scriptName);
+            engine.GenerateInformation("START " + this.scriptName);
 
-            var channelName = helper.GetParameterValue<string>("Provision Name (TAG Provision)");
+            this.channelName = helper.GetParameterValue<string>("Provision Name (TAG Provision)");
             var tagInstanceId = helper.GetParameterValue<string>("InstanceId (TAG Provision)");
 
             try
@@ -97,11 +101,14 @@ namespace Script
 
                 var scanners = helper.GetParameterValue<List<Guid>>("TAG Scanners (TAG Provision)");
                 Dictionary<Guid, bool> scannersComplete = new Dictionary<Guid, bool>();
+                int errorScan = 0;
 
                 bool CheckScanners()
                 {
                     try
                     {
+                        errorScan = 0;
+
                         foreach (var scanner in scanners)
                         {
                             var scannerFilter = DomInstanceExposers.Id.Equal(new DomInstanceId(scanner));
@@ -110,6 +117,11 @@ namespace Script
                             if (scannerInstance.StatusId == "active" || scannerInstance.StatusId == "complete")
                             {
                                 scannersComplete[scannerInstance.ID.Id] = true;
+                            }
+                            else if (scannerInstance.StatusId == "active_with_errors" || scannerInstance.StatusId == "error")
+                            {
+                                scannersComplete[scannerInstance.ID.Id] = true;
+                                errorScan++;
                             }
                             else
                             {
@@ -129,25 +141,25 @@ namespace Script
                         engine.Log("Exception thrown while verifying the scan subprocess: " + ex);
                         var log = new Log
                         {
-                            AffectedItem = scriptName,
-                            AffectedService = channelName,
+                            AffectedItem = this.scriptName,
+                            AffectedService = this.channelName,
                             Timestamp = DateTime.Now,
                             ErrorCode = new ErrorCode
                             {
-                                ConfigurationItem = scriptName + " Script",
+                                ConfigurationItem = this.scriptName + " Script",
                                 ConfigurationType = ErrorCode.ConfigType.Automation,
                                 Source = "CheckScanners()",
                                 Severity = ErrorCode.SeverityType.Critical,
                             },
                         };
-                        exceptionHelper.ProcessException(ex, log);
+                        this.exceptionHelper.ProcessException(ex, log);
                         throw;
                     }
                 }
 
                 if (Retry(CheckScanners, new TimeSpan(0, 10, 0)))
                 {
-                    PostActions(engine, helper, tagInstanceId, action);
+                    this.PostActions(engine, helper, tagInstanceId, action, scannersComplete, errorScan);
 
                     helper.SendFinishMessageToTokenHandler();
                 }
@@ -155,82 +167,183 @@ namespace Script
                 {
                     var log = new Log
                     {
-                        AffectedItem = scriptName,
-                        AffectedService = channelName,
+                        AffectedItem = this.scriptName,
+                        AffectedService = this.channelName,
                         Timestamp = DateTime.Now,
                         ErrorCode = new ErrorCode
                         {
-                            ConfigurationItem = scriptName + " Script",
+                            ConfigurationItem = this.scriptName + " Script",
                             ConfigurationType = ErrorCode.ConfigType.Automation,
-                            Code = "ActivityNotFinished",
+                            Code = "RetryTimeout",
                             Source = "Retry condition",
                             Severity = ErrorCode.SeverityType.Major,
                             Description = "Scanners did not complete in time.",
                         },
                     };
-                    exceptionHelper.GenerateLog(log);
+                    this.exceptionHelper.GenerateLog(log);
                 }
             }
             catch (Exception ex)
             {
-                engine.GenerateInformation($"ERROR in {scriptName} " + ex);
+                engine.GenerateInformation($"ERROR in {this.scriptName} " + ex);
                 var log = new Log
                 {
-                    AffectedItem = scriptName,
-                    AffectedService = channelName,
+                    AffectedItem = this.scriptName,
+                    AffectedService = this.channelName,
                     Timestamp = DateTime.Now,
                     ErrorCode = new ErrorCode
                     {
-                        ConfigurationItem = scriptName + " Script",
+                        ConfigurationItem = this.scriptName + " Script",
                         ConfigurationType = ErrorCode.ConfigType.Automation,
                         Source = "Run()",
                         Severity = ErrorCode.SeverityType.Critical,
                     },
                 };
-                exceptionHelper.ProcessException(ex, log);
+                this.exceptionHelper.ProcessException(ex, log);
 
-                helper.Log($"An issue occurred while executing {scriptName} activity for {channelName}: {ex}", PaLogLevel.Error);
+                helper.Log($"An issue occurred while executing {this.scriptName} activity for {this.channelName}: {ex}", PaLogLevel.Error);
                 helper.SendErrorMessageToTokenHandler();
             }
         }
 
-        private void PostActions(Engine engine, PaProfileLoadDomHelper helper, string tagInstanceId, string action)
+        private void PostActions(Engine engine, PaProfileLoadDomHelper helper, string tagInstanceId, string action, Dictionary<Guid, bool> scannersComplete, int errorScan)
         {
+            var allScannersCount = scannersComplete.Count;
+
             if (action == "provision" || action == "reprovision" || action == "complete-provision")
             {
-                helper.TransitionState("inprogress_to_active");
+                if (errorScan == allScannersCount)
+                {
+                    helper.TransitionState("inprogress_to_error");
+
+                    var log = new Log
+                    {
+                        AffectedItem = this.scriptName,
+                        AffectedService = this.channelName,
+                        Timestamp = DateTime.Now,
+                        ErrorCode = new ErrorCode
+                        {
+                            ConfigurationItem = this.scriptName + " Script",
+                            ConfigurationType = ErrorCode.ConfigType.Automation,
+                            Code = "PAErrorState",
+                            Source = "PostActions method",
+                            Severity = ErrorCode.SeverityType.Major,
+                            Description = "All Scans were not provisioned.",
+                        },
+                    };
+                    this.exceptionHelper.GenerateLog(log);
+                }
+                else if (errorScan > 0)
+                {
+                    helper.TransitionState("inprogress_to_activewitherrors");
+
+                    var log = new Log
+                    {
+                        AffectedItem = this.scriptName,
+                        AffectedService = this.channelName,
+                        Timestamp = DateTime.Now,
+                        ErrorCode = new ErrorCode
+                        {
+                            ConfigurationItem = this.scriptName + " Script",
+                            ConfigurationType = ErrorCode.ConfigType.Automation,
+                            Code = "PAActiveWithErrorState",
+                            Source = "PostActions method",
+                            Severity = ErrorCode.SeverityType.Major,
+                            Description = "Some Scans were not provisioned.",
+                        },
+                    };
+                    this.exceptionHelper.GenerateLog(log);
+                }
+                else
+                {
+                    helper.TransitionState("inprogress_to_active");
+                }
             }
             else if (action == "deactivate")
             {
-                helper.TransitionState("deactivating_to_complete");
+                if (errorScan == allScannersCount)
+                {
+                    helper.TransitionState("deactivating_to_error");
+
+                    var log = new Log
+                    {
+                        AffectedItem = this.scriptName,
+                        AffectedService = this.channelName,
+                        Timestamp = DateTime.Now,
+                        //SummaryFlag = false,
+                        ErrorCode = new ErrorCode
+                        {
+                            ConfigurationItem = this.scriptName + " Script",
+                            ConfigurationType = ErrorCode.ConfigType.Automation,
+                            Code = "PAErrorState",
+                            Source = "PostActions method",
+                            Severity = ErrorCode.SeverityType.Major,
+                            Description = "All Scans were not deactivated.",
+                        },
+                    };
+                    this.exceptionHelper.GenerateLog(log);
+                }
+                else if (errorScan > 0)
+                {
+                    helper.TransitionState("deactivating_to_activewitherrors");
+
+                    var log = new Log
+                    {
+                        AffectedItem = this.scriptName,
+                        AffectedService = this.channelName,
+                        Timestamp = DateTime.Now,
+                        //SummaryFlag = false,
+                        ErrorCode = new ErrorCode
+                        {
+                            ConfigurationItem = this.scriptName + " Script",
+                            ConfigurationType = ErrorCode.ConfigType.Automation,
+                            Code = "PAActiveWithErrorState",
+                            Source = "PostActions method",
+                            Severity = ErrorCode.SeverityType.Major,
+                            Description = "Some Scans were not deactivated.",
+                        },
+                    };
+                    this.exceptionHelper.GenerateLog(log);
+                }
+                else
+                {
+                    helper.TransitionState("deactivating_to_complete");
+                }
             }
 
-            var filter = DomInstanceExposers.Id.Equal(new DomInstanceId(Guid.Parse(tagInstanceId)));
-            var tagInstances = this.innerDomHelper.DomInstances.Read(filter);
-            var tagInstance = tagInstances.First();
-
-            // successfully created filter
-            var sourceElement = helper.GetParameterValue<string>("Source Element (TAG Provision)");
-            var provisionName = helper.GetParameterValue<string>("Source ID (TAG Provision)");
-
-            if (!string.IsNullOrWhiteSpace(sourceElement))
+            try
             {
-                ExternalRequest evtmgrUpdate = new ExternalRequest
-                {
-                    Type = "Process Automation",
-                    ProcessResponse = new ProcessResponse
-                    {
-                        EventName = provisionName,
-                        Tag = new TagResponse
-                        {
-                            Status = tagInstance.StatusId == "active" ? "Active" : "Complete",
-                        },
-                    },
-                };
+                var filter = DomInstanceExposers.Id.Equal(new DomInstanceId(Guid.Parse(tagInstanceId)));
+                var tagInstances = this.innerDomHelper.DomInstances.Read(filter);
+                var tagInstance = tagInstances.First();
 
-                var elementSplit = sourceElement.Split('/');
-                var eventManager = engine.FindElement(Convert.ToInt32(elementSplit[0]), Convert.ToInt32(elementSplit[1]));
-                eventManager.SetParameter(Convert.ToInt32(elementSplit[2]), JsonConvert.SerializeObject(evtmgrUpdate));
+                // successfully created filter
+                var sourceElement = helper.GetParameterValue<string>("Source Element (TAG Provision)");
+                var provisionName = helper.GetParameterValue<string>("Source ID (TAG Provision)");
+
+                if (!string.IsNullOrWhiteSpace(sourceElement))
+                {
+                    ExternalRequest evtmgrUpdate = new ExternalRequest
+                    {
+                        Type = "Process Automation",
+                        ProcessResponse = new ProcessResponse
+                        {
+                            EventName = provisionName,
+                            Tag = new TagResponse
+                            {
+                                Status = tagInstance.StatusId == "active" ? "Active" : "Complete",
+                            },
+                        },
+                    };
+
+                    var elementSplit = sourceElement.Split('/');
+                    var eventManager = engine.FindElement(Convert.ToInt32(elementSplit[0]), Convert.ToInt32(elementSplit[1]));
+                    eventManager.SetParameter(Convert.ToInt32(elementSplit[2]), JsonConvert.SerializeObject(evtmgrUpdate));
+                }
+            }
+            catch (FieldValueNotFoundException)
+            {
+                // no action
             }
         }
 
