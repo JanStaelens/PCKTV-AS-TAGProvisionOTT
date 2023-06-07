@@ -182,13 +182,13 @@ namespace Script
 						AffectedItem = scriptName,
 						AffectedService = scanner.ScanName,
 						Timestamp = DateTime.Now,
-						SummaryFlag = false,
+						//SummaryFlag = false,
 						ErrorCode = new ErrorCode
 						{
 							ConfigurationItem = scriptName + " Script",
 							ConfigurationType = ErrorCode.ConfigType.Automation,
 							Severity = ErrorCode.SeverityType.Warning,
-							Code = "PAActivityFailed",
+							Code = "RetryTimeout",
 							Source = "Retry condition",
 							Description = $"Failed to deactivate the scanners/update channels within the timeout time. ScanName: {scanner.ScanName}. TAG Element: {scanner.TagElement}",
 						},

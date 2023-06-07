@@ -172,7 +172,7 @@ namespace Script
                         AffectedItem = scriptName,
                         AffectedService = scanName,
                         Timestamp = DateTime.Now,
-                        SummaryFlag = false,
+                        //SummaryFlag = false,
                         ErrorCode = new ErrorCode
                         {
                             ConfigurationItem = scriptName + " Script",
@@ -231,7 +231,7 @@ namespace Script
                     AffectedItem = scriptName,
                     AffectedService = scanner.ScanName,
                     Timestamp = DateTime.Now,
-                    SummaryFlag = false,
+                    //SummaryFlag = false,
                     ErrorCode = new ErrorCode
                     {
                         ConfigurationItem = scriptName + " Script",

@@ -113,13 +113,14 @@ public class Script
 
 			scanName = scanner.ScanName;
 			var totalChannels = scanner.Channels.Count;
-			bool isActiveWithErrors = false;
+			int errorChannelsCount = 0;
             
             bool CheckStateChange()
             {
                 try
                 {
 					var finishedChannels = 0;
+					var errorChannels = 0;
 
 					foreach (var channel in scanner.Channels)
                     {
@@ -133,13 +134,18 @@ public class Script
 
 						if (subInstance.StatusId == "error")
 						{
-							isActiveWithErrors = true;
-							finishedChannels++;
+							errorChannels++;
 						}
 					}
 
-					engine.GenerateInformation($"finished channels: {finishedChannels} vs total: {totalChannels}");
-                    return finishedChannels == totalChannels;
+					engine.GenerateInformation($"finished channels: {finishedChannels + errorChannels} vs total: {totalChannels}");
+					bool areFinished = (finishedChannels + errorChannels) == totalChannels;
+					if (areFinished)
+					{
+						errorChannelsCount = errorChannels;
+					}
+
+                    return areFinished;
                 }
                 catch (Exception ex)
                 {
@@ -165,7 +171,11 @@ public class Script
 
             if (this.Retry(CheckStateChange, new TimeSpan(0, 5, 0)))
             {
-				if (isActiveWithErrors)
+				if (errorChannelsCount == totalChannels)
+				{
+					helper.TransitionState("inprogress_to_error");
+				}
+				else if (errorChannelsCount > 0)
 				{
 					helper.TransitionState("inprogress_to_activewitherrors");
 				}
@@ -189,12 +199,13 @@ public class Script
 						ConfigurationItem = scriptName + " Script",
 						ConfigurationType = ErrorCode.ConfigType.Automation,
 						Severity = ErrorCode.SeverityType.Warning,
-						Code = "PAActivityFailed",
+						Code = "RetryTimeout",
 						Source = "Retry condition",
 						Description = "Channel subprocess didn't finish (wrong status on linked instances).",
 					},
 				};
                 exceptionHelper.GenerateLog(log);
+				helper.Log($"Channel subprocess didn't finish (wrong status on linked instances). ScanName: {scanner.ScanName}", PaLogLevel.Error);
                 helper.SendErrorMessageToTokenHandler();
             }
         }

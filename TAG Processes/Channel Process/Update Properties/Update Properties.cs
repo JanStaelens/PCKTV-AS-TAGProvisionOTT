@@ -115,7 +115,7 @@ namespace Script
 						AffectedItem = scriptName,
 						AffectedService = channelName,
 						Timestamp = DateTime.Now,
-						SummaryFlag = false,
+						//SummaryFlag = false,
 						ErrorCode = new ErrorCode
 						{
 							ConfigurationItem = scriptName + " Script",
@@ -127,7 +127,7 @@ namespace Script
 						},
 					};
 
-					helper.Log($"Cannot update properties. Missing Channels: {JsonConvert.SerializeObject(errorLayoutsList)}", PaLogLevel.Error);
+					helper.Log($"Cannot update properties. Missing Channels: {JsonConvert.SerializeObject(this.errorLayoutsList)}", PaLogLevel.Error);
 					exceptionHelper.GenerateLog(log);
 				}
 				else
@@ -218,6 +218,7 @@ namespace Script
 				helper.Log($"No channels found in channel status with given name: {tagInfo.ChannelMatch}.", PaLogLevel.Error);
 				engine.GenerateInformation("Did not find any channels with match: " + tagInfo.ChannelMatch);
 				exceptionHelper.GenerateLog(log);
+				this.errorLayoutsList.Add(tagInfo.ChannelMatch);
 
 				return "error";
 			}

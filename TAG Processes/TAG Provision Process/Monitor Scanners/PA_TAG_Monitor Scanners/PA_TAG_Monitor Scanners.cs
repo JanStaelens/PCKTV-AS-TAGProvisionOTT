@@ -100,11 +100,14 @@ namespace Script
 
                 var scanners = helper.GetParameterValue<List<Guid>>("TAG Scanners (TAG Provision)");
                 Dictionary<Guid, bool> scannersComplete = new Dictionary<Guid, bool>();
+                int errorScan = 0;
 
                 bool CheckScanners()
                 {
                     try
                     {
+                        errorScan = 0;
+
                         foreach (var scanner in scanners)
                         {
                             var scannerFilter = DomInstanceExposers.Id.Equal(new DomInstanceId(scanner));
@@ -113,6 +116,11 @@ namespace Script
                             if (scannerInstance.StatusId == "active" || scannerInstance.StatusId == "complete")
                             {
                                 scannersComplete[scannerInstance.ID.Id] = true;
+                            }
+                            else if (scannerInstance.StatusId == "active_with_errors" || scannerInstance.StatusId == "error")
+                            {
+                                scannersComplete[scannerInstance.ID.Id] = true;
+                                errorScan++;
                             }
                             else
                             {
@@ -150,7 +158,7 @@ namespace Script
 
                 if (Retry(CheckScanners, new TimeSpan(0, 10, 0)))
                 {
-                    this.PostActions(engine, helper, tagInstanceId, action, scannersComplete);
+                    this.PostActions(engine, helper, tagInstanceId, action, scannersComplete, errorScan);
 
                     helper.SendFinishMessageToTokenHandler();
                 }
@@ -165,7 +173,7 @@ namespace Script
                         {
                             ConfigurationItem = this.scriptName + " Script",
                             ConfigurationType = ErrorCode.ConfigType.Automation,
-                            Code = "PAActivityFailed",
+                            Code = "RetryTimeout",
                             Source = "Retry condition",
                             Severity = ErrorCode.SeverityType.Major,
                             Description = "Scanners did not complete in time.",
@@ -197,14 +205,13 @@ namespace Script
             }
         }
 
-        private void PostActions(Engine engine, PaProfileLoadDomHelper helper, string tagInstanceId, string action, Dictionary<Guid, bool> scannersComplete)
+        private void PostActions(Engine engine, PaProfileLoadDomHelper helper, string tagInstanceId, string action, Dictionary<Guid, bool> scannersComplete, int errorScan)
         {
-            var scansNotCompleted = scannersComplete.Select(x => !x.Value).ToList().Count;
             var allScannersCount = scannersComplete.Count;
 
             if (action == "provision" || action == "reprovision" || action == "complete-provision")
             {
-                if (scansNotCompleted == allScannersCount)
+                if (errorScan == allScannersCount)
                 {
                     helper.TransitionState("inprogress_to_error");
 
@@ -225,7 +232,7 @@ namespace Script
                     };
                     this.exceptionHelper.GenerateLog(log);
                 }
-                else if (scansNotCompleted > 0)
+                else if (errorScan > 0)
                 {
                     helper.TransitionState("inprogress_to_activewitherrors");
 
@@ -253,16 +260,16 @@ namespace Script
             }
             else if (action == "deactivate")
             {
-                if (scansNotCompleted == allScannersCount)
+                if (errorScan == allScannersCount)
                 {
-                    helper.TransitionState("inprogress_to_error");
+                    helper.TransitionState("deactivating_to_error");
 
                     var log = new Log
                     {
                         AffectedItem = this.scriptName,
                         AffectedService = this.channelName,
                         Timestamp = DateTime.Now,
-                        SummaryFlag = false,
+                        //SummaryFlag = false,
                         ErrorCode = new ErrorCode
                         {
                             ConfigurationItem = this.scriptName + " Script",
@@ -275,7 +282,7 @@ namespace Script
                     };
                     this.exceptionHelper.GenerateLog(log);
                 }
-                else if (scansNotCompleted > 0)
+                else if (errorScan > 0)
                 {
                     helper.TransitionState("deactivating_to_activewitherrors");
 
@@ -284,7 +291,7 @@ namespace Script
                         AffectedItem = this.scriptName,
                         AffectedService = this.channelName,
                         Timestamp = DateTime.Now,
-                        SummaryFlag = false,
+                        //SummaryFlag = false,
                         ErrorCode = new ErrorCode
                         {
                             ConfigurationItem = this.scriptName + " Script",
