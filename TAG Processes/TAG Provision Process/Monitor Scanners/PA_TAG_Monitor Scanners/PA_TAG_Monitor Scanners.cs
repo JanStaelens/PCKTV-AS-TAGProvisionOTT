@@ -59,6 +59,7 @@ namespace Script
     using Helper;
     using Newtonsoft.Json;
     using Skyline.DataMiner.Automation;
+    using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Common.Objects.Exceptions;
     using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.Logging;
     using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager;
     using Skyline.DataMiner.ExceptionHelper;
@@ -310,32 +311,39 @@ namespace Script
                 }
             }
 
-            var filter = DomInstanceExposers.Id.Equal(new DomInstanceId(Guid.Parse(tagInstanceId)));
-            var tagInstances = this.innerDomHelper.DomInstances.Read(filter);
-            var tagInstance = tagInstances.First();
-
-            // successfully created filter
-            var sourceElement = helper.GetParameterValue<string>("Source Element (TAG Provision)");
-            var provisionName = helper.GetParameterValue<string>("Source ID (TAG Provision)");
-
-            if (!string.IsNullOrWhiteSpace(sourceElement))
+            try
             {
-                ExternalRequest evtmgrUpdate = new ExternalRequest
-                {
-                    Type = "Process Automation",
-                    ProcessResponse = new ProcessResponse
-                    {
-                        EventName = provisionName,
-                        Tag = new TagResponse
-                        {
-                            Status = tagInstance.StatusId == "active" ? "Active" : "Complete",
-                        },
-                    },
-                };
+                var filter = DomInstanceExposers.Id.Equal(new DomInstanceId(Guid.Parse(tagInstanceId)));
+                var tagInstances = this.innerDomHelper.DomInstances.Read(filter);
+                var tagInstance = tagInstances.First();
 
-                var elementSplit = sourceElement.Split('/');
-                var eventManager = engine.FindElement(Convert.ToInt32(elementSplit[0]), Convert.ToInt32(elementSplit[1]));
-                eventManager.SetParameter(Convert.ToInt32(elementSplit[2]), JsonConvert.SerializeObject(evtmgrUpdate));
+                // successfully created filter
+                var sourceElement = helper.GetParameterValue<string>("Source Element (TAG Provision)");
+                var provisionName = helper.GetParameterValue<string>("Source ID (TAG Provision)");
+
+                if (!string.IsNullOrWhiteSpace(sourceElement))
+                {
+                    ExternalRequest evtmgrUpdate = new ExternalRequest
+                    {
+                        Type = "Process Automation",
+                        ProcessResponse = new ProcessResponse
+                        {
+                            EventName = provisionName,
+                            Tag = new TagResponse
+                            {
+                                Status = tagInstance.StatusId == "active" ? "Active" : "Complete",
+                            },
+                        },
+                    };
+
+                    var elementSplit = sourceElement.Split('/');
+                    var eventManager = engine.FindElement(Convert.ToInt32(elementSplit[0]), Convert.ToInt32(elementSplit[1]));
+                    eventManager.SetParameter(Convert.ToInt32(elementSplit[2]), JsonConvert.SerializeObject(evtmgrUpdate));
+                }
+            }
+            catch (FieldValueNotFoundException)
+            {
+                // no action
             }
         }
 
