@@ -201,11 +201,12 @@ public class Script
 						Severity = ErrorCode.SeverityType.Warning,
 						Code = "RetryTimeout",
 						Source = "Retry condition",
-						Description = "Channel subprocess didn't finish (wrong status on linked instances).",
+						Description = "Channel subprocess didn't finish within the timeout time.",
 					},
 				};
                 exceptionHelper.GenerateLog(log);
-				helper.Log($"Channel subprocess didn't finish (wrong status on linked instances). ScanName: {scanner.ScanName}", PaLogLevel.Error);
+				helper.Log($"Channel subprocess didn't finish within the timeout time. ScanName: {scanner.ScanName}", PaLogLevel.Error);
+				helper.TransitionState("inprogress_to_error");
                 helper.SendErrorMessageToTokenHandler();
             }
         }

@@ -97,6 +97,8 @@ namespace Script
                     this.ExecuteActionOnScanners(action, scannerInstance);
                 }
 
+
+
                 if (action == "provision" || action == "complete-provision")
                 {
                     helper.TransitionState("ready_to_inprogress");
@@ -138,6 +140,7 @@ namespace Script
 
         private void ExecuteActionOnScanners(string action, DomInstance instance)
         {
+            var statusId = instance.StatusId;
             foreach (var section in instance.Sections)
             {
                 Func<SectionDefinitionID, SectionDefinition> sectionDefinitionFunc = this.SetSectionDefinitionById;
@@ -150,7 +153,19 @@ namespace Script
                     instance.AddOrUpdateFieldValue(section.GetSectionDefinition(), fieldToUpdate, action);
                     this.innerDomHelper.DomInstances.Update(instance);
 
-                    this.innerDomHelper.DomInstances.ExecuteAction(instance.ID, action);
+                    //this.innerDomHelper.DomInstances.ExecuteAction(instance.ID, action);
+                    if (statusId == "active" || statusId == "complete" || statusId == "deactivate" || statusId == "complete-provision")
+                    {
+                        this.innerDomHelper.DomInstances.ExecuteAction(instance.ID, action);
+                    }
+                    else if (statusId == ("error"))
+                    {
+                        this.innerDomHelper.DomInstances.ExecuteAction(instance.ID, "error-" + action);
+                    }
+                    else
+                    {
+                        this.innerDomHelper.DomInstances.ExecuteAction(instance.ID, "activewitherrors-" + action);
+                    }
 
                     break;
                 }

@@ -528,9 +528,8 @@ namespace Script
 					new DomStatusTransition("error_to_reprovision", "error", "reprovision"),
 					new DomStatusTransition("error_to_deactivate", "error", "deactivate"),
 					new DomStatusTransition("inprogress_to_activewitherrors", "in_progress", "active_with_errors"),
-					new DomStatusTransition("deactivating_to_activewitherrors", "deactivating", "active_with_errors"),
 					new DomStatusTransition("activewitherrors_to_reprovision", "active_with_errors", "reprovision"),
-					new DomStatusTransition("activewitherrors_to_deactivating", "active_with_errors", "deactivate"),
+					new DomStatusTransition("activewitherrors_to_deactivate", "active_with_errors", "deactivate"),
 				};
 
 				List<IDomActionDefinition> behaviorActions = GetBehaviorActions("TAG Process", "Provision Name");
@@ -582,9 +581,8 @@ namespace Script
 					new DomStatusTransition("error_to_reprovision", "error", "reprovision"),
 					new DomStatusTransition("error_to_deactivate", "error", "deactivate"),
 					new DomStatusTransition("inprogress_to_activewitherrors", "in_progress", "active_with_errors"),
-					new DomStatusTransition("deactivating_to_activewitherrors", "deactivating", "active_with_errors"),
 					new DomStatusTransition("activewitherrors_to_reprovision", "active_with_errors", "reprovision"),
-					new DomStatusTransition("activewitherrors_to_deactivating", "active_with_errors", "deactivate"),
+					new DomStatusTransition("activewitherrors_to_deactivate", "active_with_errors", "deactivate"),
 				};
 
 				List<IDomActionDefinition> behaviorActions = GetBehaviorActions("TAG Scan Process", "Scan Name");
@@ -647,17 +645,17 @@ namespace Script
 					Layout = new DomButtonDefinitionLayout { Text = "Deactivate" },
 				};
 
-				DomInstanceButtonDefinition activeErrorReprovisionButton = new DomInstanceButtonDefinition("activeerror-reprovision")
+				DomInstanceButtonDefinition activeErrorReprovisionButton = new DomInstanceButtonDefinition("activewitherrors-reprovision")
 				{
 					VisibilityCondition = new StatusCondition(new List<string> { "active_with_errors" }),
-					ActionDefinitionIds = new List<string> { "activeerror-reprovision" },
+					ActionDefinitionIds = new List<string> { "activewitherrors-reprovision" },
 					Layout = new DomButtonDefinitionLayout { Text = "Reprovision" },
 				};
 
-				DomInstanceButtonDefinition activeErrorDeactivateButton = new DomInstanceButtonDefinition("activeerror-deactivate")
+				DomInstanceButtonDefinition activeErrorDeactivateButton = new DomInstanceButtonDefinition("activewitherrors-deactivate")
 				{
 					VisibilityCondition = new StatusCondition(new List<string> { "active_with_errors" }),
-					ActionDefinitionIds = new List<string> { "activeerror-deactivate" },
+					ActionDefinitionIds = new List<string> { "activewitherrors-deactivate" },
 					Layout = new DomButtonDefinitionLayout { Text = "Deactivate" },
 				};
 
@@ -796,7 +794,7 @@ namespace Script
 						$"PARAMETER:1:{processName}",
 						"PARAMETER:2:error_to_reprovision",
 						$"PARAMETER:3:{businessKeyField}",
-						"PARAMETER:4:error-reprovision",
+						"PARAMETER:4:reprovision",
 					},
 				};
 
@@ -809,7 +807,7 @@ namespace Script
 						$"PARAMETER:1:{processName}",
 						"PARAMETER:2:error_to_deactivate",
 						$"PARAMETER:3:{businessKeyField}",
-						"PARAMETER:4:error-deactivate",
+						"PARAMETER:4:deactivate",
 					},
 				};
 
@@ -825,7 +823,7 @@ namespace Script
 
 				if (!processName.Contains("Channel"))
 				{
-					var activeErrorReprovisionAction = new ExecuteScriptDomActionDefinition("activeerror-reprovision")
+					var activeErrorReprovisionAction = new ExecuteScriptDomActionDefinition("activewitherrors-reprovision")
 					{
 						Script = "start_process",
 						IsInteractive = false,
@@ -834,11 +832,11 @@ namespace Script
 							$"PARAMETER:1:{processName}",
 							"PARAMETER:2:activewitherrors_to_reprovision",
 							$"PARAMETER:3:{businessKeyField}",
-							"PARAMETER:4:activeerror-reprovision",
+							"PARAMETER:4:reprovision",
 						},
 					};
 
-					var activeErrorDeactivateAction = new ExecuteScriptDomActionDefinition("activeerror-deactivate")
+					var activeErrorDeactivateAction = new ExecuteScriptDomActionDefinition("activewitherrors-deactivate")
 					{
 						Script = "start_process",
 						IsInteractive = false,
@@ -847,7 +845,7 @@ namespace Script
 							$"PARAMETER:1:{processName}",
 							"PARAMETER:2:activewitherrors_to_deactivate",
 							$"PARAMETER:3:{businessKeyField}",
-							"PARAMETER:4:activeerror-deactivate",
+							"PARAMETER:4:deactivate",
 						},
 					};
 
@@ -890,6 +888,7 @@ namespace Script
 					new DomStatusTransition("deactivating_to_error", "deactivating", "error"),
 					new DomStatusTransition("error_to_reprovision", "error", "reprovision"),
 					new DomStatusTransition("error_to_deactivate", "error", "deactivate"),
+					new DomStatusTransition("error_to_complete", "error", "complete"),
 				};
 
 				List<IDomActionDefinition> behaviorActions = GetBehaviorActions("TAG Channel Process", "Channel Name");

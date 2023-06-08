@@ -110,7 +110,7 @@ namespace Script
 						keyFound = true;
 					}
 
-					if (keyFound && instanceSet)
+					if (keyFound && instanceSet && actionSet)
 					{
 						break;
 					}

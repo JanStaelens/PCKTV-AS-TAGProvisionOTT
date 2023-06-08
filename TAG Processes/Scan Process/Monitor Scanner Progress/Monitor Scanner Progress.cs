@@ -194,6 +194,9 @@ namespace Script
                         },
                     };
                     exceptionHelper.GenerateLog(log);
+
+					helper.Log($"Scan did not finish due to verify timeout. ScanName: {scanner.ScanName}", PaLogLevel.Error);
+					helper.TransitionState("inprogress_to_error");
                     helper.SendErrorMessageToTokenHandler();
                 }
             }

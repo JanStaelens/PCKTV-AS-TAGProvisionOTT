@@ -74,6 +74,7 @@ namespace Script
 		private readonly int scanChannelsTable = 1310;
 		private DomHelper innerDomHelper;
 		private SharedMethods sharedMethods;
+		private Engine innerEngine;
 
 		/// <summary>
 		/// The Script entry point.
@@ -84,6 +85,7 @@ namespace Script
 			var scriptName = "PA_TAG_Deactivate Scanner";
 			var scanName = String.Empty;
 
+			this.innerEngine = engine;
 			var helper = new PaProfileLoadDomHelper(engine);
 			this.innerDomHelper = new DomHelper(engine.SendSLNetMessages, "process_automation");
 
@@ -303,12 +305,18 @@ namespace Script
 		private void ExecuteChannelsTransition(List<Guid> channels, string status)
 		{
 			var transition = status.Equals("deactivating") ? "active_to_complete" : "active_to_draft";
+			innerEngine.GenerateInformation($"status: {status}");
 
 			foreach (var channel in channels)
 			{
 				var subFilter = DomInstanceExposers.Id.Equal(new DomInstanceId(channel));
 				var subInstance = this.innerDomHelper.DomInstances.Read(subFilter).First();
+				if (subInstance.StatusId == "error")
+				{
+					transition = "error_to_complete";
+				}
 
+				innerEngine.GenerateInformation($"transition: {transition}");
 				this.innerDomHelper.DomInstances.DoStatusTransition(subInstance.ID, transition);
 			}
 		}

@@ -261,7 +261,7 @@ namespace Script
             }
             else if (action == "deactivate")
             {
-                if (errorScan == allScannersCount)
+                if (errorScan == allScannersCount || errorScan > 0)
                 {
                     helper.TransitionState("deactivating_to_error");
 
@@ -276,28 +276,6 @@ namespace Script
                             ConfigurationItem = this.scriptName + " Script",
                             ConfigurationType = ErrorCode.ConfigType.Automation,
                             Code = "PAErrorState",
-                            Source = "PostActions method",
-                            Severity = ErrorCode.SeverityType.Major,
-                            Description = "All Scans were not deactivated.",
-                        },
-                    };
-                    this.exceptionHelper.GenerateLog(log);
-                }
-                else if (errorScan > 0)
-                {
-                    helper.TransitionState("deactivating_to_activewitherrors");
-
-                    var log = new Log
-                    {
-                        AffectedItem = this.scriptName,
-                        AffectedService = this.channelName,
-                        Timestamp = DateTime.Now,
-                        //SummaryFlag = false,
-                        ErrorCode = new ErrorCode
-                        {
-                            ConfigurationItem = this.scriptName + " Script",
-                            ConfigurationType = ErrorCode.ConfigType.Automation,
-                            Code = "PAActiveWithErrorState",
                             Source = "PostActions method",
                             Severity = ErrorCode.SeverityType.Major,
                             Description = "Some Scans were not deactivated.",
