@@ -298,8 +298,9 @@ namespace Script
                 // successfully created filter
                 var sourceElement = helper.GetParameterValue<string>("Source Element (TAG Provision)");
                 var provisionName = helper.GetParameterValue<string>("Source ID (TAG Provision)");
+                var instanceStatus = tagInstance.StatusId == "active_with_errors" || tagInstance.StatusId == "error";
 
-                if (!string.IsNullOrWhiteSpace(sourceElement))
+                if (!string.IsNullOrWhiteSpace(sourceElement) && !instanceStatus)
                 {
                     ExternalRequest evtmgrUpdate = new ExternalRequest
                     {
