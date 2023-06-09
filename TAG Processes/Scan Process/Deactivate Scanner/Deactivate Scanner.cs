@@ -196,7 +196,16 @@ namespace Script
 						},
 					};
 					exceptionHelper.GenerateLog(log);
-					helper.TransitionState("deactivating_to_error");
+					if (status == "deactivating")
+					{
+						helper.TransitionState("deactivating_to_error");
+					}
+					else
+					{
+						helper.TransitionState("reprovision_to_inprogress");
+						helper.TransitionState("inprogress_to_error");
+					}
+
 					helper.SendErrorMessageToTokenHandler();
 				}
 			}
@@ -304,19 +313,46 @@ namespace Script
 
 		private void ExecuteChannelsTransition(List<Guid> channels, string status)
 		{
-			var transition = status.Equals("deactivating") ? "active_to_complete" : "active_to_draft";
-			innerEngine.GenerateInformation($"status: {status}");
+			//var transition = status.Equals("deactivating") ? "active_to_complete" : "active_to_draft";
 
 			foreach (var channel in channels)
 			{
 				var subFilter = DomInstanceExposers.Id.Equal(new DomInstanceId(channel));
 				var subInstance = this.innerDomHelper.DomInstances.Read(subFilter).First();
-				if (subInstance.StatusId == "error")
+				var transition = String.Empty;
+				if (status.Equals("deactivating"))
 				{
-					transition = "error_to_complete";
-				}
+					if (subInstance.StatusId == "complete")
+					{
+						continue;
+					}
 
-				innerEngine.GenerateInformation($"transition: {transition}");
+					if (subInstance.StatusId == "error")
+					{
+						transition = "error_to_complete";
+					}
+					else
+					{
+						transition = "active_to_complete";
+					}
+				}
+				else
+				{
+					if (subInstance.StatusId == "draft")
+					{
+						continue;
+					}
+
+					if (subInstance.StatusId == "error")
+					{
+						transition = "error_to_draft";
+					}
+					else
+					{
+						transition = "active_to_draft";
+					}
+				}
+				
 				this.innerDomHelper.DomInstances.DoStatusTransition(subInstance.ID, transition);
 			}
 		}

@@ -154,11 +154,11 @@ namespace Script
                     this.innerDomHelper.DomInstances.Update(instance);
 
                     //this.innerDomHelper.DomInstances.ExecuteAction(instance.ID, action);
-                    if (statusId == "active" || statusId == "complete" || statusId == "deactivate" || statusId == "complete-provision")
+                    if (statusId == "active" || statusId == "complete" || statusId == "draft")
                     {
                         this.innerDomHelper.DomInstances.ExecuteAction(instance.ID, action);
                     }
-                    else if (statusId == ("error"))
+                    else if (statusId.StartsWith("error"))
                     {
                         this.innerDomHelper.DomInstances.ExecuteAction(instance.ID, "error-" + action);
                     }

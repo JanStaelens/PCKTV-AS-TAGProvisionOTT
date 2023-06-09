@@ -889,6 +889,7 @@ namespace Script
 					new DomStatusTransition("error_to_reprovision", "error", "reprovision"),
 					new DomStatusTransition("error_to_deactivate", "error", "deactivate"),
 					new DomStatusTransition("error_to_complete", "error", "complete"),
+					new DomStatusTransition("error_to_draft", "error", "draft"),
 				};
 
 				List<IDomActionDefinition> behaviorActions = GetBehaviorActions("TAG Channel Process", "Channel Name");
