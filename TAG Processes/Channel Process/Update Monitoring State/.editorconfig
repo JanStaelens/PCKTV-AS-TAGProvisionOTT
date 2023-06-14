@@ -24,3 +24,6 @@ dotnet_analyzer_diagnostic.category-StyleCop.CSharp.MaintainabilityRules.severit
 
 # CS1591: Missing XML comment for publicly visible type or member
 dotnet_diagnostic.CS1591.severity = none
+
+# SA1027: Use tabs correctly
+dotnet_diagnostic.SA1027.severity = none

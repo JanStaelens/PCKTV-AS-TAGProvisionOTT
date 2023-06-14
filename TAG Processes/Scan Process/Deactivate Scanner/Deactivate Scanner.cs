@@ -314,7 +314,7 @@ namespace Script
 						transition = "active_to_draft";
 					}
 				}
-				
+
 				this.innerDomHelper.DomInstances.DoStatusTransition(subInstance.ID, transition);
 			}
 		}

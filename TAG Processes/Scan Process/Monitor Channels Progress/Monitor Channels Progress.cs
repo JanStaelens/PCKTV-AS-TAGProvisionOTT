@@ -67,35 +67,35 @@ using TagHelperMethods;
 /// </summary>
 public class Script
 {
-    /// <summary>
-    /// The Script entry point.
-    /// </summary>
-    /// <param name="engine">Link with SLAutomation process.</param>
-    public void Run(Engine engine)
-    {
-        var scriptName = "PA_TAG_Monitor Channels Progress";
+	/// <summary>
+	/// The Script entry point.
+	/// </summary>
+	/// <param name="engine">Link with SLAutomation process.</param>
+	public void Run(Engine engine)
+	{
+		var scriptName = "PA_TAG_Monitor Channels Progress";
 		var scanName = String.Empty;
 
-        var helper = new PaProfileLoadDomHelper(engine);
-        var domHelper = new DomHelper(engine.SendSLNetMessages, "process_automation");
+		var helper = new PaProfileLoadDomHelper(engine);
+		var domHelper = new DomHelper(engine.SendSLNetMessages, "process_automation");
 
-        var exceptionHelper = new ExceptionHelper(engine, domHelper);
-        var sharedMethods = new SharedMethods(helper, domHelper);
+		var exceptionHelper = new ExceptionHelper(engine, domHelper);
+		var sharedMethods = new SharedMethods(helper, domHelper);
 
-        engine.GenerateInformation("START " + scriptName);
+		engine.GenerateInformation("START " + scriptName);
 
-        var instanceId = helper.GetParameterValue<string>("InstanceId (TAG Scan)");
-        var instance = domHelper.DomInstances.Read(DomInstanceExposers.Id.Equal(new DomInstanceId(Guid.Parse(instanceId)))).First();
-        var status = instance.StatusId;
+		var instanceId = helper.GetParameterValue<string>("InstanceId (TAG Scan)");
+		var instance = domHelper.DomInstances.Read(DomInstanceExposers.Id.Equal(new DomInstanceId(Guid.Parse(instanceId)))).First();
+		var status = instance.StatusId;
 
-        if (!status.Equals("in_progress"))
-        {
-            helper.SendFinishMessageToTokenHandler();
-            return;
-        }
+		if (!status.Equals("in_progress"))
+		{
+			helper.SendFinishMessageToTokenHandler();
+			return;
+		}
 
-        try
-        {
+		try
+		{
 			var scanner = new Scanner
 			{
 				AssetId = helper.GetParameterValue<string>("Asset ID (TAG Scan)"),
@@ -114,21 +114,21 @@ public class Script
 			scanName = scanner.ScanName;
 			var totalChannels = scanner.Channels.Count;
 			int errorChannelsCount = 0;
-            
-            bool CheckStateChange()
-            {
-                try
-                {
+
+			bool CheckStateChange()
+			{
+				try
+				{
 					var finishedChannels = 0;
 					var errorChannels = 0;
 
 					foreach (var channel in scanner.Channels)
-                    {
-                        var channelFilter = DomInstanceExposers.Id.Equal(new DomInstanceId(channel));
-                        var subInstance = domHelper.DomInstances.Read(channelFilter).First();
+					{
+						var channelFilter = DomInstanceExposers.Id.Equal(new DomInstanceId(channel));
+						var subInstance = domHelper.DomInstances.Read(channelFilter).First();
 
-                        if (subInstance.StatusId == "active")
-                        {
+						if (subInstance.StatusId == "active")
+						{
 							finishedChannels++;
 						}
 
@@ -145,10 +145,10 @@ public class Script
 						errorChannelsCount = errorChannels;
 					}
 
-                    return areFinished;
-                }
-                catch (Exception ex)
-                {
+					return areFinished;
+				}
+				catch (Exception ex)
+				{
 					var log = new Log
 					{
 						AffectedItem = scriptName,
@@ -165,12 +165,12 @@ public class Script
 					exceptionHelper.ProcessException(ex, log);
 					SharedMethods.TransitionToError(helper, status);
 					helper.Log("Exception thrown while verifying the subprocess: " + ex, PaLogLevel.Error);
-                    throw;
-                }
-            }
+					throw;
+				}
+			}
 
-            if (this.Retry(CheckStateChange, new TimeSpan(0, 5, 0)))
-            {
+			if (this.Retry(CheckStateChange, new TimeSpan(0, 5, 0)))
+			{
 				if (errorChannelsCount == totalChannels)
 				{
 					SharedMethods.TransitionToError(helper, status);
@@ -184,10 +184,10 @@ public class Script
 					helper.TransitionState("inprogress_to_active");
 				}
 
-                helper.SendFinishMessageToTokenHandler();
-            }
-            else
-            {
+				helper.SendFinishMessageToTokenHandler();
+			}
+			else
+			{
 				// failed to execute in time
 				var log = new Log
 				{
@@ -204,18 +204,18 @@ public class Script
 						Description = "Channel subprocess didn't finish within the timeout time.",
 					},
 				};
-                exceptionHelper.GenerateLog(log);
+				exceptionHelper.GenerateLog(log);
 				helper.Log($"Channel subprocess didn't finish within the timeout time. ScanName: {scanner.ScanName}", PaLogLevel.Error);
 				SharedMethods.TransitionToError(helper, status);
 				helper.SendFinishMessageToTokenHandler();
-            }
-        }
-        catch (ScriptAbortException)
-        {
-            // no issue
-        }
-        catch (Exception ex)
-        {
+			}
+		}
+		catch (ScriptAbortException)
+		{
+			// no issue
+		}
+		catch (Exception ex)
+		{
 			var log = new Log
 			{
 				AffectedItem = scriptName,
@@ -232,32 +232,32 @@ public class Script
 			exceptionHelper.ProcessException(ex, log);
 			SharedMethods.TransitionToError(helper, status);
 			helper.SendFinishMessageToTokenHandler();
-            throw;
-        }
-    }
+			throw;
+		}
+	}
 
-    // <summary>
-    // Retry until success or until timeout.
-    // </summary>
-    // <param name="func">Operation to retry.</param>
-    // <param name="timeout">Max TimeSpan during which the operation specified in <paramref name="func"/> can be retried.</param>
-    // <returns><c>true</c> if one of the retries succeeded within the specified <paramref name="timeout"/>. Otherwise <c>false</c>.</returns>
-    private bool Retry(Func<bool> func, TimeSpan timeout)
-    {
-        bool success;
+	// <summary>
+	// Retry until success or until timeout.
+	// </summary>
+	// <param name="func">Operation to retry.</param>
+	// <param name="timeout">Max TimeSpan during which the operation specified in <paramref name="func"/> can be retried.</param>
+	// <returns><c>true</c> if one of the retries succeeded within the specified <paramref name="timeout"/>. Otherwise <c>false</c>.</returns>
+	private bool Retry(Func<bool> func, TimeSpan timeout)
+	{
+		bool success;
 
-        Stopwatch sw = new Stopwatch();
-        sw.Start();
+		Stopwatch sw = new Stopwatch();
+		sw.Start();
 
-        do
-        {
-            success = func();
-            if (!success)
-            {
-                Thread.Sleep(5000);
-            }
-        }
-        while (!success && sw.Elapsed <= timeout);
-        return success;
-    }
+		do
+		{
+			success = func();
+			if (!success)
+			{
+				Thread.Sleep(5000);
+			}
+		}
+		while (!success && sw.Elapsed <= timeout);
+		return success;
+	}
 }

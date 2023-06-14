@@ -52,143 +52,142 @@ DATE        VERSION     AUTHOR          COMMENTS
 
 namespace Script
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Linq;
-    using System.Threading;
-    using Skyline.DataMiner.Automation;
-    using Skyline.DataMiner.Core.DataMinerSystem.Automation;
-    using Skyline.DataMiner.Core.DataMinerSystem.Common;
-    using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.Logging;
-    using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager;
-    using Skyline.DataMiner.ExceptionHelper;
-    using Skyline.DataMiner.Net.Apps.DataMinerObjectModel;
-    using Skyline.DataMiner.Net.Sections;
-    using TagHelperMethods;
+	using System;
+	using System.Collections.Generic;
+	using System.Linq;
+	using System.Threading;
+	using Skyline.DataMiner.Automation;
+	using Skyline.DataMiner.Core.DataMinerSystem.Automation;
+	using Skyline.DataMiner.Core.DataMinerSystem.Common;
+	using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.Logging;
+	using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager;
+	using Skyline.DataMiner.ExceptionHelper;
+	using Skyline.DataMiner.Net.Apps.DataMinerObjectModel;
+	using Skyline.DataMiner.Net.Sections;
+	using TagHelperMethods;
 
-    internal class Script
-    {
-        private const int NoLayout = 0;
+	internal class Script
+	{
+		private const int NoLayout = 0;
 #pragma warning disable S1450 // Private fields only used as local variables in methods should become local variables
-        private DomHelper innerDomHelper;
+		private DomHelper innerDomHelper;
 #pragma warning restore S1450 // Private fields only used as local variables in methods should become local variables
 
-        /// <summary>
-        /// The Script entry point.
-        /// </summary>
-        /// <param name="engine">The <see cref="Engine" /> instance used to communicate with DataMiner.</param>
-        public void Run(Engine engine)
-        {
-            engine.SetFlag(RunTimeFlags.NoCheckingSets);
+		/// <summary>
+		/// The Script entry point.
+		/// </summary>
+		/// <param name="engine">The <see cref="Engine" /> instance used to communicate with DataMiner.</param>
+		public void Run(Engine engine)
+		{
+			engine.SetFlag(RunTimeFlags.NoCheckingSets);
 
-            var scriptName = "PA_TAG_Clear Layout";
-            var tagElementName = "Pre-Code";
-            var channelName = "Pre-Code";
-            engine.GenerateInformation("START " + scriptName);
-            var helper = new PaProfileLoadDomHelper(engine);
-            this.innerDomHelper = new DomHelper(engine.SendSLNetMessages, "process_automation");
-            var exceptionHelper = new ExceptionHelper(engine, this.innerDomHelper);
+			var scriptName = "PA_TAG_Clear Layout";
+			var tagElementName = "Pre-Code";
+			var channelName = "Pre-Code";
+			engine.GenerateInformation("START " + scriptName);
+			var helper = new PaProfileLoadDomHelper(engine);
+			this.innerDomHelper = new DomHelper(engine.SendSLNetMessages, "process_automation");
+			var exceptionHelper = new ExceptionHelper(engine, this.innerDomHelper);
 
-            var status = String.Empty;
+			var status = String.Empty;
 
-            try
-            {
-                tagElementName = helper.GetParameterValue<string>("TAG Element (TAG Channel)");
-                channelName = helper.GetParameterValue<string>("Channel Name (TAG Channel)");
-                var channelMatch = helper.GetParameterValue<string>("Channel Match (TAG Channel)");
+			try
+			{
+				tagElementName = helper.GetParameterValue<string>("TAG Element (TAG Channel)");
+				channelName = helper.GetParameterValue<string>("Channel Name (TAG Channel)");
+				var channelMatch = helper.GetParameterValue<string>("Channel Match (TAG Channel)");
 
-                var instanceId = helper.GetParameterValue<string>("InstanceId (TAG Channel)");
-                var instance = this.innerDomHelper.DomInstances.Read(DomInstanceExposers.Id.Equal(new DomInstanceId(Guid.Parse(instanceId)))).First();
-                status = instance.StatusId;
+				var instanceId = helper.GetParameterValue<string>("InstanceId (TAG Channel)");
+				var instance = this.innerDomHelper.DomInstances.Read(DomInstanceExposers.Id.Equal(new DomInstanceId(Guid.Parse(instanceId)))).First();
+				status = instance.StatusId;
 
-                // only run this activity if reprovision or deactivate
-                if (status.Equals("ready"))
-                {
-                    helper.ReturnSuccess();
-                    return;
-                }
-
-                IDms thisDms = engine.GetDms();
-                var tagElement = thisDms.GetElement(tagElementName);
-                var engineTag = engine.FindElement(tagElement.Name);
-                var allLayoutChannelsTable = tagElement.GetTable(10300);
-
-                var filterColumn = new ColumnFilter { ComparisonOperator = ComparisonOperator.Equal, Value = channelMatch, Pid = 10303 };
-                var channelLayoutRows = allLayoutChannelsTable.QueryData(new List<ColumnFilter> { filterColumn });
-                if (channelLayoutRows.Any())
-                {
-                    foreach (var row in channelLayoutRows)
-                    {
-                        engineTag.SetParameterByPrimaryKey(10353, Convert.ToString(row[0]), NoLayout);
-                        Thread.Sleep(1000);
-                    }
-                }
-                else
-                {
-                    // no channels to clear
-                    engine.GenerateInformation("Did not find any channels with match: " + channelMatch);
-                }
-
-                if (status.Equals("deactivate"))
-                {
-                    helper.TransitionState("deactivate_to_deactivating");
-                    helper.ReturnSuccess();
-                    return;
-                }
-                else if (status.Equals("reprovision"))
-                {
-                    helper.TransitionState("reprovision_to_inprogress");
-                }
-                else
-                {
-                    var log = new Log
-                    {
-                        AffectedItem = scriptName,
-                        AffectedService = channelName,
-                        Timestamp = DateTime.Now,
-                        ErrorCode = new ErrorCode
-                        {
-                            ConfigurationItem = scriptName + " Script",
-                            ConfigurationType = ErrorCode.ConfigType.Automation,
-                            Source = "Status transition condition",
-                            Code = "InvalidStatusForTransition",
-                            Severity = ErrorCode.SeverityType.Warning,
-                            Description = $"Cannot execute the transition as the current status is unexpected. Current status: {status}",
-                        },
-                    };
-
-                    helper.Log($"Cannot execute the transition as the status. Current status: {status}", PaLogLevel.Error);
-                    exceptionHelper.GenerateLog(log);
+				// only run this activity if reprovision or deactivate
+				if (status.Equals("ready"))
+				{
+					helper.ReturnSuccess();
+					return;
 				}
 
-                helper.ReturnSuccess();
-            }
-            catch (Exception ex)
-            {
-                engine.GenerateInformation("ERROR in clear layout: " + ex);
-                var log = new Log
-                {
-                    AffectedItem = scriptName,
-                    AffectedService = channelName,
-                    Timestamp = DateTime.Now,
-                    ErrorCode = new ErrorCode
-                    {
-                        ConfigurationItem = scriptName + " Script",
-                        ConfigurationType = ErrorCode.ConfigType.Automation,
-                        Source = "Run()",
-                        Severity = ErrorCode.SeverityType.Critical,
-                        Description = "Exception while processing Clear Layout",
-                    },
-                };
+				IDms thisDms = engine.GetDms();
+				var tagElement = thisDms.GetElement(tagElementName);
+				var engineTag = engine.FindElement(tagElement.Name);
+				var allLayoutChannelsTable = tagElement.GetTable(10300);
 
-                exceptionHelper.ProcessException(ex, log);
+				var filterColumn = new ColumnFilter { ComparisonOperator = ComparisonOperator.Equal, Value = channelMatch, Pid = 10303 };
+				var channelLayoutRows = allLayoutChannelsTable.QueryData(new List<ColumnFilter> { filterColumn });
+				if (channelLayoutRows.Any())
+				{
+					foreach (var row in channelLayoutRows)
+					{
+						engineTag.SetParameterByPrimaryKey(10353, Convert.ToString(row[0]), NoLayout);
+						Thread.Sleep(1000);
+					}
+				}
+				else
+				{
+					// no channels to clear
+					engine.GenerateInformation("Did not find any channels with match: " + channelMatch);
+				}
 
-                helper.Log($"An issue occurred while executing {scriptName} activity for {channelName}: {ex}", PaLogLevel.Error);
-                SharedMethods.TransitionToError(helper, status);
+				if (status.Equals("deactivate"))
+				{
+					helper.TransitionState("deactivate_to_deactivating");
+					helper.ReturnSuccess();
+					return;
+				}
+				else if (status.Equals("reprovision"))
+				{
+					helper.TransitionState("reprovision_to_inprogress");
+				}
+				else
+				{
+					var log = new Log
+					{
+						AffectedItem = scriptName,
+						AffectedService = channelName,
+						Timestamp = DateTime.Now,
+						ErrorCode = new ErrorCode
+						{
+							ConfigurationItem = scriptName + " Script",
+							ConfigurationType = ErrorCode.ConfigType.Automation,
+							Source = "Status transition condition",
+							Code = "InvalidStatusForTransition",
+							Severity = ErrorCode.SeverityType.Warning,
+							Description = $"Cannot execute the transition as the current status is unexpected. Current status: {status}",
+						},
+					};
 
-                helper.SendFinishMessageToTokenHandler();
-            }
-        }
-    }
+					helper.Log($"Cannot execute the transition as the status. Current status: {status}", PaLogLevel.Error);
+					exceptionHelper.GenerateLog(log);
+				}
+
+				helper.ReturnSuccess();
+			}
+			catch (Exception ex)
+			{
+				engine.GenerateInformation("ERROR in clear layout: " + ex);
+				var log = new Log
+				{
+					AffectedItem = scriptName,
+					AffectedService = channelName,
+					Timestamp = DateTime.Now,
+					ErrorCode = new ErrorCode
+					{
+						ConfigurationItem = scriptName + " Script",
+						ConfigurationType = ErrorCode.ConfigType.Automation,
+						Source = "Run()",
+						Severity = ErrorCode.SeverityType.Critical,
+						Description = "Exception while processing Clear Layout",
+					},
+				};
+
+				exceptionHelper.ProcessException(ex, log);
+
+				helper.Log($"An issue occurred while executing {scriptName} activity for {channelName}: {ex}", PaLogLevel.Error);
+				SharedMethods.TransitionToError(helper, status);
+
+				helper.SendFinishMessageToTokenHandler();
+			}
+		}
+	}
 }

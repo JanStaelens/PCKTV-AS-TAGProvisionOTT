@@ -12,3 +12,6 @@ dotnet_sort_system_directives_first = true
 
 # Default severity for analyzer diagnostics with category 'StyleCop.CSharp.DocumentationRules'
 dotnet_analyzer_diagnostic.category-StyleCop.CSharp.DocumentationRules.severity = none
+
+# SA1027: Use tabs correctly
+dotnet_diagnostic.SA1027.severity = none

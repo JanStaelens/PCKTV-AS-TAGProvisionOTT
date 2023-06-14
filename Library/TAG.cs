@@ -1,7 +1,6 @@
 ﻿namespace TagHelperMethods
 {
     using Newtonsoft.Json;
-    using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager;
     using System.Collections.Generic;
 
     public class TagRequest

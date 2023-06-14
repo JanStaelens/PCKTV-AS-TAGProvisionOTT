@@ -51,54 +51,54 @@ dd/mm/2023  1.0.0.1     XXX, Skyline    Initial version
 
 namespace Script
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Web;
-    using Skyline.DataMiner.Automation;
-    using Skyline.DataMiner.Core.DataMinerSystem.Automation;
-    using Skyline.DataMiner.Core.DataMinerSystem.Common;
-    using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.Logging;
-    using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager;
-    using Skyline.DataMiner.ExceptionHelper;
-    using Skyline.DataMiner.Net.Apps.DataMinerObjectModel;
-    using Skyline.DataMiner.Net.Sections;
-    using TagHelperMethods;
+	using System;
+	using System.Collections.Generic;
+	using System.Linq;
+	using System.Web;
+	using Skyline.DataMiner.Automation;
+	using Skyline.DataMiner.Core.DataMinerSystem.Automation;
+	using Skyline.DataMiner.Core.DataMinerSystem.Common;
+	using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.Logging;
+	using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager;
+	using Skyline.DataMiner.ExceptionHelper;
+	using Skyline.DataMiner.Net.Apps.DataMinerObjectModel;
+	using Skyline.DataMiner.Net.Sections;
+	using TagHelperMethods;
 
-    /// <summary>
-    /// DataMiner Script Class.
-    /// </summary>
-    public class Script
-    {
-        /// <summary>
-        /// The Script entry point.
-        /// </summary>
-        /// <param name="engine">Link with SLAutomation process.</param>
-        public void Run(Engine engine)
-        {
-            var scriptName = "PA_TAG_Monitor Scanner Progress";
+	/// <summary>
+	/// DataMiner Script Class.
+	/// </summary>
+	public class Script
+	{
+		/// <summary>
+		/// The Script entry point.
+		/// </summary>
+		/// <param name="engine">Link with SLAutomation process.</param>
+		public void Run(Engine engine)
+		{
+			var scriptName = "PA_TAG_Monitor Scanner Progress";
 			var scanName = String.Empty;
 
-            var helper = new PaProfileLoadDomHelper(engine);
-            var domHelper = new DomHelper(engine.SendSLNetMessages, "process_automation");
+			var helper = new PaProfileLoadDomHelper(engine);
+			var domHelper = new DomHelper(engine.SendSLNetMessages, "process_automation");
 
-            var exceptionHelper = new ExceptionHelper(engine, domHelper);
-            var sharedMethods = new SharedMethods(helper, domHelper);
+			var exceptionHelper = new ExceptionHelper(engine, domHelper);
+			var sharedMethods = new SharedMethods(helper, domHelper);
 
-            engine.GenerateInformation("START " + scriptName);
+			engine.GenerateInformation("START " + scriptName);
 
-            var instanceId = helper.GetParameterValue<string>("InstanceId (TAG Scan)");
-            var instance = domHelper.DomInstances.Read(DomInstanceExposers.Id.Equal(new DomInstanceId(Guid.Parse(instanceId)))).First();
-            var status = instance.StatusId;
+			var instanceId = helper.GetParameterValue<string>("InstanceId (TAG Scan)");
+			var instance = domHelper.DomInstances.Read(DomInstanceExposers.Id.Equal(new DomInstanceId(Guid.Parse(instanceId)))).First();
+			var status = instance.StatusId;
 
-            if (!status.Equals("in_progress"))
-            {
-                helper.SendFinishMessageToTokenHandler();
-                return;
-            }
+			if (!status.Equals("in_progress"))
+			{
+				helper.SendFinishMessageToTokenHandler();
+				return;
+			}
 
-            try
-            {
+			try
+			{
 				var scanner = new Scanner
 				{
 					AssetId = helper.GetParameterValue<string>("Asset ID (TAG Scan)"),
@@ -115,13 +115,13 @@ namespace Script
 				};
 
 				IDms dms = engine.GetDms();
-                IDmsElement element = dms.GetElement(scanner.TagElement);
+				IDmsElement element = dms.GetElement(scanner.TagElement);
 
-                var manifests = sharedMethods.GetManifests(instance);
+				var manifests = sharedMethods.GetManifests(instance);
 
-                bool VerifyScan()
-                {
-                    try
+				bool VerifyScan()
+				{
+					try
 					{
 						int iTotalExpected = 0;
 						int iScanRequestChecked = 0;
@@ -149,8 +149,8 @@ namespace Script
 						return false;
 					}
 					catch (Exception ex)
-                    {
-                        engine.Log("Exception thrown while checking TAG Scan status: " + ex);
+					{
+						engine.Log("Exception thrown while checking TAG Scan status: " + ex);
 
 						var log = new Log
 						{
@@ -169,60 +169,60 @@ namespace Script
 						SharedMethods.TransitionToError(helper, status);
 						exceptionHelper.ProcessException(ex, log);
 						throw;
-                    }
-                }
+					}
+				}
 
-                if (sharedMethods.Retry(VerifyScan, new TimeSpan(0, 5, 0)))
-                {
-                    sharedMethods.StartTAGChannelsProcess(scanner);
-                    helper.ReturnSuccess();
-                }
-                else
-                {
-                    // failed to execute in time
-                    var log = new Log
-                    {
-                        AffectedItem = scriptName,
-                        AffectedService = scanner.ScanName,
-                        Timestamp = DateTime.Now,
-                        ErrorCode = new ErrorCode
-                        {
-                            ConfigurationItem = scriptName + " Script",
+				if (sharedMethods.Retry(VerifyScan, new TimeSpan(0, 5, 0)))
+				{
+					sharedMethods.StartTAGChannelsProcess(scanner);
+					helper.ReturnSuccess();
+				}
+				else
+				{
+					// failed to execute in time
+					var log = new Log
+					{
+						AffectedItem = scriptName,
+						AffectedService = scanner.ScanName,
+						Timestamp = DateTime.Now,
+						ErrorCode = new ErrorCode
+						{
+							ConfigurationItem = scriptName + " Script",
 							ConfigurationType = ErrorCode.ConfigType.Automation,
-                            Severity = ErrorCode.SeverityType.Warning,
+							Severity = ErrorCode.SeverityType.Warning,
 							Code = "RetryTimeout",
 							Source = "Retry condition",
 							Description = "Scan did not finish due to verify timeout.",
-                        },
-                    };
-                    exceptionHelper.GenerateLog(log);
+						},
+					};
+					exceptionHelper.GenerateLog(log);
 
 					helper.Log($"Scan did not finish due to verify timeout. ScanName: {scanner.ScanName}", PaLogLevel.Error);
 					SharedMethods.TransitionToError(helper, status);
 					helper.SendFinishMessageToTokenHandler();
-                }
-            }
-            catch (Exception ex)
-            {
-                var log = new Log
-                {
-                    AffectedItem = scriptName,
-                    AffectedService = scanName,
-                    Timestamp = DateTime.Now,
-                    ErrorCode = new ErrorCode
-                    {
-                        ConfigurationItem = scriptName + " Script",
-                        ConfigurationType = ErrorCode.ConfigType.Automation,
-                        Severity = ErrorCode.SeverityType.Warning,
-                        Source = "Run()",
-                    },
-                };
-                exceptionHelper.ProcessException(ex, log);
+				}
+			}
+			catch (Exception ex)
+			{
+				var log = new Log
+				{
+					AffectedItem = scriptName,
+					AffectedService = scanName,
+					Timestamp = DateTime.Now,
+					ErrorCode = new ErrorCode
+					{
+						ConfigurationItem = scriptName + " Script",
+						ConfigurationType = ErrorCode.ConfigType.Automation,
+						Severity = ErrorCode.SeverityType.Warning,
+						Source = "Run()",
+					},
+				};
+				exceptionHelper.ProcessException(ex, log);
 				SharedMethods.TransitionToError(helper, status);
 				helper.SendFinishMessageToTokenHandler();
-                throw;
-            }
-        }
+				throw;
+			}
+		}
 
 		private static int ValidateScans(Scanner scanner, List<Manifest> manifests, int iScanRequestChecked, object[][] scanChannelsRows)
 		{
