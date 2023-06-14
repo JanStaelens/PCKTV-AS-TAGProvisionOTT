@@ -162,27 +162,32 @@ namespace Script
 						helper.TransitionState("ready_to_inprogress");
 					}
 
-					helper.ReturnSuccess();
-				}
-				else
-				{
-					// failed to execute in time
-					var log = new Log
-					{
-						AffectedItem = scriptName,
-						AffectedService = scanName,
-						Timestamp = DateTime.Now,
-						ErrorCode = new ErrorCode
-						{
-							ConfigurationItem = scriptName + " Script",
-							ConfigurationType = ErrorCode.ConfigType.Automation,
-							Severity = ErrorCode.SeverityType.Warning,
-							Code = "PAActivityFailed",
-							Source = "Retry condition",
-							Description = $"Create Scan failed for event {scanName}. TAG Element: {scanner.TagElement}",
-						},
-					};
-					exceptionHelper.GenerateLog(log);
+                    helper.ReturnSuccess();
+                }
+                else
+                {
+                    // failed to execute in time
+                    var log = new Log
+                    {
+                        AffectedItem = scriptName,
+                        AffectedService = scanName,
+                        Timestamp = DateTime.Now,
+                        //SummaryFlag = false,
+                        ErrorCode = new ErrorCode
+                        {
+                            ConfigurationItem = scriptName + " Script",
+                            ConfigurationType = ErrorCode.ConfigType.Automation,
+                            Severity = ErrorCode.SeverityType.Warning,
+                            Code = "RetryTimeout",
+                            Source = "Retry condition",
+                            Description = $"Create Scan failed for event {scanName}. TAG Element: {scanner.TagElement}",
+                        },
+                    };
+                    exceptionHelper.GenerateLog(log);
+                    if (status == "ready")
+                    {
+                        helper.TransitionState("ready_to_inprogress");
+                    }
 
 					SharedMethods.TransitionToError(helper, status);
 					helper.SendFinishMessageToTokenHandler();
