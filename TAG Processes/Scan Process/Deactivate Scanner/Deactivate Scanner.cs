@@ -257,7 +257,7 @@ namespace Script
 				helper.TransitionState("deactivating_to_complete");
 				helper.SendFinishMessageToTokenHandler();
 			}
-			else if (scanner.Action == "reprovision")
+			else if (status == "reprovision")
 			{
 				helper.TransitionState("reprovision_to_inprogress");
 				helper.ReturnSuccess();
@@ -320,9 +320,10 @@ namespace Script
 				var subFilter = DomInstanceExposers.Id.Equal(new DomInstanceId(channel));
 				var subInstance = this.innerDomHelper.DomInstances.Read(subFilter).First();
 				var transition = String.Empty;
+
 				if (status.Equals("deactivating"))
 				{
-					if (subInstance.StatusId == "complete")
+					if (subInstance.StatusId == "complete" || subInstance.StatusId == "draft")
 					{
 						continue;
 					}
@@ -352,7 +353,7 @@ namespace Script
 						transition = "active_to_draft";
 					}
 				}
-				
+
 				this.innerDomHelper.DomInstances.DoStatusTransition(subInstance.ID, transition);
 			}
 		}

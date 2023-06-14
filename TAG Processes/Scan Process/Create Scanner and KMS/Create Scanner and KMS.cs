@@ -178,7 +178,7 @@ namespace Script
                             ConfigurationItem = scriptName + " Script",
                             ConfigurationType = ErrorCode.ConfigType.Automation,
                             Severity = ErrorCode.SeverityType.Warning,
-                            Code = "PAActivityFailed",
+                            Code = "RetryTimeout",
                             Source = "Retry condition",
                             Description = $"Create Scan failed for event {scanName}. TAG Element: {scanner.TagElement}",
                         },

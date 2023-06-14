@@ -97,8 +97,6 @@ namespace Script
                     this.ExecuteActionOnScanners(action, scannerInstance);
                 }
 
-
-
                 if (action == "provision" || action == "complete-provision")
                 {
                     helper.TransitionState("ready_to_inprogress");
