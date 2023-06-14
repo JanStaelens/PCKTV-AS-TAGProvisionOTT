@@ -169,7 +169,7 @@ namespace Script
 					}
 				}
 
-				if (this.sharedMethods.Retry(VerifyScanDeleted, new TimeSpan(0, 5, 0)))
+				if (SharedMethods.Retry(VerifyScanDeleted, new TimeSpan(0, 5, 0)))
 				{
 					// successfully deleted
 					helper.Log($"Scanner {scanner.ScanName} Deactivated", PaLogLevel.Information);
@@ -275,8 +275,6 @@ namespace Script
 
 		private void ExecuteChannelsTransition(List<Guid> channels, string status)
 		{
-			//var transition = status.Equals("deactivating") ? "active_to_complete" : "active_to_draft";
-
 			foreach (var channel in channels)
 			{
 				var subFilter = DomInstanceExposers.Id.Equal(new DomInstanceId(channel));

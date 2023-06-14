@@ -27,3 +27,6 @@ dotnet_analyzer_diagnostic.category-Minor Code Smell.severity = none
 
 # S3267: Loops should be simplified with "LINQ" expressions
 dotnet_diagnostic.S3267.severity = none
+
+# SA1027: Use tabs correctly
+dotnet_diagnostic.SA1027.severity = none

@@ -153,7 +153,7 @@ namespace Script
 					}
 				}
 
-				if (this.sharedMethods.Retry(VerifyScanCreation, new TimeSpan(0, 5, 0)))
+				if (SharedMethods.Retry(VerifyScanCreation, new TimeSpan(0, 5, 0)))
 				{
 					// successfully created filter
 					engine.GenerateInformation("Scan created for " + scanner.TagElement);
@@ -172,7 +172,6 @@ namespace Script
                         AffectedItem = scriptName,
                         AffectedService = scanName,
                         Timestamp = DateTime.Now,
-                        //SummaryFlag = false,
                         ErrorCode = new ErrorCode
                         {
                             ConfigurationItem = scriptName + " Script",
@@ -184,10 +183,6 @@ namespace Script
                         },
                     };
                     exceptionHelper.GenerateLog(log);
-                    if (status == "ready")
-                    {
-                        helper.TransitionState("ready_to_inprogress");
-                    }
 
 					SharedMethods.TransitionToError(helper, status);
 					helper.SendFinishMessageToTokenHandler();
@@ -228,7 +223,6 @@ namespace Script
 					AffectedItem = scriptName,
 					AffectedService = scanner.ScanName,
 					Timestamp = DateTime.Now,
-					//SummaryFlag = false,
 					ErrorCode = new ErrorCode
 					{
 						ConfigurationItem = scriptName + " Script",

@@ -49,12 +49,12 @@ DATE        VERSION     AUTHOR          COMMENTS
 
 ****************************************************************************
 */
-
 namespace Script
 {
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
+	using Newtonsoft.Json;
 	using Skyline.DataMiner.Automation;
 	using Skyline.DataMiner.Core.DataMinerSystem.Automation;
 	using Skyline.DataMiner.Core.DataMinerSystem.Common;
@@ -65,217 +65,198 @@ namespace Script
 	using Skyline.DataMiner.Net.Sections;
 	using TagHelperMethods;
 
-    internal class Script
-    {
-        private readonly string scriptName = "PA_TAG_Update Monitoring State";
-        private PaProfileLoadDomHelper helper;
-        private Engine engine;
-        private ExceptionHelper exceptionHelper;
-        private string channelName = "Pre-Code";
+	internal class Script
+	{
+		private readonly string scriptName = "PA_TAG_Update Monitoring State";
+		private PaProfileLoadDomHelper helper;
+		private Engine engine;
+		private ExceptionHelper exceptionHelper;
+		private string channelName = "Pre-Code";
 
-        /// <summary>
-        /// The Script entry point.
-        /// </summary>
-        /// <param name="engine">The <see cref="Engine" /> instance used to communicate with DataMiner.</param>
-        public void Run(Engine engine)
-        {
-            this.engine = engine;
-            engine.SetFlag(RunTimeFlags.NoCheckingSets);
+		/// <summary>
+		/// The Script entry point.
+		/// </summary>
+		/// <param name="engine">The <see cref="Engine" /> instance used to communicate with DataMiner.</param>
+		public void Run(Engine engine)
+		{
+			this.engine = engine;
+			engine.SetFlag(RunTimeFlags.NoCheckingSets);
 
-            var tagElementName = "Pre-Code";
-            this.helper = new PaProfileLoadDomHelper(engine);
-            var innerDomHelper = new DomHelper(engine.SendSLNetMessages, "process_automation");
-            this.exceptionHelper = new ExceptionHelper(engine, innerDomHelper);
+			var tagElementName = "Pre-Code";
+			this.helper = new PaProfileLoadDomHelper(engine);
+			var innerDomHelper = new DomHelper(engine.SendSLNetMessages, "process_automation");
+			this.exceptionHelper = new ExceptionHelper(engine, innerDomHelper);
 
-            try
-            {
-                TagChannelInfo tagInfo = new TagChannelInfo(engine, this.helper, innerDomHelper);
-                this.channelName = tagInfo.Channel;
-                tagElementName = tagInfo.ElementName;
-                engine.GenerateInformation("START " + this.scriptName);
+			var status = String.Empty;
 
-                var filterColumn = new ColumnFilter { ComparisonOperator = ComparisonOperator.Equal, Value = tagInfo.ChannelMatch, Pid = 248 };
-                var channelStatusRows = tagInfo.ChannelStatusTable.QueryData(new List<ColumnFilter> { filterColumn });
-                if (channelStatusRows.Any())
-                {
-                    foreach (var row in channelStatusRows)
-                    {
-                        tagInfo.EngineElement.SetParameterByPrimaryKey(356, Convert.ToString(row[0]), (int)tagInfo.MonitorUpdate);
-                    }
-                }
-                else
-                {
-                    var log = new Log
-                    {
-                        AffectedItem = this.scriptName,
-                        AffectedService = this.channelName,
-                        Timestamp = DateTime.Now,
-                        ErrorCode = new ErrorCode
-                        {
-                            ConfigurationItem = this.scriptName + " Script",
-                            ConfigurationType = ErrorCode.ConfigType.Automation,
-                            Source = "Channel Status condition",
-                            Code = "ChannelNotFound",
-                            Severity = ErrorCode.SeverityType.Warning,
-                            Description = $"No channels found in Channel Status Overview Table.",
-                        },
-                    };
+			try
+			{
+				TagChannelInfo tagInfo = new TagChannelInfo(engine, this.helper, innerDomHelper);
+				status = tagInfo.Status;
+				this.channelName = tagInfo.Channel;
+				tagElementName = tagInfo.ElementName;
+				engine.GenerateInformation("START " + this.scriptName);
 
-                    this.helper.Log($"No channels found in channel status with given name: {this.channelName}.", PaLogLevel.Error);
-                    engine.GenerateInformation("Did not find any channels with match: " + tagInfo.ChannelMatch);
-                    this.exceptionHelper.GenerateLog(log);
-                }
+				var filterColumn = new ColumnFilter { ComparisonOperator = ComparisonOperator.Equal, Value = tagInfo.ChannelMatch, Pid = 248 };
+				var channelStatusRows = tagInfo.ChannelStatusTable.QueryData(new List<ColumnFilter> { filterColumn });
+				if (channelStatusRows.Any())
+				{
+					foreach (var row in channelStatusRows)
+					{
+						tagInfo.EngineElement.SetParameterByPrimaryKey(356, Convert.ToString(row[0]), (int)tagInfo.MonitorUpdate);
+					}
+				}
+				else
+				{
+					var log = new Log
+					{
+						AffectedItem = this.scriptName,
+						AffectedService = this.channelName,
+						Timestamp = DateTime.Now,
+						ErrorCode = new ErrorCode
+						{
+							ConfigurationItem = this.scriptName + " Script",
+							ConfigurationType = ErrorCode.ConfigType.Automation,
+							Source = "Channel Status condition",
+							Code = "ChannelNotFound",
+							Severity = ErrorCode.SeverityType.Warning,
+							Description = $"No channels found in Channel Status Overview Table.",
+						},
+					};
 
-                var missingChannelsData = new List<string>();
-                bool VerifyMonitoredChannels()
-                {
-                    missingChannelsData = new List<string>();
-                    var finishedChannels = 0;
-                    var totalChannels = channelStatusRows.Count();
-                    if (channelStatusRows.Any())
-                    {
-                        foreach (var row in channelStatusRows)
-                        {
-                            var ismonitored = Convert.ToInt32(row[14 /*Monitored*/]) == (int)tagInfo.MonitorUpdate;
-                            var isresponseDataFilled = !string.IsNullOrWhiteSpace(Convert.ToString(row[27 /*ResponseData*/]));
-                            if (tagInfo.Status.Equals("deactivating"))
-                            {
-                                isresponseDataFilled = true;
-                            }
+					this.helper.Log($"No channels found in channel status with given name: {this.channelName}.", PaLogLevel.Error);
+					engine.GenerateInformation("Did not find any channels with match: " + tagInfo.ChannelMatch);
+					this.exceptionHelper.GenerateLog(log);
+				}
 
-                            if (ismonitored && isresponseDataFilled)
-                            {
-                                finishedChannels++;
-                            }
-                            else
-                            {
-                                missingChannelsData.Add(Convert.ToString(row[12 /*Name*/]));
-                            }
-                        }
+				var missingChannelsData = new List<string>();
+				bool VerifyMonitoredChannels()
+				{
+					missingChannelsData = new List<string>();
+					var finishedChannels = 0;
+					var totalChannels = channelStatusRows.Count();
+					if (channelStatusRows.Any())
+					{
+						foreach (var row in channelStatusRows)
+						{
+							var ismonitored = Convert.ToInt32(row[14 /*Monitored*/]) == (int)tagInfo.MonitorUpdate;
+							var isresponseDataFilled = !string.IsNullOrWhiteSpace(Convert.ToString(row[27 /*ResponseData*/]));
+							if (tagInfo.Status.Equals("deactivating"))
+							{
+								isresponseDataFilled = true;
+							}
 
-                        return finishedChannels == totalChannels;
-                    }
-                    else
-                    {
-                        engine.Log("No monitored channels to evaluate");
-                        return true;
-                    }
-                }
+							if (ismonitored && isresponseDataFilled)
+							{
+								finishedChannels++;
+							}
+							else
+							{
+								missingChannelsData.Add(Convert.ToString(row[12 /*Name*/]));
+							}
+						}
 
-                if (Retry(VerifyMonitoredChannels, new TimeSpan(0, 3, 0)))
-                {
-                    this.ExecuteDoneTransition(tagInfo.Status, tagElementName);
-                }
-                else
-                {
-                    var log = new Log
-                    {
-                        AffectedItem = this.scriptName,
-                        AffectedService = this.channelName,
-                        Timestamp = DateTime.Now,
-                        ErrorCode = new ErrorCode
-                        {
-                            ConfigurationItem = this.scriptName + " Script",
-                            ConfigurationType = ErrorCode.ConfigType.Automation,
-                            Source = "Retry condition",
-                            Code = "RetryTimeout",
-                            Severity = ErrorCode.SeverityType.Warning,
-                            Description = $"Monitor Channel did not finish due to timeout. Must be needed both values (Monitored and ResponseData) to execute next activity (channel sets).\n Missing channels to finish: {JsonConvert.SerializeObject(missingChannelsData)}",
-                        },
-                    };
+						return finishedChannels == totalChannels;
+					}
+					else
+					{
+						engine.Log("No monitored channels to evaluate");
+						return true;
+					}
+				}
 
-                    this.helper.Log($"Monitor Channel did not finish due to timeout. Must be needed both values (Monitored and ResponseData) to execute next activity (channel sets).\n Missing channels to finish: {JsonConvert.SerializeObject(missingChannelsData)}", PaLogLevel.Error);
-                    this.exceptionHelper.GenerateLog(log);
+				if (SharedMethods.Retry(VerifyMonitoredChannels, new TimeSpan(0, 3, 0)))
+				{
+					this.ExecuteDoneTransition(tagInfo.Status, tagElementName);
+				}
+				else
+				{
+					var log = new Log
+					{
+						AffectedItem = this.scriptName,
+						AffectedService = this.channelName,
+						Timestamp = DateTime.Now,
+						ErrorCode = new ErrorCode
+						{
+							ConfigurationItem = this.scriptName + " Script",
+							ConfigurationType = ErrorCode.ConfigType.Automation,
+							Source = "Retry condition",
+							Code = "RetryTimeout",
+							Severity = ErrorCode.SeverityType.Warning,
+							Description = $"Monitor Channel did not finish due to timeout. Must be needed both values (Monitored and ResponseData) to execute next activity (channel sets).\n Missing channels to finish: {JsonConvert.SerializeObject(missingChannelsData)}",
+						},
+					};
 
-                    this.ExecuteErrorTransition(tagInfo.Status);
-                }
+					this.helper.Log($"Monitor Channel did not finish due to timeout. Must be needed both values (Monitored and ResponseData) to execute next activity (channel sets).\n Missing channels to finish: {JsonConvert.SerializeObject(missingChannelsData)}", PaLogLevel.Error);
+					this.exceptionHelper.GenerateLog(log);
 
-                this.helper.ReturnSuccess();
-            }
-            catch (Exception ex)
-            {
-                engine.GenerateInformation($"An issue occurred while executing {this.scriptName} activity for {this.channelName}: {ex}");
-                var log = new Log
-                {
-                    AffectedItem = this.scriptName,
-                    AffectedService = this.channelName,
-                    Timestamp = DateTime.Now,
-                    ErrorCode = new ErrorCode
-                    {
-                        ConfigurationItem = this.scriptName + " Script",
-                        ConfigurationType = ErrorCode.ConfigType.Automation,
-                        Source = "Run()",
-                        Severity = ErrorCode.SeverityType.Critical,
-                        Description = "Exception while processing " + this.scriptName,
-                    },
-                };
+					SharedMethods.TransitionToError(this.helper, status);
+				}
 
-                this.exceptionHelper.ProcessException(ex, log);
-                this.helper.Log($"An issue occurred while executing {this.scriptName} activity for {this.channelName}: {ex}", PaLogLevel.Error);
-                this.helper.SendErrorMessageToTokenHandler();
-            }
-        }
+				this.helper.ReturnSuccess();
+			}
+			catch (Exception ex)
+			{
+				engine.GenerateInformation($"An issue occurred while executing {this.scriptName} activity for {this.channelName}: {ex}");
+				var log = new Log
+				{
+					AffectedItem = this.scriptName,
+					AffectedService = this.channelName,
+					Timestamp = DateTime.Now,
+					ErrorCode = new ErrorCode
+					{
+						ConfigurationItem = this.scriptName + " Script",
+						ConfigurationType = ErrorCode.ConfigType.Automation,
+						Source = "Run()",
+						Severity = ErrorCode.SeverityType.Critical,
+						Description = "Exception while processing " + this.scriptName,
+					},
+				};
 
-        private void ExecuteErrorTransition(string status)
-        {
-            if (status.Equals("deactivating"))
-            {
-                this.helper.TransitionState("deactivating_to_error");
-            }
-            else if (status.Equals("ready"))
-            {
-                this.helper.TransitionState("ready_to_inprogress");
-                this.helper.TransitionState("inprogress_to_error");
-            }
-            else if (status.Equals("in_progress"))
-            {
-                this.helper.TransitionState("inprogress_to_error");
-            }
-        }
+				this.exceptionHelper.ProcessException(ex, log);
+				this.helper.Log($"An issue occurred while executing {this.scriptName} activity for {this.channelName}: {ex}", PaLogLevel.Error);
+				SharedMethods.TransitionToError(this.helper, status);
+				this.helper.SendErrorMessageToTokenHandler();
+			}
+		}
 
-        private void ExecuteDoneTransition(string status, string tagElementName)
-        {
-            if (status.Equals("deactivating"))
-            {
-                this.helper.TransitionState("deactivating_to_complete");
-                this.engine.GenerateInformation("Successfully executed " + this.scriptName + " for: " + tagElementName);
-                this.helper.SendFinishMessageToTokenHandler();
-                return;
-            }
-            else if (status.Equals("ready"))
-            {
-                this.helper.TransitionState("ready_to_inprogress");
-            }
-            else if (status.Equals("in_progress"))
-            {
-                // no update
-            }
-            else
-            {
-                var log = new Log
-                {
-                    AffectedItem = this.scriptName,
-                    AffectedService = this.channelName,
-                    Timestamp = DateTime.Now,
-                    ErrorCode = new ErrorCode
-                    {
-                        ConfigurationItem = this.scriptName + " Script",
-                        ConfigurationType = ErrorCode.ConfigType.Automation,
-                        Source = "Status transition condition",
-                        Code = "InvalidStatusForTransition",
-                        Severity = ErrorCode.SeverityType.Warning,
-                        Description = $"Cannot execute the transition as the current status is unexpected.",
-                    },
-                };
+		private void ExecuteDoneTransition(string status, string tagElementName)
+		{
+			if (status.Equals("deactivating"))
+			{
+				this.helper.TransitionState("deactivating_to_complete");
+				this.engine.GenerateInformation("Successfully executed " + this.scriptName + " for: " + tagElementName);
+				this.helper.SendFinishMessageToTokenHandler();
+			}
+			else if (status.Equals("ready"))
+			{
+				this.helper.TransitionState("ready_to_inprogress");
+			}
+			else if (status.Equals("in_progress"))
+			{
+				// no update
+			}
+			else
+			{
+				var log = new Log
+				{
+					AffectedItem = this.scriptName,
+					AffectedService = this.channelName,
+					Timestamp = DateTime.Now,
+					ErrorCode = new ErrorCode
+					{
+						ConfigurationItem = this.scriptName + " Script",
+						ConfigurationType = ErrorCode.ConfigType.Automation,
+						Source = "Status transition condition",
+						Code = "InvalidStatusForTransition",
+						Severity = ErrorCode.SeverityType.Warning,
+						Description = $"Cannot execute the transition as the current status is unexpected.",
+					},
+				};
 
-                this.helper.Log($"Cannot execute the transition as the status. Current status: {status}", PaLogLevel.Error);
-                this.exceptionHelper.GenerateLog(log);
-            }
-
-            this.engine.GenerateInformation("Successfully executed " + this.scriptName + " for: " + tagElementName);
-        }
-
-				helper.SendFinishMessageToTokenHandler();
+				this.helper.Log($"Cannot execute the transition as the status. Current status: {status}", PaLogLevel.Error);
+				SharedMethods.TransitionToError(this.helper, status);
+				this.exceptionHelper.GenerateLog(log);
 			}
 		}
 	}

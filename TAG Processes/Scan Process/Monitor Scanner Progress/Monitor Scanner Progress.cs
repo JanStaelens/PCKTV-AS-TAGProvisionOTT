@@ -172,7 +172,7 @@ namespace Script
 					}
 				}
 
-				if (sharedMethods.Retry(VerifyScan, new TimeSpan(0, 5, 0)))
+				if (SharedMethods.Retry(VerifyScan, new TimeSpan(0, 5, 0)))
 				{
 					sharedMethods.StartTAGChannelsProcess(scanner);
 					helper.ReturnSuccess();
