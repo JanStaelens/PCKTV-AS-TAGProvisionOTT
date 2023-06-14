@@ -65,8 +65,9 @@ namespace Script
     using Skyline.DataMiner.ExceptionHelper;
     using Skyline.DataMiner.Net.Apps.DataMinerObjectModel;
     using Skyline.DataMiner.Net.Sections;
+	using TagHelperMethods;
 
-    internal class Script
+	internal class Script
     {
         /// <summary>
         /// The Script entry point.
@@ -83,10 +84,13 @@ namespace Script
             var innerDomHelper = new DomHelper(engine.SendSLNetMessages, "process_automation");
             var exceptionHelper = new ExceptionHelper(engine, innerDomHelper);
 
+			var status = String.Empty;
+
             try
             {
                 TagChannelInfo tagInfo = new TagChannelInfo(engine, helper, innerDomHelper);
-                channelName = tagInfo.Channel;
+				status = tagInfo.Status;
+				channelName = tagInfo.Channel;
                 tagElementName = tagInfo.ElementName;
                 engine.GenerateInformation("START " + scriptName);
 
@@ -182,34 +186,10 @@ namespace Script
 
                 exceptionHelper.ProcessException(ex, log);
                 helper.Log($"An issue occurred while executing {scriptName} activity for {channelName}: {ex}", PaLogLevel.Error);
-                helper.SendErrorMessageToTokenHandler();
+				SharedMethods.TransitionToError(helper, status);
+
+				helper.SendFinishMessageToTokenHandler();
             }
-        }
-
-        /// <summary>
-        /// Retry until success or until timeout.
-        /// </summary>
-        /// <param name="func">Operation to retry.</param>
-        /// <param name="timeout">Max TimeSpan during which the operation specified in <paramref name="func"/> can be retried.</param>
-        /// <returns><c>true</c> if one of the retries succeeded within the specified <paramref name="timeout"/>. Otherwise <c>false</c>.</returns>
-        public static bool Retry(Func<bool> func, TimeSpan timeout)
-        {
-            bool success = false;
-
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
-
-            do
-            {
-                success = func();
-                if (!success)
-                {
-                    Thread.Sleep(3000);
-                }
-            }
-            while (!success && sw.Elapsed <= timeout);
-
-            return success;
         }
     }
 

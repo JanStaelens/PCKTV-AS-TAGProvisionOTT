@@ -104,11 +104,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monitor Scanner Progress", "TAG Processes\Scan Process\Monitor Scanner Progress\Monitor Scanner Progress.csproj", "{A9DE2D7E-1D39-4939-84ED-46859BAAD016}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Generic Classes", "Generic Classes", "{C131B91B-DA68-4239-BB4E-5CD262318CD9}"
-	ProjectSection(SolutionItems) = preProject
-		ExternalRequest.cs = ExternalRequest.cs
-		TAG.cs = TAG.cs
-		TAGScan.cs = TAGScan.cs
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Start Scanners", "Start Scanners", "{E3392FD5-6E7E-499D-A04C-EE572F7E2E55}"
 	ProjectSection(SolutionItems) = preProject
@@ -148,7 +143,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Library", "Library\Library.shproj", "{B01D4978-7FB4-401F-9A9D-0E4B548048C1}"
+EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Library\Library.projitems*{073736b2-d79f-4818-84ab-2fbcb8560811}*SharedItemsImports = 4
+		Library\Library.projitems*{3db8cae1-2ae4-4834-a83e-2a83a846ad82}*SharedItemsImports = 4
+		Library\Library.projitems*{453538aa-7589-477d-9655-fe4111c64a0c}*SharedItemsImports = 4
+		Library\Library.projitems*{6cc71493-c59e-4287-ae31-19406ab3c4ac}*SharedItemsImports = 4
+		Library\Library.projitems*{923c13ce-dfc9-4852-a3d7-fad5b525112a}*SharedItemsImports = 4
+		Library\Library.projitems*{9d37e683-f559-484c-9266-05d6334589c1}*SharedItemsImports = 4
+		Library\Library.projitems*{a9de2d7e-1d39-4939-84ed-46859baad016}*SharedItemsImports = 4
+		Library\Library.projitems*{b01d4978-7fb4-401f-9a9d-0e4b548048c1}*SharedItemsImports = 13
+		Library\Library.projitems*{b96666be-0e72-486e-b050-847888d6947f}*SharedItemsImports = 4
+		Library\Library.projitems*{b9c289ff-abaf-4515-99df-42894fd27f9e}*SharedItemsImports = 4
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -247,6 +256,7 @@ Global
 		{AFFB56B6-E72F-4201-8A1C-7763C3E8053B} = {666CAA53-AF49-40A2-BC41-74595F6C6449}
 		{59AD951F-99E4-49CD-AD0B-C058FE59B34A} = {AE3354E9-BA92-4487-AC39-F6348EFB1B52}
 		{2BE98BBC-E83A-476E-AE5F-50DA644722FD} = {59AD951F-99E4-49CD-AD0B-C058FE59B34A}
+		{B01D4978-7FB4-401F-9A9D-0E4B548048C1} = {C131B91B-DA68-4239-BB4E-5CD262318CD9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BF264E17-2956-41D7-9B7F-5C340832C75E}

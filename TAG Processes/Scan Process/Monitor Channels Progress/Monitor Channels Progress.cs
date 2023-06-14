@@ -90,7 +90,7 @@ public class Script
 
         if (!status.Equals("in_progress"))
         {
-            helper.SendErrorMessageToTokenHandler();
+            helper.SendFinishMessageToTokenHandler();
             return;
         }
 
@@ -163,7 +163,7 @@ public class Script
 						},
 					};
 					exceptionHelper.ProcessException(ex, log);
-
+					SharedMethods.TransitionToError(helper, status);
 					helper.Log("Exception thrown while verifying the subprocess: " + ex, PaLogLevel.Error);
                     throw;
                 }
@@ -173,7 +173,7 @@ public class Script
             {
 				if (errorChannelsCount == totalChannels)
 				{
-					helper.TransitionState("inprogress_to_error");
+					SharedMethods.TransitionToError(helper, status);
 				}
 				else if (errorChannelsCount > 0)
 				{
@@ -206,8 +206,8 @@ public class Script
 				};
                 exceptionHelper.GenerateLog(log);
 				helper.Log($"Channel subprocess didn't finish within the timeout time. ScanName: {scanner.ScanName}", PaLogLevel.Error);
-				helper.TransitionState("inprogress_to_error");
-                helper.SendErrorMessageToTokenHandler();
+				SharedMethods.TransitionToError(helper, status);
+				helper.SendFinishMessageToTokenHandler();
             }
         }
         catch (ScriptAbortException)
@@ -230,7 +230,8 @@ public class Script
 				},
 			};
 			exceptionHelper.ProcessException(ex, log);
-            helper.SendErrorMessageToTokenHandler();
+			SharedMethods.TransitionToError(helper, status);
+			helper.SendFinishMessageToTokenHandler();
             throw;
         }
     }

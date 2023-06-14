@@ -80,10 +80,11 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
+  <Import Project="..\..\..\Library\Library.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties DisLinkedXmlFile="..\Clear Layout.xml" DisProjectType="automationScriptProject" DisLinkId="2" />
+      <UserProperties DisLinkId="2" DisProjectType="automationScriptProject" DisLinkedXmlFile="..\Clear Layout.xml" />
     </VisualStudio>
   </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

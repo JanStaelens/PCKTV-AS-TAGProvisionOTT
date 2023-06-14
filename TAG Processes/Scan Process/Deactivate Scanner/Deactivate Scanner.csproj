@@ -52,12 +52,6 @@
     <Content Include=".editorconfig" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\..\TAG.cs">
-      <Link>TAG.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\TAGScan.cs">
-      <Link>TAGScan.cs</Link>
-    </Compile>
     <Compile Include="Deactivate Scanner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -86,10 +80,11 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
+  <Import Project="..\..\..\Library\Library.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties DisLinkedXmlFile="..\Deactivate Scanner.xml" DisProjectType="automationScriptProject" DisLinkId="1" />
+      <UserProperties DisLinkId="1" DisProjectType="automationScriptProject" DisLinkedXmlFile="..\Deactivate Scanner.xml" />
     </VisualStudio>
   </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

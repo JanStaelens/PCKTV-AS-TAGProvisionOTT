@@ -66,6 +66,7 @@ namespace Script
     using Skyline.DataMiner.Net.Apps.DataMinerObjectModel;
     using Skyline.DataMiner.Net.Messages.SLDataGateway;
     using Skyline.DataMiner.Net.Sections;
+    using TagHelperMethods;
 
     /// <summary>
     /// DataMiner Script Class.
@@ -95,9 +96,15 @@ namespace Script
             this.channelName = helper.GetParameterValue<string>("Provision Name (TAG Provision)");
             var tagInstanceId = helper.GetParameterValue<string>("InstanceId (TAG Provision)");
 
+            var status = String.Empty;
+
             try
             {
                 var action = helper.GetParameterValue<string>("Action (TAG Provision)");
+
+                var instanceFilter = DomInstanceExposers.Id.Equal(new DomInstanceId(Guid.Parse(tagInstanceId)));
+                var tagInstance = innerDomHelper.DomInstances.Read(instanceFilter).First();
+                status = tagInstance.StatusId;
 
                 var scanners = helper.GetParameterValue<List<Guid>>("TAG Scanners (TAG Provision)");
                 Dictionary<Guid, bool> scannersComplete = new Dictionary<Guid, bool>();
@@ -152,8 +159,11 @@ namespace Script
                                 Severity = ErrorCode.SeverityType.Critical,
                             },
                         };
+
                         this.exceptionHelper.ProcessException(ex, log);
-                        throw;
+                        SharedMethods.TransitionToError(helper, status);
+                        helper.SendFinishMessageToTokenHandler();
+                        return false;
                     }
                 }
 
@@ -180,7 +190,10 @@ namespace Script
                             Description = "Scanners did not complete in time.",
                         },
                     };
+
                     this.exceptionHelper.GenerateLog(log);
+                    SharedMethods.TransitionToError(helper, status);
+					helper.SendFinishMessageToTokenHandler();
                 }
             }
             catch (Exception ex)
@@ -202,7 +215,8 @@ namespace Script
                 this.exceptionHelper.ProcessException(ex, log);
 
                 helper.Log($"An issue occurred while executing {this.scriptName} activity for {this.channelName}: {ex}", PaLogLevel.Error);
-                helper.SendErrorMessageToTokenHandler();
+                SharedMethods.TransitionToError(helper, status);
+                helper.SendFinishMessageToTokenHandler();
             }
         }
 
@@ -270,7 +284,6 @@ namespace Script
                         AffectedItem = this.scriptName,
                         AffectedService = this.channelName,
                         Timestamp = DateTime.Now,
-                        //SummaryFlag = false,
                         ErrorCode = new ErrorCode
                         {
                             ConfigurationItem = this.scriptName + " Script",

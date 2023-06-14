@@ -89,6 +89,51 @@
             return success;
         }
 
+        public static void TransitionToError(PaProfileLoadDomHelper helper, string status)
+        {
+            switch (status)
+            {
+                case "draft":
+                    helper.TransitionState("draft_to_ready");
+                    helper.TransitionState("ready_to_inprogress");
+                    helper.TransitionState("inprogress_to_error");
+                    break;
+                case "ready":
+                    helper.TransitionState("ready_to_inprogress");
+                    helper.TransitionState("inprogress_to_error");
+                    break;
+                case "in_progress":
+                    helper.TransitionState("inprogress_to_error");
+                    break;
+                case "active":
+                    helper.TransitionState("active_to_reprovision");
+                    helper.TransitionState("reprovision_to_inprogress");
+                    helper.TransitionState("inprogress_to_error");
+                    break;
+                case "deactivate":
+                    helper.TransitionState("deactivate_to_deactivating");
+                    helper.TransitionState("deactivating_to_error");
+                    break;
+                case "deactivating":
+                    helper.TransitionState("deactivating_to_error");
+                    break;
+                case "reprovision":
+                    helper.TransitionState("reprovision_to_inprogress");
+                    helper.TransitionState("inprogress_to_error");
+                    break;
+                case "complete":
+                    helper.TransitionState("complete_to_ready");
+                    helper.TransitionState("ready_to_inprogress");
+                    helper.TransitionState("inprogress_to_error");
+                    break;
+                case "active_with_errors":
+                    helper.TransitionState("activewitherrors_to_deactivate");
+                    helper.TransitionState("deactivate_to_deactivating");
+                    helper.TransitionState("deactivating_to_error");
+                    break;
+            }
+        }
+
         public List<Manifest> GetManifests(DomInstance instance)
         {
             List<Manifest> manifests = new List<Manifest>();

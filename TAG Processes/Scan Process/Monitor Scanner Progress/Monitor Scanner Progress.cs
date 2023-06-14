@@ -93,7 +93,7 @@ namespace Script
 
             if (!status.Equals("in_progress"))
             {
-                helper.SendErrorMessageToTokenHandler();
+                helper.SendFinishMessageToTokenHandler();
                 return;
             }
 
@@ -165,6 +165,8 @@ namespace Script
 								Source = "VerifyScan()",
 							},
 						};
+
+						SharedMethods.TransitionToError(helper, status);
 						exceptionHelper.ProcessException(ex, log);
 						throw;
                     }
@@ -196,13 +198,9 @@ namespace Script
                     exceptionHelper.GenerateLog(log);
 
 					helper.Log($"Scan did not finish due to verify timeout. ScanName: {scanner.ScanName}", PaLogLevel.Error);
-					helper.TransitionState("inprogress_to_error");
-                    helper.SendErrorMessageToTokenHandler();
+					SharedMethods.TransitionToError(helper, status);
+					helper.SendFinishMessageToTokenHandler();
                 }
-            }
-            catch (ScriptAbortException)
-            {
-                // no issue
             }
             catch (Exception ex)
             {
@@ -220,7 +218,8 @@ namespace Script
                     },
                 };
                 exceptionHelper.ProcessException(ex, log);
-                helper.SendErrorMessageToTokenHandler();
+				SharedMethods.TransitionToError(helper, status);
+				helper.SendFinishMessageToTokenHandler();
                 throw;
             }
         }

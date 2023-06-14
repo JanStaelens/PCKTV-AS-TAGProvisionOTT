@@ -99,7 +99,7 @@ namespace Script
             if (!status.Equals("ready") && !status.Equals("in_progress"))
             {
                 engine.GenerateInformation("Failed to create scanner due to incorrect status: " + status);
-                helper.SendErrorMessageToTokenHandler();
+                helper.SendFinishMessageToTokenHandler();
                 return;
             }
 
@@ -172,7 +172,6 @@ namespace Script
                         AffectedItem = scriptName,
                         AffectedService = scanName,
                         Timestamp = DateTime.Now,
-                        //SummaryFlag = false,
                         ErrorCode = new ErrorCode
                         {
                             ConfigurationItem = scriptName + " Script",
@@ -184,18 +183,10 @@ namespace Script
                         },
                     };
                     exceptionHelper.GenerateLog(log);
-                    if (status == "ready")
-                    {
-                        helper.TransitionState("ready_to_inprogress");
-                    }
 
-                    helper.TransitionState("inprogress_to_error");
-                    helper.SendErrorMessageToTokenHandler();
+					SharedMethods.TransitionToError(helper, status);
+					helper.SendFinishMessageToTokenHandler();
                 }
-            }
-            catch (ScriptAbortException)
-            {
-                // no issue
             }
             catch (Exception ex)
             {
@@ -214,7 +205,8 @@ namespace Script
                     },
                 };
                 exceptionHelper.ProcessException(ex, log);
-                helper.SendErrorMessageToTokenHandler();
+				SharedMethods.TransitionToError(helper, status);
+				helper.SendFinishMessageToTokenHandler();
             }
         }
 
@@ -242,13 +234,8 @@ namespace Script
                 };
                 exceptionHelper.ProcessException(ex, log);
 
-                if (status == "ready")
-                {
-                    helper.TransitionState("ready_to_inprogress");
-                }
-
-                helper.TransitionState("inprogress_to_error");
-                helper.SendErrorMessageToTokenHandler();
+				SharedMethods.TransitionToError(helper, status);
+				helper.SendFinishMessageToTokenHandler();
                 throw;
             }
         }

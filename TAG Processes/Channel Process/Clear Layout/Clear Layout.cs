@@ -65,6 +65,7 @@ namespace Script
     using Skyline.DataMiner.ExceptionHelper;
     using Skyline.DataMiner.Net.Apps.DataMinerObjectModel;
     using Skyline.DataMiner.Net.Sections;
+    using TagHelperMethods;
 
     internal class Script
     {
@@ -89,6 +90,8 @@ namespace Script
             this.innerDomHelper = new DomHelper(engine.SendSLNetMessages, "process_automation");
             var exceptionHelper = new ExceptionHelper(engine, this.innerDomHelper);
 
+            var status = String.Empty;
+
             try
             {
                 tagElementName = helper.GetParameterValue<string>("TAG Element (TAG Channel)");
@@ -97,7 +100,7 @@ namespace Script
 
                 var instanceId = helper.GetParameterValue<string>("InstanceId (TAG Channel)");
                 var instance = this.innerDomHelper.DomInstances.Read(DomInstanceExposers.Id.Equal(new DomInstanceId(Guid.Parse(instanceId)))).First();
-                var status = instance.StatusId;
+                status = instance.StatusId;
 
                 // only run this activity if reprovision or deactivate
                 if (status.Equals("ready"))
@@ -157,9 +160,8 @@ namespace Script
 
                     helper.Log($"Cannot execute the transition as the status. Current status: {status}", PaLogLevel.Error);
                     exceptionHelper.GenerateLog(log);
-                }
+				}
 
-                engine.GenerateInformation("Successfully executed " + scriptName + " for: " + tagElementName);
                 helper.ReturnSuccess();
             }
             catch (Exception ex)
@@ -183,36 +185,10 @@ namespace Script
                 exceptionHelper.ProcessException(ex, log);
 
                 helper.Log($"An issue occurred while executing {scriptName} activity for {channelName}: {ex}", PaLogLevel.Error);
-                helper.SendErrorMessageToTokenHandler();
+                SharedMethods.TransitionToError(helper, status);
+
+                helper.SendFinishMessageToTokenHandler();
             }
-        }
-
-        /// <summary>
-        /// Retry until success or until timeout.
-        /// </summary>
-        /// <param name="func">Operation to retry.</param>
-        /// <param name="timeout">Max TimeSpan during which the operation specified in <paramref name="func"/> can be retried.</param>
-        /// <returns><c>true</c> if one of the retries succeeded within the specified <paramref name="timeout"/>. Otherwise <c>false</c>.</returns>
-#pragma warning disable SA1204 // Static elements should appear before instance elements
-        public static bool Retry(Func<bool> func, TimeSpan timeout)
-#pragma warning restore SA1204 // Static elements should appear before instance elements
-        {
-            bool success = false;
-
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
-
-            do
-            {
-                success = func();
-                if (!success)
-                {
-                    Thread.Sleep(3000);
-                }
-            }
-            while (!success && sw.Elapsed <= timeout);
-
-            return success;
         }
     }
 }

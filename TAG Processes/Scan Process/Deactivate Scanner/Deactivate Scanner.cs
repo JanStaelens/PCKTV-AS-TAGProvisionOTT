@@ -93,6 +93,8 @@ namespace Script
 			this.sharedMethods = new SharedMethods(helper, this.innerDomHelper);
 			var instanceId = helper.GetParameterValue<string>("InstanceId (TAG Scan)");
 
+			var status = String.Empty;
+
 			try
 			{
 				engine.GenerateInformation("START " + scriptName);
@@ -124,7 +126,7 @@ namespace Script
 
 				var instance = scanInstances.First();
 
-				var status = instance.StatusId;
+				status = instance.StatusId;
 
 				if (!status.Equals("deactivate") && !status.Equals("reprovision"))
 				{
@@ -158,9 +160,7 @@ namespace Script
 
 						var scanCompleted = scanChannelsRows == null || this.CheckScanDelete(requestTitles, scanChannelsRows);
 
-						var channelsUpdated = this.ValidateChannelsStatus(scanner.Channels, status);
-
-						return scanCompleted && channelsUpdated;
+						return scanCompleted;
 					}
 					catch (Exception e)
 					{
@@ -196,22 +196,10 @@ namespace Script
 						},
 					};
 					exceptionHelper.GenerateLog(log);
-					if (status == "deactivating")
-					{
-						helper.TransitionState("deactivating_to_error");
-					}
-					else
-					{
-						helper.TransitionState("reprovision_to_inprogress");
-						helper.TransitionState("inprogress_to_error");
-					}
+					SharedMethods.TransitionToError(helper, status);
 
-					helper.SendErrorMessageToTokenHandler();
+					helper.SendFinishMessageToTokenHandler();
 				}
-			}
-			catch (ScriptAbortException)
-			{
-				// no issue
 			}
 			catch (Exception ex)
 			{
@@ -230,7 +218,8 @@ namespace Script
 					},
 				};
 				exceptionHelper.ProcessException(ex, log);
-				helper.SendErrorMessageToTokenHandler();
+				SharedMethods.TransitionToError(helper, status);
+				helper.SendFinishMessageToTokenHandler();
 			}
 		}
 
@@ -280,35 +269,8 @@ namespace Script
 					},
 				};
 				exceptionHelper.GenerateLog(log);
-				helper.SendErrorMessageToTokenHandler();
+				helper.SendFinishMessageToTokenHandler();
 			}
-		}
-
-		private bool ValidateChannelsStatus(List<Guid> channels, string status)
-		{
-			var expectedChannels = channels.Count;
-			var updatedChannels = 0;
-
-			var newStatus = status.Equals("deactivating") ? "complete" : "draft";
-
-			foreach (var channel in channels)
-			{
-				var subFilter = DomInstanceExposers.Id.Equal(new DomInstanceId(channel));
-				var subInstance = this.innerDomHelper.DomInstances.Read(subFilter).First();
-
-				subInstance.Stitch(this.SetSectionDefinitionById, this.SetDomDefinitionById);
-				if (subInstance.StatusId == newStatus)
-				{
-					updatedChannels++;
-				}
-
-				if (updatedChannels == expectedChannels)
-				{
-					return true;
-				}
-			}
-
-			return false;
 		}
 
 		private void ExecuteChannelsTransition(List<Guid> channels, string status)
@@ -322,7 +284,7 @@ namespace Script
 				var transition = String.Empty;
 				if (status.Equals("deactivating"))
 				{
-					if (subInstance.StatusId == "complete")
+					if (subInstance.StatusId == "complete" || subInstance.StatusId == "draft")
 					{
 						continue;
 					}

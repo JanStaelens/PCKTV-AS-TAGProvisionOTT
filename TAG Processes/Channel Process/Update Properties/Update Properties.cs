@@ -67,6 +67,7 @@ namespace Script
 	using Skyline.DataMiner.ExceptionHelper;
 	using Skyline.DataMiner.Net.Apps.DataMinerObjectModel;
 	using Skyline.DataMiner.Net.Sections;
+	using TagHelperMethods;
 
 	public class Script
 	{
@@ -88,19 +89,18 @@ namespace Script
 			this.innerDomHelper = new DomHelper(engine.SendSLNetMessages, "process_automation");
 			var exceptionHelper = new ExceptionHelper(engine, this.innerDomHelper);
 
+			var status = String.Empty;
+
 			try
 			{
 				TagChannelInfo tagInfo = new TagChannelInfo(engine, helper, this.innerDomHelper);
+				status = tagInfo.Status;
 				channelName = tagInfo.Channel;
 				tagElementName = tagInfo.ElementName;
 				engine.GenerateInformation("START " + scriptName);
 
 				var newStatus = this.ExecuteChannelSets(engine, scriptName, helper, exceptionHelper, tagInfo);
 
-				//if (tagInfo.Status.Equals("in_progress"))
-				//{
-				//	helper.TransitionState("inprogress_to_active");
-				//}
 				if (newStatus == "active")
 				{
 					helper.TransitionState("inprogress_to_active");
@@ -175,7 +175,8 @@ namespace Script
 
 				exceptionHelper.ProcessException(ex, log);
 				helper.Log($"An issue occurred while executing {scriptName} activity for {channelName}: {ex}", PaLogLevel.Error);
-				helper.SendErrorMessageToTokenHandler();
+				SharedMethods.TransitionToError(helper, status);
+				helper.SendFinishMessageToTokenHandler();
 			}
 		}
 
@@ -190,8 +191,8 @@ namespace Script
 				tagInfo.MonitoringSetSuccuess = tagInfo.TryChannelSet(engine, 8083, tagInfo.MonitoringMode, key);
 				tagInfo.ThresholdSetSuccuess = tagInfo.TryChannelSet(engine, 8054, tagInfo.Threshold, key);
 				tagInfo.NotificationSetSuccuess = tagInfo.TryChannelSet(engine, 8055, tagInfo.Notification, key);
-				// tagInfo.EncryptionSetSuccuess = tagInfo.TryChannelSet(engine, 356, tagInfo.Encryption, key);
-				// tagInfo.KmsSetSuccuess = tagInfo.TryChannelSet(engine, 356, tagInfo.KMS, key);
+				// tagInfo.EncryptionSetSuccuess = tagInfo.TryChannelSet(engine, 8068, tagInfo.Encryption, key); Issue with sets needing to be a number, need to convert value to a number based on text
+				tagInfo.KmsSetSuccuess = tagInfo.TryChannelSet(engine, 8084, tagInfo.KMS, key);
 
 				// Can generate a log displaying which sets failed
 
@@ -436,7 +437,7 @@ namespace Script
 		{
 			try
 			{
-				if (Convert.ToString(EngineElement.GetParameterByPrimaryKey(columnPid - 50, key)) == updatedValue)
+				if (String.IsNullOrWhiteSpace(updatedValue) || Convert.ToString(EngineElement.GetParameterByPrimaryKey(columnPid - 50, key)) == updatedValue)
 				{
 					return true;
 				}
