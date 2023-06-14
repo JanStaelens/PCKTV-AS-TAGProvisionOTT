@@ -1,8 +1,13 @@
-﻿namespace TagHelperMethods
-{
-    using Newtonsoft.Json;
-    using System.Collections.Generic;
+﻿// <copyright file="TAG.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
+namespace TagHelperMethods
+{
+    using System.Collections.Generic;
+    using Newtonsoft.Json;
+
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1649:File name should match first type name", Justification = "<Pending>")]
     public class TagRequest
     {
         public TagRequest()
@@ -32,6 +37,7 @@
         public List<Scan> ScanRequests { get; set; }
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "ignored")]
     public class Scan
     {
         public enum ModeState
