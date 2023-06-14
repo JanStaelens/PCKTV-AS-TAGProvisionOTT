@@ -171,8 +171,6 @@ namespace Script
 
 				if (SharedMethods.Retry(VerifyScanDeleted, new TimeSpan(0, 5, 0)))
 				{
-					// successfully deleted
-					helper.Log($"Scanner {scanner.ScanName} Deactivated", PaLogLevel.Information);
 					PostActions(scriptName, helper, exceptionHelper, scanner, status);
 				}
 				else
