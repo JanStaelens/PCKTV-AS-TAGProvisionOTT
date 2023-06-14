@@ -201,7 +201,7 @@ public class Script
 						Severity = ErrorCode.SeverityType.Warning,
 						Code = "RetryTimeout",
 						Source = "Retry condition",
-						Description = "Channel subprocess didn't finish within the timeout time.",
+						Description = "All channels didn't finish within scan wait limit (5 minutes).",
 					},
 				};
 				exceptionHelper.GenerateLog(log);
