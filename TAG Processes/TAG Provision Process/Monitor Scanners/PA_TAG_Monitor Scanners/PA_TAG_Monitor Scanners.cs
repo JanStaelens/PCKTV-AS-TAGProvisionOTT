@@ -108,7 +108,7 @@ namespace Script
 
 				var scanners = helper.GetParameterValue<List<Guid>>("TAG Scanners (TAG Provision)");
 				Dictionary<Guid, bool> scannersComplete = new Dictionary<Guid, bool>();
-				int errorScan = 0;
+				double errorScan = 0;
 
 				bool CheckScanners()
 				{
@@ -125,7 +125,12 @@ namespace Script
 							{
 								scannersComplete[scannerInstance.ID.Id] = true;
 							}
-							else if (scannerInstance.StatusId == "active_with_errors" || scannerInstance.StatusId == "error")
+							else if (scannerInstance.StatusId == "active_with_errors")
+							{
+								scannersComplete[scannerInstance.ID.Id] = true;
+								errorScan += 0.5;
+							}
+							else if (scannerInstance.StatusId == "error")
 							{
 								scannersComplete[scannerInstance.ID.Id] = true;
 								errorScan++;
@@ -220,7 +225,7 @@ namespace Script
 			}
 		}
 
-		private void PostActions(Engine engine, PaProfileLoadDomHelper helper, string tagInstanceId, string action, Dictionary<Guid, bool> scannersComplete, int errorScan)
+		private void PostActions(Engine engine, PaProfileLoadDomHelper helper, string tagInstanceId, string action, Dictionary<Guid, bool> scannersComplete, double errorScan)
 		{
 			var allScannersCount = scannersComplete.Count;
 

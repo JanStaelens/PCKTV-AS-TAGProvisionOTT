@@ -107,14 +107,13 @@ namespace Script
 				}
 				else if (newStatus == "error")
 				{
-					helper.TransitionState("inprogress_to_error");
+					SharedMethods.TransitionToError(helper, status);
 
 					var log = new Log
 					{
 						AffectedItem = scriptName,
 						AffectedService = channelName,
 						Timestamp = DateTime.Now,
-						//SummaryFlag = false,
 						ErrorCode = new ErrorCode
 						{
 							ConfigurationItem = scriptName + " Script",
