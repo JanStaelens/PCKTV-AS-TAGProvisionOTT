@@ -36,6 +36,7 @@ jobs:
            build-number: ${{ github.run_number }}
            
        - name: Skyline DataMiner Deploy Action Release
+         if: github.ref_type == 'tag'
          uses: SkylineCommunications/Skyline-DataMiner-Deploy-Action@v1
          with:
            # Stage deploy
