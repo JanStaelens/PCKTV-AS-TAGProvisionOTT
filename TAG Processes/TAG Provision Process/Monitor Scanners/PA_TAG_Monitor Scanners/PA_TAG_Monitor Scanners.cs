@@ -327,7 +327,7 @@ namespace Script
 							EventName = provisionName,
 							Tag = new TagResponse
 							{
-								Status = tagInstance.StatusId == "active" ? "Active" : "Complete",
+								Status = tagInstance.StatusId == "complete" ? "Complete" : "Active",
 							},
 						},
 					};
