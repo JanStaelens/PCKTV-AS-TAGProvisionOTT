@@ -40,8 +40,8 @@ namespace Script
 
 				if (!String.IsNullOrWhiteSpace(businessKey))
 				{
-					innerDomHelper.DomInstances.DoStatusTransition(instanceId, transition);
 					UpdateAction(instanceId, actionValue);
+					innerDomHelper.DomInstances.DoStatusTransition(instanceId, transition);
 					ProcessHelper.PushToken(process, businessKey, instanceId);
 				}
 			}
