@@ -108,6 +108,8 @@ namespace Script
 				}
 				else
 				{
+					SharedMethods.TransitionToError(helper, status);
+					engine.GenerateInformation("Did not find any channels with match: " + tagInfo.ChannelMatch);
 					var log = new Log
 					{
 						AffectedItem = this.scriptName,
@@ -124,9 +126,9 @@ namespace Script
 						},
 					};
 
-					this.helper.Log($"No channels found in channel status with given name: {this.channelName}.", PaLogLevel.Error);
-					engine.GenerateInformation("Did not find any channels with match: " + tagInfo.ChannelMatch);
 					this.exceptionHelper.GenerateLog(log);
+					this.helper.SendFinishMessageToTokenHandler();
+					return;
 				}
 
 				var missingChannelsData = new List<string>();
@@ -188,7 +190,6 @@ namespace Script
 						},
 					};
 
-					this.helper.Log($"Monitor Channel did not finish due to timeout. Must be needed both values (Monitored and ResponseData) to execute next activity (channel sets).\n Missing channels to finish: {JsonConvert.SerializeObject(missingChannelsData)}", PaLogLevel.Error);
 					this.exceptionHelper.GenerateLog(log);
 				}
 
@@ -215,7 +216,7 @@ namespace Script
 
 				this.exceptionHelper.ProcessException(ex, log);
 				this.helper.Log($"An issue occurred while executing {this.scriptName} activity for {this.channelName}: {ex}", PaLogLevel.Error);
-				this.helper.SendErrorMessageToTokenHandler();
+				this.helper.SendFinishMessageToTokenHandler();
 			}
 		}
 

@@ -123,11 +123,6 @@ namespace Script
 						Thread.Sleep(1000);
 					}
 				}
-				else
-				{
-					// no channels to clear
-					engine.GenerateInformation("Did not find any channels with match: " + channelMatch);
-				}
 
 				if (status.Equals("deactivate"))
 				{

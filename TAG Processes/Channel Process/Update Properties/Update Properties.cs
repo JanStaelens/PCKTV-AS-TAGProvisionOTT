@@ -167,10 +167,8 @@ namespace Script
 				tagInfo.MonitoringSetSuccess = tagInfo.TryChannelSet(engine, 8083, tagInfo.MonitoringMode, key);
 				tagInfo.ThresholdSetSuccess = tagInfo.TryChannelSet(engine, 8054, tagInfo.Threshold, key);
 				tagInfo.NotificationSetSuccess = tagInfo.TryChannelSet(engine, 8055, tagInfo.Notification, key);
-				tagInfo.EncryptionSetSuccess = true; // tagInfo.TryChannelSet(engine, 8068, tagInfo.Encryption, key); Issue with sets needing to be a number, need to convert value to a number based on text
-				tagInfo.KmsSetSuccess = true; // tagInfo.TryChannelSet(engine, 8084, tagInfo.KMS, key);
-
-				// Can generate a log displaying which sets failed
+				tagInfo.EncryptionSetSuccess = String.IsNullOrWhiteSpace(tagInfo.Encryption) ? true : tagInfo.TryChannelSet(engine, 8068, Convert.ToString(tagInfo.EncryptionValue[tagInfo.Encryption]), key);
+				tagInfo.KmsSetSuccess = tagInfo.TryChannelSet(engine, 8084, tagInfo.KMS, key);
 
 				tagInfo.LayoutSetSuccuess = UpdateLayouts(engine, scriptName, helper, exceptionHelper, tagInfo);
 
@@ -320,6 +318,30 @@ namespace Script
 
 	public class TagChannelInfo
 	{
+
+		public Dictionary<string, int> EncryptionValue = new Dictionary<string, int>
+		{
+			{ "NA", -1 },
+			{ "None", 0 },
+			{ "Axinom, CENC", 196619 },
+			{ "BISS-2, AES-128-CBC", 65545 },
+			{ "BuyDRM, CENC", 196622 },
+			{ "CPIX, CENC", 196616 },
+			{ "Generic, AES-128-CBC", 65540 },
+			{ "HuaweiPlayReady, AES-128-CTR", 131074 },
+			{ "Irdeto, AES-128-CBC", 65543 },
+			{ "Irdeto, CENC", 196615 },
+			{ "KalturaUDRM, CENC", 196621 },
+			{ "Simulcrypt, AES-128-CBC", 65537 },
+			{ "Simulcrypt, AES-128-ECB", 524289 },
+			{ "Simulcrypt, DVB-CSA", 262145 },
+			{ "SKYCKS, CENC", 196614 },
+			{ "Static, CENC", 196620 },
+			{ "SynMedia, CENC", 196618 },
+			{ "VerimatrixMultiRights, CENC", 131077 },
+			{ "Verimatrix, AES-128-CBC", 65539 },
+		};
+
 		public string ElementName { get; set; }
 
 		public string Channel { get; set; }
@@ -444,7 +466,7 @@ namespace Script
 					}
 				}
 
-				if (Retry(VerifySet, new TimeSpan(0, 1, 0)))
+				if (SharedMethods.Retry(VerifySet, new TimeSpan(0, 1, 0)))
 				{
 					return true;
 				}
@@ -455,32 +477,6 @@ namespace Script
 			}
 
 			return false;
-		}
-
-		/// <summary>
-		/// Retry until success or until timeout.
-		/// </summary>
-		/// <param name="func">Operation to retry.</param>
-		/// <param name="timeout">Max TimeSpan during which the operation specified in <paramref name="func"/> can be retried.</param>
-		/// <returns><c>true</c> if one of the retries succeeded within the specified <paramref name="timeout"/>. Otherwise <c>false</c>.</returns>
-		public static bool Retry(Func<bool> func, TimeSpan timeout)
-		{
-			bool success = false;
-
-			Stopwatch sw = new Stopwatch();
-			sw.Start();
-
-			do
-			{
-				success = func();
-				if (!success)
-				{
-					Thread.Sleep(5000);
-				}
-			}
-			while (!success && sw.Elapsed <= timeout);
-
-			return success;
 		}
 	}
 }
