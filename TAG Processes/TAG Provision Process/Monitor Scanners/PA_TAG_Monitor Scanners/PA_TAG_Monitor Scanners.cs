@@ -151,6 +151,7 @@ namespace Script
 					catch (Exception ex)
 					{
 						engine.Log("Exception thrown while verifying the scan subprocess: " + ex);
+						SharedMethods.TransitionToError(helper, status);
 						var log = new Log
 						{
 							AffectedItem = this.scriptName,
@@ -166,7 +167,6 @@ namespace Script
 						};
 
 						this.exceptionHelper.ProcessException(ex, log);
-						SharedMethods.TransitionToError(helper, status);
 						helper.SendFinishMessageToTokenHandler();
 						return false;
 					}
@@ -180,6 +180,7 @@ namespace Script
 				}
 				else
 				{
+					SharedMethods.TransitionToError(helper, status);
 					var log = new Log
 					{
 						AffectedItem = this.scriptName,
@@ -197,12 +198,12 @@ namespace Script
 					};
 
 					this.exceptionHelper.GenerateLog(log);
-					SharedMethods.TransitionToError(helper, status);
 					helper.SendFinishMessageToTokenHandler();
 				}
 			}
 			catch (Exception ex)
 			{
+				SharedMethods.TransitionToError(helper, status);
 				engine.GenerateInformation($"ERROR in {this.scriptName} " + ex);
 				var log = new Log
 				{
@@ -220,7 +221,6 @@ namespace Script
 				this.exceptionHelper.ProcessException(ex, log);
 
 				helper.Log($"An issue occurred while executing {this.scriptName} activity for {this.channelName}: {ex}", PaLogLevel.Error);
-				SharedMethods.TransitionToError(helper, status);
 				helper.SendFinishMessageToTokenHandler();
 			}
 		}

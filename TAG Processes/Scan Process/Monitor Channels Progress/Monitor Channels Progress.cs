@@ -149,6 +149,7 @@ public class Script
 				}
 				catch (Exception ex)
 				{
+					SharedMethods.TransitionToError(helper, status);
 					var log = new Log
 					{
 						AffectedItem = scriptName,
@@ -163,7 +164,6 @@ public class Script
 						},
 					};
 					exceptionHelper.ProcessException(ex, log);
-					SharedMethods.TransitionToError(helper, status);
 					helper.Log("Exception thrown while verifying the subprocess: " + ex, PaLogLevel.Error);
 					throw;
 				}
@@ -189,6 +189,7 @@ public class Script
 			else
 			{
 				// failed to execute in time
+				SharedMethods.TransitionToError(helper, status);
 				var log = new Log
 				{
 					AffectedItem = scriptName,
@@ -206,12 +207,12 @@ public class Script
 				};
 				exceptionHelper.GenerateLog(log);
 				helper.Log($"Channel subprocess didn't finish within the timeout time. ScanName: {scanner.ScanName}", PaLogLevel.Error);
-				SharedMethods.TransitionToError(helper, status);
 				helper.SendFinishMessageToTokenHandler();
 			}
 		}
 		catch (Exception ex)
 		{
+			SharedMethods.TransitionToError(helper, status);
 			var log = new Log
 			{
 				AffectedItem = scriptName,
@@ -225,8 +226,8 @@ public class Script
 					Source = "Run() ",
 				},
 			};
+
 			exceptionHelper.ProcessException(ex, log);
-			SharedMethods.TransitionToError(helper, status);
 			helper.SendFinishMessageToTokenHandler();
 			throw;
 		}

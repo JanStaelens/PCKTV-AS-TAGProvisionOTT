@@ -72,7 +72,6 @@ namespace Script
 	{
 		private DomHelper innerDomHelper;
 		private string channelName = "Pre-Code";
-		private List<string> errorLayoutsList = new List<string>();
 
 		/// <summary>
 		/// The Script entry point.
@@ -98,14 +97,14 @@ namespace Script
 				tagElementName = tagInfo.ElementName;
 				engine.GenerateInformation("START " + scriptName);
 
-				var newStatus = this.ExecuteChannelSets(engine, scriptName, helper, exceptionHelper, tagInfo);
+				var successLog = this.ExecuteChannelSets(engine, scriptName, helper, exceptionHelper, tagInfo);
 
-				if (newStatus == "active")
+				if (!successLog.Contains("False"))
 				{
 					helper.TransitionState("inprogress_to_active");
 					engine.GenerateInformation("Successfully executed " + scriptName + " for: " + tagElementName);
 				}
-				else if (newStatus == "error")
+				else
 				{
 					SharedMethods.TransitionToError(helper, status);
 
@@ -119,34 +118,13 @@ namespace Script
 							ConfigurationItem = scriptName + " Script",
 							ConfigurationType = ErrorCode.ConfigType.Automation,
 							Source = "Run()",
-							Code = "ErrorWhileProvision",
+							Code = "FailedChannelSets",
 							Severity = ErrorCode.SeverityType.Warning,
-							Description = $"Cannot update properties for channel: {tagInfo.ChannelMatch}",
+							Description = $"Failed to update some channel properties. Log: {successLog}",
 						},
 					};
 
-					helper.Log($"Cannot update properties. Missing Channels: {JsonConvert.SerializeObject(this.errorLayoutsList)}", PaLogLevel.Error);
-					exceptionHelper.GenerateLog(log);
-				}
-				else
-				{
-					var log = new Log
-					{
-						AffectedItem = scriptName,
-						AffectedService = channelName,
-						Timestamp = DateTime.Now,
-						ErrorCode = new ErrorCode
-						{
-							ConfigurationItem = scriptName + " Script",
-							ConfigurationType = ErrorCode.ConfigType.Automation,
-							Source = "Run()",
-							Code = "InvalidStatusForTransition",
-							Severity = ErrorCode.SeverityType.Warning,
-							Description = $"Cannot execute the transition as the current status is unexpected. Current status: {tagInfo.Status}",
-						},
-					};
-
-					helper.Log($"Cannot execute the transition as the status. Current status: {tagInfo.Status}", PaLogLevel.Error);
+					engine.GenerateInformation($"Failed to update some channel properties. Log: {successLog}");
 					exceptionHelper.GenerateLog(log);
 				}
 
@@ -156,6 +134,7 @@ namespace Script
 			catch (Exception ex)
 			{
 				engine.GenerateInformation($"An issue occurred while executing {scriptName} activity for {channelName}: {ex}");
+				SharedMethods.TransitionToError(helper, status);
 				var log = new Log
 				{
 					AffectedItem = scriptName,
@@ -173,7 +152,6 @@ namespace Script
 
 				exceptionHelper.ProcessException(ex, log);
 				helper.Log($"An issue occurred while executing {scriptName} activity for {channelName}: {ex}", PaLogLevel.Error);
-				SharedMethods.TransitionToError(helper, status);
 				helper.SendFinishMessageToTokenHandler();
 			}
 		}
@@ -186,15 +164,17 @@ namespace Script
 			{
 				var row = channelRows.First();
 				var key = Convert.ToString(row[0]);
-				tagInfo.MonitoringSetSuccuess = tagInfo.TryChannelSet(engine, 8083, tagInfo.MonitoringMode, key);
-				tagInfo.ThresholdSetSuccuess = tagInfo.TryChannelSet(engine, 8054, tagInfo.Threshold, key);
-				tagInfo.NotificationSetSuccuess = tagInfo.TryChannelSet(engine, 8055, tagInfo.Notification, key);
-				// tagInfo.EncryptionSetSuccuess = tagInfo.TryChannelSet(engine, 8068, tagInfo.Encryption, key); Issue with sets needing to be a number, need to convert value to a number based on text
-				tagInfo.KmsSetSuccuess = tagInfo.TryChannelSet(engine, 8084, tagInfo.KMS, key);
+				tagInfo.MonitoringSetSuccess = tagInfo.TryChannelSet(engine, 8083, tagInfo.MonitoringMode, key);
+				tagInfo.ThresholdSetSuccess = tagInfo.TryChannelSet(engine, 8054, tagInfo.Threshold, key);
+				tagInfo.NotificationSetSuccess = tagInfo.TryChannelSet(engine, 8055, tagInfo.Notification, key);
+				tagInfo.EncryptionSetSuccess = true; // tagInfo.TryChannelSet(engine, 8068, tagInfo.Encryption, key); Issue with sets needing to be a number, need to convert value to a number based on text
+				tagInfo.KmsSetSuccess = true; // tagInfo.TryChannelSet(engine, 8084, tagInfo.KMS, key);
 
 				// Can generate a log displaying which sets failed
 
-				return this.UpdateLayouts(engine, scriptName, helper, exceptionHelper, tagInfo);
+				tagInfo.LayoutSetSuccuess = UpdateLayouts(engine, scriptName, helper, exceptionHelper, tagInfo);
+
+				return $"Successful sets - Monitoring: {tagInfo.MonitoringSetSuccess}|Threshold: {tagInfo.ThresholdSetSuccess}|Notification: {tagInfo.NotificationSetSuccess}|Encryption: {tagInfo.EncryptionSetSuccess}|KMS: {tagInfo.KmsSetSuccess}";
 			}
 			else
 			{
@@ -217,15 +197,13 @@ namespace Script
 				helper.Log($"No channels found in channel status with given name: {tagInfo.ChannelMatch}.", PaLogLevel.Error);
 				engine.GenerateInformation("Did not find any channels with match: " + tagInfo.ChannelMatch);
 				exceptionHelper.GenerateLog(log);
-				this.errorLayoutsList.Add(tagInfo.ChannelMatch);
 
-				return "error";
+				return "No channels found: false";
 			}
 		}
 
-		private string UpdateLayouts(Engine engine, string scriptName, PaProfileLoadDomHelper helper, ExceptionHelper exceptionHelper, TagChannelInfo tagInfo)
+		private bool UpdateLayouts(Engine engine, string scriptName, PaProfileLoadDomHelper helper, ExceptionHelper exceptionHelper, TagChannelInfo tagInfo)
 		{
-			int errorLayout = 0;
 			foreach (var section in tagInfo.Instance.Sections)
 			{
 				string layout = "Empty";
@@ -241,14 +219,16 @@ namespace Script
 
 					var layoutMatchField = section.FieldValues.First();
 					layout = Convert.ToString(layoutMatchField.Value.Value);
+					if (String.IsNullOrWhiteSpace(layout))
+					{
+						return true;
+					}
+
 					var index = CheckLayoutIndexes(engine, scriptName, exceptionHelper, tagInfo, layout);
 					if (!String.IsNullOrWhiteSpace(index))
 					{
 						tagInfo.EngineElement.SetParameterByPrimaryKey(10353, index, tagInfo.ChannelMatch);
-					}
-					else
-					{
-						errorLayout++;
+						return true;
 					}
 				}
 				catch (Exception ex)
@@ -281,7 +261,7 @@ namespace Script
 				}
 			}
 
-			return errorLayout > 0 ? "error" : "active";
+			return false;
 		}
 
 		public string CheckLayoutIndexes(Engine engine, string scriptName, ExceptionHelper exceptionHelper, TagChannelInfo tagInfo, string layout)
@@ -348,23 +328,25 @@ namespace Script
 
 		public string Threshold { get; set; }
 
-		public bool ThresholdSetSuccuess { get; set; }
+		public bool ThresholdSetSuccess { get; set; }
 
 		public string MonitoringMode { get; set; }
 
-		public bool MonitoringSetSuccuess { get; set; }
+		public bool MonitoringSetSuccess { get; set; }
 
 		public string Notification { get; set; }
 
-		public bool NotificationSetSuccuess { get; set; }
+		public bool NotificationSetSuccess { get; set; }
 
 		public string Encryption { get; set; }
 
-		public bool EncryptionSetSuccuess { get; set; }
+		public bool EncryptionSetSuccess { get; set; }
 
 		public string KMS { get; set; }
 
-		public bool KmsSetSuccuess { get; set; }
+		public bool KmsSetSuccess { get; set; }
+
+		public bool LayoutSetSuccuess { get; set; }
 
 		public DomInstance Instance { get; set; }
 

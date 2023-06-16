@@ -177,6 +177,8 @@ namespace Script
 				{
 					// failed to execute in time
 					engine.GenerateInformation("Failed to verify the scan was deleted in time");
+					SharedMethods.TransitionToError(helper, status);
+
 					var log = new Log
 					{
 						AffectedItem = scriptName,
@@ -194,14 +196,13 @@ namespace Script
 						},
 					};
 					exceptionHelper.GenerateLog(log);
-					SharedMethods.TransitionToError(helper, status);
-
 					helper.SendFinishMessageToTokenHandler();
 				}
 			}
 			catch (Exception ex)
 			{
 				engine.GenerateInformation("Exception caught in Deactivate Scanner: " + ex);
+				SharedMethods.TransitionToError(helper, status);
 				var log = new Log
 				{
 					AffectedItem = scriptName,
@@ -215,8 +216,8 @@ namespace Script
 						Source = "Run()",
 					},
 				};
+
 				exceptionHelper.ProcessException(ex, log);
-				SharedMethods.TransitionToError(helper, status);
 				helper.SendFinishMessageToTokenHandler();
 			}
 		}
@@ -251,6 +252,7 @@ namespace Script
 			}
 			else
 			{
+				SharedMethods.TransitionToError(helper, status);
 				var log = new Log
 				{
 					AffectedItem = scriptName,
@@ -294,25 +296,9 @@ namespace Script
 					{
 						transition = "active_to_complete";
 					}
-				}
-				else
-				{
-					if (subInstance.StatusId == "draft")
-					{
-						continue;
-					}
 
-					if (subInstance.StatusId == "error")
-					{
-						transition = "error_to_draft";
-					}
-					else
-					{
-						transition = "active_to_draft";
-					}
+					this.innerDomHelper.DomInstances.DoStatusTransition(subInstance.ID, transition);
 				}
-
-				this.innerDomHelper.DomInstances.DoStatusTransition(subInstance.ID, transition);
 			}
 		}
 
