@@ -177,6 +177,8 @@ namespace Script
 				{
 					// failed to execute in time
 					engine.GenerateInformation("Failed to verify the scan was deleted in time");
+					SharedMethods.TransitionToError(helper, status);
+
 					var log = new Log
 					{
 						AffectedItem = scriptName,
@@ -194,14 +196,14 @@ namespace Script
 						},
 					};
 					exceptionHelper.GenerateLog(log);
-					SharedMethods.TransitionToError(helper, status);
-
 					helper.SendFinishMessageToTokenHandler();
 				}
 			}
 			catch (Exception ex)
 			{
 				engine.GenerateInformation("Exception caught in Deactivate Scanner: " + ex);
+				SharedMethods.TransitionToError(helper, status);
+
 				var log = new Log
 				{
 					AffectedItem = scriptName,
@@ -216,7 +218,6 @@ namespace Script
 					},
 				};
 				exceptionHelper.ProcessException(ex, log);
-				SharedMethods.TransitionToError(helper, status);
 				helper.SendFinishMessageToTokenHandler();
 			}
 		}

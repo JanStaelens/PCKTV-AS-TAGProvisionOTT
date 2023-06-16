@@ -156,6 +156,8 @@ namespace Script
 			catch (Exception ex)
 			{
 				engine.GenerateInformation($"An issue occurred while executing {scriptName} activity for {channelName}: {ex}");
+				SharedMethods.TransitionToError(helper, status);
+
 				var log = new Log
 				{
 					AffectedItem = scriptName,
@@ -173,7 +175,6 @@ namespace Script
 
 				exceptionHelper.ProcessException(ex, log);
 				helper.Log($"An issue occurred while executing {scriptName} activity for {channelName}: {ex}", PaLogLevel.Error);
-				SharedMethods.TransitionToError(helper, status);
 				helper.SendFinishMessageToTokenHandler();
 			}
 		}

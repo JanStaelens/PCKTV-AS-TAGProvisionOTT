@@ -151,6 +151,7 @@ namespace Script
 					catch (Exception ex)
 					{
 						engine.Log("Exception thrown while checking TAG Scan status: " + ex);
+						SharedMethods.TransitionToError(helper, status);
 
 						var log = new Log
 						{
@@ -165,8 +166,6 @@ namespace Script
 								Source = "VerifyScan()",
 							},
 						};
-
-						SharedMethods.TransitionToError(helper, status);
 						exceptionHelper.ProcessException(ex, log);
 						throw;
 					}
@@ -180,6 +179,8 @@ namespace Script
 				else
 				{
 					// failed to execute in time
+					SharedMethods.TransitionToError(helper, status);
+
 					var log = new Log
 					{
 						AffectedItem = scriptName,
@@ -198,12 +199,13 @@ namespace Script
 					exceptionHelper.GenerateLog(log);
 
 					helper.Log($"Scan did not finish due to verify timeout. ScanName: {scanner.ScanName}", PaLogLevel.Error);
-					SharedMethods.TransitionToError(helper, status);
 					helper.SendFinishMessageToTokenHandler();
 				}
 			}
 			catch (Exception ex)
 			{
+				SharedMethods.TransitionToError(helper, status);
+
 				var log = new Log
 				{
 					AffectedItem = scriptName,
@@ -218,7 +220,6 @@ namespace Script
 					},
 				};
 				exceptionHelper.ProcessException(ex, log);
-				SharedMethods.TransitionToError(helper, status);
 				helper.SendFinishMessageToTokenHandler();
 				throw;
 			}

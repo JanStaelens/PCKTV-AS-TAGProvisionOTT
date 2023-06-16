@@ -171,6 +171,8 @@ namespace Script
 				}
 				else
 				{
+					SharedMethods.TransitionToError(this.helper, status);
+
 					var log = new Log
 					{
 						AffectedItem = this.scriptName,
@@ -189,8 +191,6 @@ namespace Script
 
 					this.helper.Log($"Monitor Channel did not finish due to timeout. Must be needed both values (Monitored and ResponseData) to execute next activity (channel sets).\n Missing channels to finish: {JsonConvert.SerializeObject(missingChannelsData)}", PaLogLevel.Error);
 					this.exceptionHelper.GenerateLog(log);
-
-					SharedMethods.TransitionToError(this.helper, status);
 				}
 
 				this.helper.ReturnSuccess();
@@ -198,6 +198,8 @@ namespace Script
 			catch (Exception ex)
 			{
 				engine.GenerateInformation($"An issue occurred while executing {this.scriptName} activity for {this.channelName}: {ex}");
+				SharedMethods.TransitionToError(this.helper, status);
+
 				var log = new Log
 				{
 					AffectedItem = this.scriptName,
@@ -215,7 +217,6 @@ namespace Script
 
 				this.exceptionHelper.ProcessException(ex, log);
 				this.helper.Log($"An issue occurred while executing {this.scriptName} activity for {this.channelName}: {ex}", PaLogLevel.Error);
-				SharedMethods.TransitionToError(this.helper, status);
 				this.helper.SendErrorMessageToTokenHandler();
 			}
 		}
@@ -238,6 +239,8 @@ namespace Script
 			}
 			else
 			{
+				SharedMethods.TransitionToError(this.helper, status);
+
 				var log = new Log
 				{
 					AffectedItem = this.scriptName,
@@ -255,7 +258,6 @@ namespace Script
 				};
 
 				this.helper.Log($"Cannot execute the transition as the status. Current status: {status}", PaLogLevel.Error);
-				SharedMethods.TransitionToError(this.helper, status);
 				this.exceptionHelper.GenerateLog(log);
 			}
 		}
