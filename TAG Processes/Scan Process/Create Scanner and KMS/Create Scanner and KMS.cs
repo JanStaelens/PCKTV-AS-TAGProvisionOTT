@@ -167,6 +167,8 @@ namespace Script
                 else
                 {
                     // failed to execute in time
+					SharedMethods.TransitionToError(helper, status);
+
                     var log = new Log
                     {
                         AffectedItem = scriptName,
@@ -182,15 +184,16 @@ namespace Script
                             Description = $"Create Scan failed for event {scanName}. TAG Element: {scanner.TagElement}",
                         },
                     };
-                    exceptionHelper.GenerateLog(log);
 
-					SharedMethods.TransitionToError(helper, status);
+                    exceptionHelper.GenerateLog(log);
 					helper.SendFinishMessageToTokenHandler();
 				}
 			}
 			catch (Exception ex)
 			{
 				engine.GenerateInformation("Error in Create Scanner and KMS: " + ex);
+				SharedMethods.TransitionToError(helper, status);
+
 				var log = new Log
 				{
 					AffectedItem = scriptName,
@@ -205,7 +208,6 @@ namespace Script
 					},
 				};
 				exceptionHelper.ProcessException(ex, log);
-				SharedMethods.TransitionToError(helper, status);
 				helper.SendFinishMessageToTokenHandler();
 			}
 		}
@@ -218,6 +220,7 @@ namespace Script
 			}
 			catch (Exception ex)
 			{
+				SharedMethods.TransitionToError(helper, status);
 				var log = new Log
 				{
 					AffectedItem = scriptName,
@@ -232,8 +235,6 @@ namespace Script
 					},
 				};
 				exceptionHelper.ProcessException(ex, log);
-
-				SharedMethods.TransitionToError(helper, status);
 				helper.SendFinishMessageToTokenHandler();
 				throw;
 			}
