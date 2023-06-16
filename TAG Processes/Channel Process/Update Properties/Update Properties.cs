@@ -98,7 +98,7 @@ namespace Script
 				engine.GenerateInformation("START " + scriptName);
 
 				var successLog = this.ExecuteChannelSets(engine, scriptName, helper, exceptionHelper, tagInfo);
-
+				engine.GenerateInformation($"sets report on {tagInfo.ChannelMatch}: " + successLog);
 				if (!successLog.Contains("False"))
 				{
 					helper.TransitionState("inprogress_to_active");
@@ -128,7 +128,6 @@ namespace Script
 					exceptionHelper.GenerateLog(log);
 				}
 
-				//engine.GenerateInformation("Successfully executed " + scriptName + " for: " + tagElementName);
 				helper.ReturnSuccess();
 			}
 			catch (Exception ex)
@@ -164,7 +163,7 @@ namespace Script
 			{
 				var row = channelRows.First();
 				var key = Convert.ToString(row[0]);
-				tagInfo.MonitoringSetSuccess = tagInfo.TryChannelSet(engine, 8083, tagInfo.MonitoringMode, key);
+				tagInfo.MonitoringSetSuccess = String.IsNullOrWhiteSpace(tagInfo.MonitoringMode) ? false : tagInfo.TryChannelSet(engine, 8083, Convert.ToString(tagInfo.MonitoringValue[tagInfo.MonitoringMode]), key);
 				tagInfo.ThresholdSetSuccess = tagInfo.TryChannelSet(engine, 8054, tagInfo.Threshold, key);
 				tagInfo.NotificationSetSuccess = tagInfo.TryChannelSet(engine, 8055, tagInfo.Notification, key);
 				tagInfo.EncryptionSetSuccess = String.IsNullOrWhiteSpace(tagInfo.Encryption) ? true : tagInfo.TryChannelSet(engine, 8068, Convert.ToString(tagInfo.EncryptionValue[tagInfo.Encryption]), key);
@@ -196,7 +195,7 @@ namespace Script
 				engine.GenerateInformation("Did not find any channels with match: " + tagInfo.ChannelMatch);
 				exceptionHelper.GenerateLog(log);
 
-				return "No channels found: false";
+				return "No channels found: False";
 			}
 		}
 
@@ -321,7 +320,6 @@ namespace Script
 
 		public Dictionary<string, int> EncryptionValue = new Dictionary<string, int>
 		{
-			{ "NA", -1 },
 			{ "None", 0 },
 			{ "Axinom, CENC", 196619 },
 			{ "BISS-2, AES-128-CBC", 65545 },
@@ -340,6 +338,13 @@ namespace Script
 			{ "SynMedia, CENC", 196618 },
 			{ "VerimatrixMultiRights, CENC", 131077 },
 			{ "Verimatrix, AES-128-CBC", 65539 },
+		};
+
+		public Dictionary<string, int> MonitoringValue = new Dictionary<string, int>
+		{
+			{ "Full", 1 },
+			{ "Light", 5 },
+			{ "ExtraLight", 10 },
 		};
 
 		public string ElementName { get; set; }
