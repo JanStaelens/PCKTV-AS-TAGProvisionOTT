@@ -1098,13 +1098,13 @@ namespace Script
 							new DomStatusFieldDescriptorLink(fieldsList["Source Element (TAG Provision)"])
 							{
 								Visible = false,
-								ReadOnly = true,
+								ReadOnly = false,
 								RequiredForStatus = false,
 							},
 							new DomStatusFieldDescriptorLink(fieldsList["Source ID (TAG Provision)"])
 							{
 								Visible = false,
-								ReadOnly = true,
+								ReadOnly = false,
 								RequiredForStatus = false,
 							},
 							new DomStatusFieldDescriptorLink(fieldsList["Provision Name (TAG Provision)"])
@@ -1251,6 +1251,8 @@ namespace Script
 				public static DomStatusSectionDefinitionLink GetTagScanSectionDefinitionLink(SectionDefinition section, Dictionary<string, FieldDescriptorID> fieldsList, string status)
 				{
 					var sectionStatusLinkId = new DomStatusSectionDefinitionLinkId(status, section.GetID());
+
+					var readOnly = status != "active_with_errors" && status != "error" && status != "complete";
 					DomStatusSectionDefinitionLink draftStatusLinkDomInstance;
 					switch (section.GetName())
 					{
@@ -1262,49 +1264,49 @@ namespace Script
 									new DomStatusFieldDescriptorLink(fieldsList["Source Element (TAG Scan)"])
 									{
 										Visible = false,
-										ReadOnly = true,
+										ReadOnly = false,
 										RequiredForStatus = false,
 									},
 									new DomStatusFieldDescriptorLink(fieldsList["Source ID (TAG Scan)"])
 									{
 										Visible = false,
-										ReadOnly = true,
+										ReadOnly = false,
 										RequiredForStatus = false,
 									},
 									new DomStatusFieldDescriptorLink(fieldsList["TAG Element (TAG Scan)"])
 									{
 										Visible = true,
-										ReadOnly = true,
+										ReadOnly = readOnly,
 										RequiredForStatus = true,
 									},
 									new DomStatusFieldDescriptorLink(fieldsList["TAG Device (TAG Scan)"])
 									{
 										Visible = true,
-										ReadOnly = true,
+										ReadOnly = readOnly,
 										RequiredForStatus = true,
 									},
 									new DomStatusFieldDescriptorLink(fieldsList["TAG Interface (TAG Scan)"])
 									{
 										Visible = true,
-										ReadOnly = true,
+										ReadOnly = readOnly,
 										RequiredForStatus = true,
 									},
 									new DomStatusFieldDescriptorLink(fieldsList["Scan Name (TAG Scan)"])
 									{
 										Visible = true,
-										ReadOnly = true,
+										ReadOnly = readOnly,
 										RequiredForStatus = true,
 									},
 									new DomStatusFieldDescriptorLink(fieldsList["Asset ID (TAG Scan)"])
 									{
 										Visible = true,
-										ReadOnly = true,
+										ReadOnly = readOnly,
 										RequiredForStatus = true,
 									},
 									new DomStatusFieldDescriptorLink(fieldsList["Scan Type (TAG Scan)"])
 									{
 										Visible = true,
-										ReadOnly = true,
+										ReadOnly = readOnly,
 										RequiredForStatus = true,
 									},
 									new DomStatusFieldDescriptorLink(fieldsList["Channels (TAG Scan)"])
