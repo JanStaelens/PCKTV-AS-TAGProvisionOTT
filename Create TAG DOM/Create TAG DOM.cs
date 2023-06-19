@@ -954,15 +954,15 @@ namespace Script
 					Dictionary<string, FieldDescriptorID> fieldsList = GetFieldDescriptorDictionary(section);
 
 					var draftStatusLink = StatusSectionDefinitions.GetTagScanSectionDefinitionLinkDraft(section, fieldsList);
-					var readyStatusLink = StatusSectionDefinitions.GetTagScanSectionDefinitionLink(section, fieldsList, "ready");
-					var inprogressStatusLink = StatusSectionDefinitions.GetTagScanSectionDefinitionLink(section, fieldsList, "in_progress");
-					var activeStatusLink = StatusSectionDefinitions.GetTagScanSectionDefinitionLink(section, fieldsList, "active");
-					var reprovisionStatusLink = StatusSectionDefinitions.GetTagScanSectionDefinitionLink(section, fieldsList, "reprovision");
-					var deactivateStatusLink = StatusSectionDefinitions.GetTagScanSectionDefinitionLink(section, fieldsList, "deactivate");
-					var deactivatingStatusLink = StatusSectionDefinitions.GetTagScanSectionDefinitionLink(section, fieldsList, "deactivating");
-					var completeStatusLink = StatusSectionDefinitions.GetTagScanSectionDefinitionLink(section, fieldsList, "complete");
-					var errorStatusLink = StatusSectionDefinitions.GetTagScanSectionDefinitionLink(section, fieldsList, "error");
-					var activeWithErrorsStatusLink = StatusSectionDefinitions.GetTagScanSectionDefinitionLink(section, fieldsList, "active_with_errors");
+					var readyStatusLink = StatusSectionDefinitions.GetTagScanSectionDefinitionLink(section, fieldsList, "ready", true);
+					var inprogressStatusLink = StatusSectionDefinitions.GetTagScanSectionDefinitionLink(section, fieldsList, "in_progress", true);
+					var activeStatusLink = StatusSectionDefinitions.GetTagScanSectionDefinitionLink(section, fieldsList, "active", true);
+					var reprovisionStatusLink = StatusSectionDefinitions.GetTagScanSectionDefinitionLink(section, fieldsList, "reprovision", true);
+					var deactivateStatusLink = StatusSectionDefinitions.GetTagScanSectionDefinitionLink(section, fieldsList, "deactivate", true);
+					var deactivatingStatusLink = StatusSectionDefinitions.GetTagScanSectionDefinitionLink(section, fieldsList, "deactivating", true);
+					var completeStatusLink = StatusSectionDefinitions.GetTagScanSectionDefinitionLink(section, fieldsList, "complete", false);
+					var errorStatusLink = StatusSectionDefinitions.GetTagScanSectionDefinitionLink(section, fieldsList, "error", false);
+					var activeWithErrorsStatusLink = StatusSectionDefinitions.GetTagScanSectionDefinitionLink(section, fieldsList, "active_with_errors", false);
 
 					var links = new List<DomStatusSectionDefinitionLink>
 					{
@@ -1248,11 +1248,9 @@ namespace Script
 					return draftStatusLinkDomInstance;
 				}
 
-				public static DomStatusSectionDefinitionLink GetTagScanSectionDefinitionLink(SectionDefinition section, Dictionary<string, FieldDescriptorID> fieldsList, string status)
+				public static DomStatusSectionDefinitionLink GetTagScanSectionDefinitionLink(SectionDefinition section, Dictionary<string, FieldDescriptorID> fieldsList, string status, bool readOnly)
 				{
 					var sectionStatusLinkId = new DomStatusSectionDefinitionLinkId(status, section.GetID());
-
-					var readOnly = status != "active_with_errors" && status != "error" && status != "complete";
 					DomStatusSectionDefinitionLink draftStatusLinkDomInstance;
 					switch (section.GetName())
 					{
