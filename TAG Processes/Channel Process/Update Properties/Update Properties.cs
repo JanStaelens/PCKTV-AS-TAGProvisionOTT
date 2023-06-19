@@ -333,7 +333,7 @@ namespace Script
 			{ "Simulcrypt, AES-128-CBC", 65537 },
 			{ "Simulcrypt, AES-128-ECB", 524289 },
 			{ "Simulcrypt, DVB-CSA", 262145 },
-			{ "SKYCKS, CENC", 196614 },
+			{ "SKY CKS, CENC", 196614 },
 			{ "Static, CENC", 196620 },
 			{ "SynMedia, CENC", 196618 },
 			{ "VerimatrixMultiRights, CENC", 131077 },
