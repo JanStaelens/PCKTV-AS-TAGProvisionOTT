@@ -70,6 +70,8 @@ namespace Script
 	/// </summary>
 	public class Script
 	{
+		private DomHelper innerDomHelper;
+
 		/// <summary>
 		/// The Script entry point.
 		/// </summary>
@@ -81,7 +83,7 @@ namespace Script
 
 			var helper = new PaProfileLoadDomHelper(engine);
 			var domHelper = new DomHelper(engine.SendSLNetMessages, "process_automation");
-
+			innerDomHelper = domHelper;
 			var exceptionHelper = new ExceptionHelper(engine, domHelper);
 			var sharedMethods = new SharedMethods(helper, domHelper);
 
@@ -174,6 +176,8 @@ namespace Script
 
 				if (SharedMethods.Retry(VerifyScan, new TimeSpan(0, 5, 0)))
 				{
+					// UpdateChannelLayoutPositions(domHelper, scanner, element);
+
 					sharedMethods.StartTAGChannelsProcess(scanner);
 					helper.ReturnSuccess();
 				}
@@ -219,10 +223,119 @@ namespace Script
 					},
 				};
 				exceptionHelper.ProcessException(ex, log);
-				
+
 				helper.SendFinishMessageToTokenHandler();
 				throw;
 			}
+		}
+
+		private void UpdateChannelLayoutPositions(DomHelper domHelper, Scanner scanner, IDmsElement element)
+		{
+			foreach (var channel in scanner.Channels)
+			{
+				var allLayouts = element.GetTable(10300);
+
+				var channelFilter = DomInstanceExposers.Id.Equal(new DomInstanceId(channel));
+				var channelInstances = domHelper.DomInstances.Read(channelFilter);
+				if (channelInstances.Count > 0)
+				{
+					var channelInstance = channelInstances.First();
+					var layoutUpdates = GetLayoutsToUpdate(channelInstance);
+
+					foreach (var update in layoutUpdates)
+					{
+						var layout = update.Key;
+						var layoutsToUpdate = update.Value;
+						var layoutFilter = new ColumnFilter { ComparisonOperator = ComparisonOperator.Equal, Value = layout, Pid = 10305 };
+						var zeroFilter = new ColumnFilter { ComparisonOperator = ComparisonOperator.Equal, Value = "0", Pid = 10302 };
+						var reservedFilter = new ColumnFilter { ComparisonOperator = ComparisonOperator.NotEqual, Value = "Reserved", Pid = 10303 };
+						var layoutNoneRows = allLayouts.QueryData(new List<ColumnFilter> { layoutFilter, zeroFilter, reservedFilter }).ToList();
+						if (layoutNoneRows.Any() && layoutNoneRows.Count() > update.Value.Count)
+						{
+							List<string> sequenceKeys = new List<string>();
+							var expectedSequenceLength = update.Value.Count;
+
+							sequenceKeys.Add(Convert.ToString(layoutNoneRows[0][0]));
+							for (int i = 0; i < layoutNoneRows.Count - 2; i++)
+							{
+								var currentRow = layoutNoneRows[i];
+								var nextRow = layoutNoneRows[i + 1];
+								var currentSubKey = Convert.ToInt32(Convert.ToString(currentRow[0]).Split('/')[1]);
+								var nextSubKey = Convert.ToInt32(Convert.ToString(nextRow[0]).Split('/')[1]);
+								if (currentSubKey + 1 != nextSubKey)
+								{
+									sequenceKeys.Clear();
+								}
+
+								sequenceKeys.Add(Convert.ToString(nextRow[0]));
+								if (sequenceKeys.Count >= expectedSequenceLength)
+								{
+									break;
+								}
+							}
+
+							if (sequenceKeys.Count < expectedSequenceLength)
+							{
+								// error, not enough layouts found in a row
+							}
+
+							foreach (var layoutChannelUpdate in update.Value)
+							{
+								var positionKey = sequenceKeys.First();
+								layoutChannelUpdate.UpdateChannelLayoutPosition(positionKey);
+								sequenceKeys.Remove(positionKey);
+							}
+						}
+						else
+						{
+							// error no layouts found
+						}
+					}
+				}
+				else
+				{
+					// error, channel instance not found
+				}
+			}
+		}
+
+		private Dictionary<string, List<LayoutUpdate>> GetLayoutsToUpdate(DomInstance channelInstance)
+		{
+			var layoutUpdates = new Dictionary<string, List<LayoutUpdate>>();
+			foreach (var section in channelInstance.Sections)
+			{
+				Func<SectionDefinitionID, SectionDefinition> sectionDefinitionFunc = this.SetSectionDefinitionById;
+				section.Stitch(sectionDefinitionFunc);
+
+				var sectionDefinition = section.GetSectionDefinition();
+				if (!sectionDefinition.GetName().Equals("Layouts"))
+				{
+					continue;
+				}
+
+				var fields = sectionDefinition.GetAllFieldDescriptors();
+				var layoutField = section.GetFieldValueById(fields.First(x => x.Name.Contains("Layout Match")).ID);
+				var layoutPositionField = fields.First(x => x.Name.Contains("Layout Position"));
+
+				if (layoutField != null && !String.IsNullOrWhiteSpace(Convert.ToString(layoutField.Value.Value)))
+				{
+					// mark instance/section/field to be updated
+					var layout = Convert.ToString(layoutField.Value.Value);
+					if (!layoutUpdates.ContainsKey(layout))
+					{
+						layoutUpdates.Add(layout, new List<LayoutUpdate>());
+					}
+
+					layoutUpdates[layout].Add(new LayoutUpdate
+					{
+						Channel = channelInstance,
+						SectionToUpdate = sectionDefinition,
+						LayoutPosition = layoutPositionField,
+					});
+				}
+			}
+
+			return layoutUpdates;
 		}
 
 		private static int ValidateScans(Scanner scanner, List<Manifest> manifests, int iScanRequestChecked, object[][] scanChannelsRows)
@@ -247,6 +360,30 @@ namespace Script
 			}
 
 			return iScanRequestChecked;
+		}
+
+		private SectionDefinition SetSectionDefinitionById(SectionDefinitionID sectionDefinitionId)
+		{
+			return this.innerDomHelper.SectionDefinitions.Read(SectionDefinitionExposers.ID.Equal(sectionDefinitionId)).First();
+		}
+	}
+
+	public class LayoutUpdate
+	{
+		public string Layout { get; set; }
+
+		public DomHelper DomHelper { get; set; }
+
+		public DomInstance Channel { get; set; }
+
+		public SectionDefinition SectionToUpdate { get; set; }
+
+		public FieldDescriptor LayoutPosition { get; set; }
+
+		public void UpdateChannelLayoutPosition(string position)
+		{
+			Channel.AddOrUpdateFieldValue(SectionToUpdate, LayoutPosition, position);
+			DomHelper.DomInstances.Update(Channel);
 		}
 	}
 }

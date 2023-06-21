@@ -389,10 +389,12 @@ namespace Script
 			public static SectionDefinition CreateLayoutsSection(DomHelper domHelper)
 			{
 				var layoutMatch = CreateFieldDescriptorObject<string>("Layout Match (TAG Channel)", "The Name that will be used when scanning the manifest URL to be scanned.", false);
+				var layoutPosition = CreateFieldDescriptorObject<string>("Layout Position (TAG Channel)", "The position in the layouts that is reserved for this channel.", false);
 
 				List<FieldDescriptor> fieldDescriptors = new List<FieldDescriptor>
 				{
 					layoutMatch,
+					layoutPosition,
 				};
 
 				var sectionDefinition = CreateOrUpdateSection("Layouts", domHelper, fieldDescriptors);
@@ -1439,6 +1441,12 @@ namespace Script
 										ReadOnly = false,
 										RequiredForStatus = false,
 									},
+									new DomStatusFieldDescriptorLink(fieldsList["Layout Position (TAG Channel)"])
+									{
+										Visible = true,
+										ReadOnly = false,
+										RequiredForStatus = false,
+									},
 								},
 								AllowMultipleSections = true,
 							};
@@ -1528,6 +1536,12 @@ namespace Script
 								FieldDescriptorLinks = new List<DomStatusFieldDescriptorLink>
 								{
 									new DomStatusFieldDescriptorLink(fieldsList["Layout Match (TAG Channel)"])
+									{
+										Visible = true,
+										ReadOnly = false,
+										RequiredForStatus = false,
+									},
+									new DomStatusFieldDescriptorLink(fieldsList["Layout Position (TAG Channel)"])
 									{
 										Visible = true,
 										ReadOnly = false,

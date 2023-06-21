@@ -163,11 +163,12 @@ namespace Script
 			{
 				var row = channelRows.First();
 				var key = Convert.ToString(row[0]);
-				tagInfo.MonitoringSetSuccess = String.IsNullOrWhiteSpace(tagInfo.MonitoringMode) ? false : tagInfo.TryChannelSet(engine, 8083, Convert.ToString(tagInfo.MonitoringValue[tagInfo.MonitoringMode]), key);
-				tagInfo.ThresholdSetSuccess = tagInfo.TryChannelSet(engine, 8054, tagInfo.Threshold, key);
-				tagInfo.NotificationSetSuccess = tagInfo.TryChannelSet(engine, 8055, tagInfo.Notification, key);
-				tagInfo.EncryptionSetSuccess = String.IsNullOrWhiteSpace(tagInfo.Encryption) ? true : tagInfo.TryChannelSet(engine, 8068, Convert.ToString(tagInfo.EncryptionValue[tagInfo.Encryption]), key);
-				tagInfo.KmsSetSuccess = tagInfo.TryChannelSet(engine, 8084, tagInfo.KMS, key);
+				
+				tagInfo.ThresholdSetSuccess = tagInfo.TryChannelSetRead(engine, 8004, tagInfo.Threshold, key);
+				tagInfo.NotificationSetSuccess = tagInfo.TryChannelSetRead(engine, 8005, tagInfo.Notification, key);
+				tagInfo.EncryptionSetSuccess = String.IsNullOrWhiteSpace(tagInfo.Encryption) ? true : tagInfo.TryChannelSetRead(engine, 8018, Convert.ToString(tagInfo.EncryptionValue[tagInfo.Encryption]), key);
+				tagInfo.KmsSetSuccess = tagInfo.TryChannelSetRead(engine, 8034, tagInfo.KMS, key);
+				tagInfo.MonitoringSetSuccess = tagInfo.TryChannelSet(engine, 8083, Convert.ToString(tagInfo.MonitoringValue[tagInfo.MonitoringMode]), key);
 
 				tagInfo.LayoutSetSuccuess = UpdateLayouts(engine, scriptName, helper, exceptionHelper, tagInfo);
 
@@ -475,6 +476,27 @@ namespace Script
 				{
 					return true;
 				}
+			}
+			catch (Exception e)
+			{
+				engine.GenerateInformation($"Failed to perform set: {updatedValue} on {ChannelMatch}: " + e);
+			}
+
+			return false;
+		}
+
+		public bool TryChannelSetRead(Engine engine, int columnPid, string updatedValue, string key)
+		{
+			try
+			{
+				if (String.IsNullOrWhiteSpace(updatedValue) || Convert.ToString(EngineElement.GetParameterByPrimaryKey(columnPid, key)) == updatedValue)
+				{
+					return true;
+				}
+
+				EngineElement.SetParameterByPrimaryKey(columnPid, key, updatedValue);
+
+				return true;
 			}
 			catch (Exception e)
 			{
