@@ -445,7 +445,7 @@ namespace Script
 		{
 			try
 			{
-				if (String.IsNullOrWhiteSpace(updatedValue) || Convert.ToString(EngineElement.GetParameterByPrimaryKey(columnPid - 50, key)) == updatedValue)
+				if (String.IsNullOrWhiteSpace(updatedValue)/* || Convert.ToString(EngineElement.GetParameterByPrimaryKey(columnPid - 50, key)) == updatedValue*/)
 				{
 					return true;
 				}
