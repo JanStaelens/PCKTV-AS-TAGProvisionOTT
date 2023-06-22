@@ -176,7 +176,7 @@ namespace Script
 
 				if (SharedMethods.Retry(VerifyScan, new TimeSpan(0, 5, 0)))
 				{
-					UpdateChannelLayoutPositions(domHelper, scanner, element);
+					UpdateChannelLayoutPositions(engine, domHelper, scanner, element);
 
 					sharedMethods.StartTAGChannelsProcess(scanner);
 					helper.ReturnSuccess();
