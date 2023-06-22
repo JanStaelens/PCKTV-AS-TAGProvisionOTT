@@ -230,42 +230,50 @@ namespace Script
 			}
 		}
 
-		private void UpdateChannelLayoutPositions(DomHelper domHelper, Scanner scanner, IDmsElement element)
+		private void UpdateChannelLayoutPositions(IEngine engine, DomHelper domHelper, Scanner scanner, IDmsElement element)
 		{
-			var layoutUpdates = new Dictionary<string, List<LayoutUpdate>>();
-			var allLayouts = element.GetTable(10300);
-			foreach (var channel in scanner.Channels)
+			try
 			{
-				var channelFilter = DomInstanceExposers.Id.Equal(new DomInstanceId(channel));
-				var channelInstances = domHelper.DomInstances.Read(channelFilter);
+				var layoutUpdates = new Dictionary<string, List<LayoutUpdate>>();
+				var allLayouts = element.GetTable(10300);
+				foreach (var channel in scanner.Channels)
+				{
+					var channelFilter = DomInstanceExposers.Id.Equal(new DomInstanceId(channel));
+					var channelInstances = domHelper.DomInstances.Read(channelFilter);
 
-				if (channelInstances.Count > 0)
-				{
-					var channelInstance = channelInstances.First();
-					GetLayoutsToUpdate(channelInstance, layoutUpdates, allLayouts);
+					if (channelInstances.Count > 0)
+					{
+						var channelInstance = channelInstances.First();
+						GetLayoutsToUpdate(channelInstance, layoutUpdates, allLayouts);
+					}
+					else
+					{
+						// error, channel instance not found
+					}
 				}
-				else
+
+				foreach (var update in layoutUpdates)
 				{
-					// error, channel instance not found
+					var layout = update.Key;
+					var layoutsToUpdate = update.Value;
+					var layoutFilter = new ColumnFilter { ComparisonOperator = ComparisonOperator.Equal, Value = layout, Pid = 10305 };
+					var zeroFilter = new ColumnFilter { ComparisonOperator = ComparisonOperator.Equal, Value = "0", Pid = 10302 };
+					var reservedFilter = new ColumnFilter { ComparisonOperator = ComparisonOperator.NotEqual, Value = "Reserved", Pid = 10303 };
+					var layoutNoneRows = allLayouts.QueryData(new List<ColumnFilter> { layoutFilter, zeroFilter, reservedFilter }).ToList();
+					if (layoutNoneRows.Any() && layoutNoneRows.Count() > update.Value.Count)
+					{
+						UpdateSequentialLayouts(update, layoutNoneRows);
+					}
+					else
+					{
+						// error no layouts found
+					}
 				}
 			}
-
-			foreach (var update in layoutUpdates)
+			catch (Exception ex)
 			{
-				var layout = update.Key;
-				var layoutsToUpdate = update.Value;
-				var layoutFilter = new ColumnFilter { ComparisonOperator = ComparisonOperator.Equal, Value = layout, Pid = 10305 };
-				var zeroFilter = new ColumnFilter { ComparisonOperator = ComparisonOperator.Equal, Value = "0", Pid = 10302 };
-				var reservedFilter = new ColumnFilter { ComparisonOperator = ComparisonOperator.NotEqual, Value = "Reserved", Pid = 10303 };
-				var layoutNoneRows = allLayouts.QueryData(new List<ColumnFilter> { layoutFilter, zeroFilter, reservedFilter }).ToList();
-				if (layoutNoneRows.Any() && layoutNoneRows.Count() > update.Value.Count)
-				{
-					UpdateSequentialLayouts(update, layoutNoneRows);
-				}
-				else
-				{
-					// error no layouts found
-				}
+				engine.GenerateInformation("Failed to set channel layout positions due to exception: " + ex);
+				// error for channel layouts
 			}
 		}
 
@@ -299,6 +307,7 @@ namespace Script
 			if (sequenceKeys.Count < expectedSequenceLength)
 			{
 				// error, not enough layouts found in a row
+				return;
 			}
 
 			foreach (var layoutChannelUpdate in update.Value)
@@ -337,6 +346,7 @@ namespace Script
 
 					layoutUpdates[layout].Add(new LayoutUpdate
 					{
+						AllLayouts = allLayouts,
 						DomHelper = innerDomHelper,
 						Channel = channelInstance,
 						SectionToUpdate = sectionDefinition,

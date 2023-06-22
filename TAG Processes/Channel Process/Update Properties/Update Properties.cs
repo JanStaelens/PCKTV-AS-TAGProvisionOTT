@@ -236,12 +236,15 @@ namespace Script
 
 						// layout position wasn't set, so we're using any position in the multiviewer (first available)
 
-						var index = CheckLayoutIndexes(engine, scriptName, exceptionHelper, tagInfo, layout);
-						if (!String.IsNullOrWhiteSpace(index))
-						{
-							tagInfo.EngineElement.SetParameterByPrimaryKey(10353, index, tagInfo.ChannelMatch);
-							return true;
-						}
+						// error log because position wasn't set (but also should be generated on the scan)
+
+						// old code not needed, as space needs to be made for all channels
+						// var index = CheckLayoutIndexes(engine, scriptName, exceptionHelper, tagInfo, layout);
+						// if (!String.IsNullOrWhiteSpace(index))
+						// {
+						// 	tagInfo.EngineElement.SetParameterByPrimaryKey(10353, index, tagInfo.ChannelMatch);
+						// 	return true;
+						// }
 					}
 				}
 				catch (Exception ex)
