@@ -253,7 +253,8 @@ namespace TagHelperMethods
                 var subInstance = this.innerDomHelper.DomInstances.Read(subFilter).First();
 
                 var actionPrefix = subInstance.StatusId.Equals("error") ? "error-" : String.Empty;
-                this.innerDomHelper.DomInstances.ExecuteAction(subInstance.ID, actionPrefix + scanner.Action);
+                var action = subInstance.StatusId.Equals("draft") ? "provision" : scanner.Action;
+                this.innerDomHelper.DomInstances.ExecuteAction(subInstance.ID, actionPrefix + action);
             }
         }
 

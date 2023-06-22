@@ -208,6 +208,7 @@ namespace Script
 			}
 			catch (Exception ex)
 			{
+				engine.GenerateInformation("Monitor scanner exception: " + ex);
 				SharedMethods.TransitionToError(helper, status);
 				var log = new Log
 				{
@@ -231,38 +232,39 @@ namespace Script
 
 		private void UpdateChannelLayoutPositions(DomHelper domHelper, Scanner scanner, IDmsElement element)
 		{
+			var layoutUpdates = new Dictionary<string, List<LayoutUpdate>>();
+			var allLayouts = element.GetTable(10300);
 			foreach (var channel in scanner.Channels)
 			{
-				var allLayouts = element.GetTable(10300);
-
 				var channelFilter = DomInstanceExposers.Id.Equal(new DomInstanceId(channel));
 				var channelInstances = domHelper.DomInstances.Read(channelFilter);
+
 				if (channelInstances.Count > 0)
 				{
 					var channelInstance = channelInstances.First();
-					var layoutUpdates = GetLayoutsToUpdate(channelInstance);
-
-					foreach (var update in layoutUpdates)
-					{
-						var layout = update.Key;
-						var layoutsToUpdate = update.Value;
-						var layoutFilter = new ColumnFilter { ComparisonOperator = ComparisonOperator.Equal, Value = layout, Pid = 10305 };
-						var zeroFilter = new ColumnFilter { ComparisonOperator = ComparisonOperator.Equal, Value = "0", Pid = 10302 };
-						var reservedFilter = new ColumnFilter { ComparisonOperator = ComparisonOperator.NotEqual, Value = "Reserved", Pid = 10303 };
-						var layoutNoneRows = allLayouts.QueryData(new List<ColumnFilter> { layoutFilter, zeroFilter, reservedFilter }).ToList();
-						if (layoutNoneRows.Any() && layoutNoneRows.Count() > update.Value.Count)
-						{
-							UpdateSequentialLayouts(update, layoutNoneRows);
-						}
-						else
-						{
-							// error no layouts found
-						}
-					}
+					GetLayoutsToUpdate(channelInstance, layoutUpdates);
 				}
 				else
 				{
 					// error, channel instance not found
+				}
+			}
+
+			foreach (var update in layoutUpdates)
+			{
+				var layout = update.Key;
+				var layoutsToUpdate = update.Value;
+				var layoutFilter = new ColumnFilter { ComparisonOperator = ComparisonOperator.Equal, Value = layout, Pid = 10305 };
+				var zeroFilter = new ColumnFilter { ComparisonOperator = ComparisonOperator.Equal, Value = "0", Pid = 10302 };
+				var reservedFilter = new ColumnFilter { ComparisonOperator = ComparisonOperator.NotEqual, Value = "Reserved", Pid = 10303 };
+				var layoutNoneRows = allLayouts.QueryData(new List<ColumnFilter> { layoutFilter, zeroFilter, reservedFilter }).ToList();
+				if (layoutNoneRows.Any() && layoutNoneRows.Count() > update.Value.Count)
+				{
+					UpdateSequentialLayouts(update, layoutNoneRows);
+				}
+				else
+				{
+					// error no layouts found
 				}
 			}
 		}
@@ -277,8 +279,6 @@ namespace Script
 			{
 				for (int i = 0; i < layoutNoneRows.Count - 2; i++)
 				{
-
-
 					var currentRow = layoutNoneRows[i];
 					var nextRow = layoutNoneRows[i + 1];
 					var currentSubKey = Convert.ToInt32(Convert.ToString(currentRow[0]).Split('/')[1]);
@@ -309,9 +309,8 @@ namespace Script
 			}
 		}
 
-		private Dictionary<string, List<LayoutUpdate>> GetLayoutsToUpdate(DomInstance channelInstance)
+		private void GetLayoutsToUpdate(DomInstance channelInstance, Dictionary<string, List<LayoutUpdate>> layoutUpdates)
 		{
-			var layoutUpdates = new Dictionary<string, List<LayoutUpdate>>();
 			foreach (var section in channelInstance.Sections)
 			{
 				Func<SectionDefinitionID, SectionDefinition> sectionDefinitionFunc = this.SetSectionDefinitionById;
@@ -338,14 +337,13 @@ namespace Script
 
 					layoutUpdates[layout].Add(new LayoutUpdate
 					{
+						DomHelper = innerDomHelper,
 						Channel = channelInstance,
 						SectionToUpdate = sectionDefinition,
 						LayoutPosition = layoutPositionField,
 					});
 				}
 			}
-
-			return layoutUpdates;
 		}
 
 		private static int ValidateScans(Scanner scanner, List<Manifest> manifests, int iScanRequestChecked, object[][] scanChannelsRows)
@@ -380,8 +378,6 @@ namespace Script
 
 	public class LayoutUpdate
 	{
-		public string Layout { get; set; }
-
 		public DomHelper DomHelper { get; set; }
 
 		public DomInstance Channel { get; set; }
