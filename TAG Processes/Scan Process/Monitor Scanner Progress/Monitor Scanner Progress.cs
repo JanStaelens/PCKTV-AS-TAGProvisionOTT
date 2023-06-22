@@ -242,7 +242,7 @@ namespace Script
 				if (channelInstances.Count > 0)
 				{
 					var channelInstance = channelInstances.First();
-					GetLayoutsToUpdate(channelInstance, layoutUpdates);
+					GetLayoutsToUpdate(channelInstance, layoutUpdates, allLayouts);
 				}
 				else
 				{
@@ -309,7 +309,7 @@ namespace Script
 			}
 		}
 
-		private void GetLayoutsToUpdate(DomInstance channelInstance, Dictionary<string, List<LayoutUpdate>> layoutUpdates)
+		private void GetLayoutsToUpdate(DomInstance channelInstance, Dictionary<string, List<LayoutUpdate>> layoutUpdates, IDmsTable allLayouts)
 		{
 			foreach (var section in channelInstance.Sections)
 			{
@@ -378,6 +378,8 @@ namespace Script
 
 	public class LayoutUpdate
 	{
+		public IDmsTable AllLayouts { get; set; }
+
 		public DomHelper DomHelper { get; set; }
 
 		public DomInstance Channel { get; set; }
@@ -389,6 +391,7 @@ namespace Script
 		public void UpdateChannelLayoutPosition(string position)
 		{
 			Channel.AddOrUpdateFieldValue(SectionToUpdate, LayoutPosition, position);
+			AllLayouts.GetColumn<string>(10303).SetValue(position, "Reserved");
 			DomHelper.DomInstances.Update(Channel);
 		}
 	}
