@@ -176,7 +176,7 @@ namespace Script
 
 				if (SharedMethods.Retry(VerifyScan, new TimeSpan(0, 5, 0)))
 				{
-					// UpdateChannelLayoutPositions(domHelper, scanner, element);
+					UpdateChannelLayoutPositions(domHelper, scanner, element);
 
 					sharedMethods.StartTAGChannelsProcess(scanner);
 					helper.ReturnSuccess();
@@ -252,39 +252,7 @@ namespace Script
 						var layoutNoneRows = allLayouts.QueryData(new List<ColumnFilter> { layoutFilter, zeroFilter, reservedFilter }).ToList();
 						if (layoutNoneRows.Any() && layoutNoneRows.Count() > update.Value.Count)
 						{
-							List<string> sequenceKeys = new List<string>();
-							var expectedSequenceLength = update.Value.Count;
-
-							sequenceKeys.Add(Convert.ToString(layoutNoneRows[0][0]));
-							for (int i = 0; i < layoutNoneRows.Count - 2; i++)
-							{
-								var currentRow = layoutNoneRows[i];
-								var nextRow = layoutNoneRows[i + 1];
-								var currentSubKey = Convert.ToInt32(Convert.ToString(currentRow[0]).Split('/')[1]);
-								var nextSubKey = Convert.ToInt32(Convert.ToString(nextRow[0]).Split('/')[1]);
-								if (currentSubKey + 1 != nextSubKey)
-								{
-									sequenceKeys.Clear();
-								}
-
-								sequenceKeys.Add(Convert.ToString(nextRow[0]));
-								if (sequenceKeys.Count >= expectedSequenceLength)
-								{
-									break;
-								}
-							}
-
-							if (sequenceKeys.Count < expectedSequenceLength)
-							{
-								// error, not enough layouts found in a row
-							}
-
-							foreach (var layoutChannelUpdate in update.Value)
-							{
-								var positionKey = sequenceKeys.First();
-								layoutChannelUpdate.UpdateChannelLayoutPosition(positionKey);
-								sequenceKeys.Remove(positionKey);
-							}
+							UpdateSequentialLayouts(update, layoutNoneRows);
 						}
 						else
 						{
@@ -296,6 +264,48 @@ namespace Script
 				{
 					// error, channel instance not found
 				}
+			}
+		}
+
+		private static void UpdateSequentialLayouts(KeyValuePair<string, List<LayoutUpdate>> update, List<object[]> layoutNoneRows)
+		{
+			List<string> sequenceKeys = new List<string>();
+			var expectedSequenceLength = update.Value.Count;
+
+			sequenceKeys.Add(Convert.ToString(layoutNoneRows[0][0]));
+			if (expectedSequenceLength != 1)
+			{
+				for (int i = 0; i < layoutNoneRows.Count - 2; i++)
+				{
+
+
+					var currentRow = layoutNoneRows[i];
+					var nextRow = layoutNoneRows[i + 1];
+					var currentSubKey = Convert.ToInt32(Convert.ToString(currentRow[0]).Split('/')[1]);
+					var nextSubKey = Convert.ToInt32(Convert.ToString(nextRow[0]).Split('/')[1]);
+					if (currentSubKey + 1 != nextSubKey)
+					{
+						sequenceKeys.Clear();
+					}
+
+					sequenceKeys.Add(Convert.ToString(nextRow[0]));
+					if (sequenceKeys.Count >= expectedSequenceLength)
+					{
+						break;
+					}
+				}
+			}
+
+			if (sequenceKeys.Count < expectedSequenceLength)
+			{
+				// error, not enough layouts found in a row
+			}
+
+			foreach (var layoutChannelUpdate in update.Value)
+			{
+				var positionKey = sequenceKeys.First();
+				layoutChannelUpdate.UpdateChannelLayoutPosition(positionKey);
+				sequenceKeys.Remove(positionKey);
 			}
 		}
 

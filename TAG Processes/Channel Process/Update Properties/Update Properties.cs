@@ -215,18 +215,33 @@ namespace Script
 						continue;
 					}
 
-					var layoutMatchField = section.FieldValues.First();
-					layout = Convert.ToString(layoutMatchField.Value.Value);
-					if (String.IsNullOrWhiteSpace(layout))
-					{
-						return true;
-					}
+					var layoutSectionFields = section.GetSectionDefinition().GetAllFieldDescriptors();
 
-					var index = CheckLayoutIndexes(engine, scriptName, exceptionHelper, tagInfo, layout);
-					if (!String.IsNullOrWhiteSpace(index))
+					var layoutMatchField = layoutSectionFields.First(x => x.Name.Contains("Match"));
+					var layoutPostionField = layoutSectionFields.First(x => x.Name.Contains("Position"));
+
+					layout = Convert.ToString(section.GetFieldValueById(layoutMatchField.ID).Value.Value);
+					var position = Convert.ToString(section.GetFieldValueById(layoutPostionField.ID).Value.Value);
+					engine.GenerateInformation("position: " + position);
+					if (!String.IsNullOrWhiteSpace(position))
 					{
-						tagInfo.EngineElement.SetParameterByPrimaryKey(10353, index, tagInfo.ChannelMatch);
-						return true;
+						tagInfo.EngineElement.SetParameterByPrimaryKey(10353, position, tagInfo.ChannelMatch);
+					}
+					else
+					{
+						if (String.IsNullOrWhiteSpace(layout))
+						{
+							return true;
+						}
+
+						// layout position wasn't set, so we're using any position in the multiviewer (first available)
+
+						var index = CheckLayoutIndexes(engine, scriptName, exceptionHelper, tagInfo, layout);
+						if (!String.IsNullOrWhiteSpace(index))
+						{
+							tagInfo.EngineElement.SetParameterByPrimaryKey(10353, index, tagInfo.ChannelMatch);
+							return true;
+						}
 					}
 				}
 				catch (Exception ex)
