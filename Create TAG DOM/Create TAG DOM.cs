@@ -1339,13 +1339,13 @@ namespace Script
 									new DomStatusFieldDescriptorLink(fieldsList["Manifest Name (TAG Scan)"])
 									{
 										Visible = true,
-										ReadOnly = true,
+										ReadOnly = readOnly,
 										RequiredForStatus = true,
 									},
 									new DomStatusFieldDescriptorLink(fieldsList["Manifest URL (TAG Scan)"])
 									{
 										Visible = true,
-										ReadOnly = true,
+										ReadOnly = readOnly,
 										RequiredForStatus = true,
 									},
 								},

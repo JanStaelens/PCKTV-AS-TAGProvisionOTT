@@ -30,15 +30,15 @@ Skyline Communications.
 
 Any inquiries can be addressed to:
 
-    Skyline Communications NV
-    Ambachtenstraat 33
-    B-8870 Izegem
-    Belgium
-    Tel.    : +32 51 31 35 69
-    Fax.    : +32 51 31 01 29
-    E-mail  : info@skyline.be
-    Web     : www.skyline.be
-    Contact : Ben Vandenberghe
+	Skyline Communications NV
+	Ambachtenstraat 33
+	B-8870 Izegem
+	Belgium
+	Tel.    : +32 51 31 35 69
+	Fax.    : +32 51 31 01 29
+	E-mail  : info@skyline.be
+	Web     : www.skyline.be
+	Contact : Ben Vandenberghe
 
 ****************************************************************************
 Revision History:
@@ -51,136 +51,136 @@ dd/mm/2023  1.0.0.1     XXX, Skyline    Initial version
 
 namespace Script
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Skyline.DataMiner.Automation;
-    using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.Logging;
-    using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager;
-    using Skyline.DataMiner.ExceptionHelper;
-    using Skyline.DataMiner.Net.Apps.DataMinerObjectModel;
-    using Skyline.DataMiner.Net.Messages.SLDataGateway;
-    using Skyline.DataMiner.Net.Sections;
-    using TagHelperMethods;
-    using static Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.PaManagers;
+	using System;
+	using System.Collections.Generic;
+	using System.Linq;
+	using Skyline.DataMiner.Automation;
+	using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.Logging;
+	using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager;
+	using Skyline.DataMiner.ExceptionHelper;
+	using Skyline.DataMiner.Net.Apps.DataMinerObjectModel;
+	using Skyline.DataMiner.Net.Messages.SLDataGateway;
+	using Skyline.DataMiner.Net.Sections;
+	using TagHelperMethods;
+	using static Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.PaManagers;
 
-    /// <summary>
-    /// DataMiner Script Class.
-    /// </summary>
-    public class Script
-    {
-        private DomHelper innerDomHelper;
+	/// <summary>
+	/// DataMiner Script Class.
+	/// </summary>
+	public class Script
+	{
+		private DomHelper innerDomHelper;
 
-        /// <summary>
-        /// The Script entry point.
-        /// </summary>
-        /// <param name="engine">Link with SLAutomation process.</param>
-        public void Run(Engine engine)
-        {
-            var scriptName = "PA_TAG_Start Scanners";
+		/// <summary>
+		/// The Script entry point.
+		/// </summary>
+		/// <param name="engine">Link with SLAutomation process.</param>
+		public void Run(Engine engine)
+		{
+			var scriptName = "PA_TAG_Start Scanners";
 
-            var helper = new PaProfileLoadDomHelper(engine);
-            this.innerDomHelper = new DomHelper(engine.SendSLNetMessages, "process_automation");
-            var exceptionHelper = new ExceptionHelper(engine, this.innerDomHelper);
-            engine.GenerateInformation("START " + scriptName);
+			var helper = new PaProfileLoadDomHelper(engine);
+			this.innerDomHelper = new DomHelper(engine.SendSLNetMessages, "process_automation");
+			var exceptionHelper = new ExceptionHelper(engine, this.innerDomHelper);
+			engine.GenerateInformation("START " + scriptName);
 
-            var channelName = helper.GetParameterValue<string>("Provision Name (TAG Provision)");
-            var instanceId = helper.GetParameterValue<string>("InstanceId (TAG Provision)");
-            var instance = this.innerDomHelper.DomInstances.Read(DomInstanceExposers.Id.Equal(new DomInstanceId(Guid.Parse(instanceId)))).First();
-            var status = instance.StatusId;
+			var channelName = helper.GetParameterValue<string>("Provision Name (TAG Provision)");
+			var instanceId = helper.GetParameterValue<string>("InstanceId (TAG Provision)");
+			var instance = this.innerDomHelper.DomInstances.Read(DomInstanceExposers.Id.Equal(new DomInstanceId(Guid.Parse(instanceId)))).First();
+			var status = instance.StatusId;
 
-            var scanNames = new Dictionary<Guid, string>();
+			var scanNames = new Dictionary<Guid, string>();
 
-            try
-            {
-                var action = helper.GetParameterValue<string>("Action (TAG Provision)");
-                var scanners = helper.GetParameterValue<List<Guid>>("TAG Scanners (TAG Provision)");
-                var sharedMethods = new SharedMethods(helper, innerDomHelper);
-                scanNames = sharedMethods.GetScanNames(scanners);
+			try
+			{
+				var action = helper.GetParameterValue<string>("Action (TAG Provision)");
+				var scanners = helper.GetParameterValue<List<Guid>>("TAG Scanners (TAG Provision)");
+				var sharedMethods = new SharedMethods(helper, innerDomHelper);
+				scanNames = sharedMethods.GetScanNames(scanners);
 
-                foreach (var scanner in scanners)
-                {
-                    var scannerFilter = DomInstanceExposers.Id.Equal(new DomInstanceId(scanner));
-                    var scannerInstance = this.innerDomHelper.DomInstances.Read(scannerFilter).First();
-                    engine.GenerateInformation("status of scanner instance: " + scannerInstance.StatusId);
-                    this.ExecuteActionOnScanners(action, scannerInstance);
-                }
+				foreach (var scanner in scanners)
+				{
+					var scannerFilter = DomInstanceExposers.Id.Equal(new DomInstanceId(scanner));
+					var scannerInstance = this.innerDomHelper.DomInstances.Read(scannerFilter).First();
+					engine.GenerateInformation("status of scanner instance: " + scannerInstance.StatusId);
+					this.ExecuteActionOnScanners(action, scannerInstance);
+				}
 
-                if (action == "provision" || action == "complete-provision")
-                {
-                    helper.TransitionState("ready_to_inprogress");
-                }
-                else if (action == "deactivate")
-                {
-                    helper.TransitionState("deactivate_to_deactivating");
-                }
-                else if (action == "reprovision")
-                {
-                    helper.TransitionState("reprovision_to_inprogress");
-                }
+				if (action == "provision" || action == "complete-provision")
+				{
+					helper.TransitionState("ready_to_inprogress");
+				}
+				else if (action == "deactivate")
+				{
+					helper.TransitionState("deactivate_to_deactivating");
+				}
+				else if (action == "reprovision")
+				{
+					helper.TransitionState("reprovision_to_inprogress");
+				}
 
-                helper.ReturnSuccess();
-            }
-            catch (Exception ex)
-            {
-                engine.GenerateInformation($"ERROR in {scriptName} " + ex);
-                SharedMethods.TransitionToError(helper, status);
-                var log = new Log
-                {
-                    AffectedItem = String.Join(", ", scanNames.Values.ToList()) + " scans",
-                    AffectedService = channelName,
-                    Timestamp = DateTime.Now,
-                    LogNotes = ex.ToString(),
-                    ErrorCode = new ErrorCode
-                    {
-                        ConfigurationItem = scriptName + " Script",
-                        ConfigurationType = ErrorCode.ConfigType.Automation,
-                        Source = "Run()",
-                        Severity = ErrorCode.SeverityType.Critical,
-                    },
-                };
+				helper.ReturnSuccess();
+			}
+			catch (Exception ex)
+			{
+				engine.GenerateInformation($"ERROR in {scriptName} " + ex);
+				SharedMethods.TransitionToError(helper, status);
+				var log = new Log
+				{
+					AffectedItem = String.Join(", ", scanNames.Values.ToList()) + " scans",
+					AffectedService = channelName,
+					Timestamp = DateTime.Now,
+					LogNotes = ex.ToString(),
+					ErrorCode = new ErrorCode
+					{
+						ConfigurationItem = scriptName + " Script",
+						ConfigurationType = ErrorCode.ConfigType.Automation,
+						Source = "Run()",
+						Severity = ErrorCode.SeverityType.Critical,
+					},
+				};
 
-                exceptionHelper.ProcessException(ex, log);
-                helper.SendFinishMessageToTokenHandler();
-            }
-        }
+				exceptionHelper.ProcessException(ex, log);
+				helper.SendFinishMessageToTokenHandler();
+			}
+		}
 
-        private void ExecuteActionOnScanners(string action, DomInstance instance)
-        {
-            var statusId = instance.StatusId;
-            foreach (var section in instance.Sections)
-            {
-                Func<SectionDefinitionID, SectionDefinition> sectionDefinitionFunc = this.SetSectionDefinitionById;
+		private void ExecuteActionOnScanners(string action, DomInstance instance)
+		{
+			var statusId = instance.StatusId;
+			foreach (var section in instance.Sections)
+			{
+				Func<SectionDefinitionID, SectionDefinition> sectionDefinitionFunc = this.SetSectionDefinitionById;
 
-                section.Stitch(sectionDefinitionFunc);
-                var fieldDescriptors = section.GetSectionDefinition().GetAllFieldDescriptors();
-                if (fieldDescriptors.Any(x => x.Name.Contains("Action")))
-                {
-                    var fieldToUpdate = fieldDescriptors.First(x => x.Name.Contains("Action"));
-                    instance.AddOrUpdateFieldValue(section.GetSectionDefinition(), fieldToUpdate, action);
-                    this.innerDomHelper.DomInstances.Update(instance);
+				section.Stitch(sectionDefinitionFunc);
+				var fieldDescriptors = section.GetSectionDefinition().GetAllFieldDescriptors();
+				if (fieldDescriptors.Any(x => x.Name.Contains("Action")))
+				{
+					var fieldToUpdate = fieldDescriptors.First(x => x.Name.Contains("Action"));
+					instance.AddOrUpdateFieldValue(section.GetSectionDefinition(), fieldToUpdate, action);
+					this.innerDomHelper.DomInstances.Update(instance);
 
-                    if (statusId == "active" || statusId == "complete" || statusId == "draft")
-                    {
-                        this.innerDomHelper.DomInstances.ExecuteAction(instance.ID, action);
-                    }
-                    else if (statusId.StartsWith("error"))
-                    {
-                        this.innerDomHelper.DomInstances.ExecuteAction(instance.ID, "error-" + action);
-                    }
-                    else
-                    {
-                        this.innerDomHelper.DomInstances.ExecuteAction(instance.ID, "activewitherrors-" + action);
-                    }
+					if (statusId == "active" || statusId == "complete" || statusId == "draft")
+					{
+						this.innerDomHelper.DomInstances.ExecuteAction(instance.ID, action);
+					}
+					else if (statusId.StartsWith("error"))
+					{
+						this.innerDomHelper.DomInstances.ExecuteAction(instance.ID, "error-" + action);
+					}
+					else
+					{
+						this.innerDomHelper.DomInstances.ExecuteAction(instance.ID, "activewitherrors-" + action);
+					}
 
-                    break;
-                }
-            }
-        }
+					break;
+				}
+			}
+		}
 
-        private SectionDefinition SetSectionDefinitionById(SectionDefinitionID sectionDefinitionId)
-        {
-            return this.innerDomHelper.SectionDefinitions.Read(SectionDefinitionExposers.ID.Equal(sectionDefinitionId)).First();
-        }
-    }
+		private SectionDefinition SetSectionDefinitionById(SectionDefinitionID sectionDefinitionId)
+		{
+			return this.innerDomHelper.SectionDefinitions.Read(SectionDefinitionExposers.ID.Equal(sectionDefinitionId)).First();
+		}
+	}
 }
