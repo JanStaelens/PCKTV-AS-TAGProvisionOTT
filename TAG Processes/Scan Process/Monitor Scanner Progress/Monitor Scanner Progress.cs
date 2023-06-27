@@ -61,6 +61,7 @@ namespace Script
 	using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.Logging;
 	using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager;
 	using Skyline.DataMiner.ExceptionHelper;
+	using Skyline.DataMiner.Net;
 	using Skyline.DataMiner.Net.Apps.DataMinerObjectModel;
 	using Skyline.DataMiner.Net.Sections;
 	using TagHelperMethods;
@@ -71,6 +72,7 @@ namespace Script
 	public class Script
 	{
 		private DomHelper innerDomHelper;
+		private ExceptionHelper exceptionHelper;
 
 		/// <summary>
 		/// The Script entry point.
@@ -79,17 +81,18 @@ namespace Script
 		public void Run(Engine engine)
 		{
 			var scriptName = "PA_TAG_Monitor Scanner Progress";
-			var scanName = String.Empty;
 
 			var helper = new PaProfileLoadDomHelper(engine);
 			var domHelper = new DomHelper(engine.SendSLNetMessages, "process_automation");
 			innerDomHelper = domHelper;
-			var exceptionHelper = new ExceptionHelper(engine, domHelper);
+			exceptionHelper = new ExceptionHelper(engine, domHelper);
 			var sharedMethods = new SharedMethods(helper, domHelper);
 
 			engine.GenerateInformation("START " + scriptName);
 
+			var scanName = helper.GetParameterValue<string>("Scan Name (TAG Scan)");
 			var instanceId = helper.GetParameterValue<string>("InstanceId (TAG Scan)");
+			var tagElement = helper.GetParameterValue<string>("TAG Element (TAG Scan)");
 			var instance = domHelper.DomInstances.Read(DomInstanceExposers.Id.Equal(new DomInstanceId(Guid.Parse(instanceId)))).First();
 			var status = instance.StatusId;
 
@@ -136,7 +139,6 @@ namespace Script
 
 						if (scanChannelsRows == null)
 						{
-							helper.Log("No Scan Channel Rows found", PaLogLevel.Information);
 							return false;
 						}
 
@@ -152,24 +154,7 @@ namespace Script
 					}
 					catch (Exception ex)
 					{
-						engine.Log("Exception thrown while checking TAG Scan status: " + ex);
-
-						var log = new Log
-						{
-							AffectedItem = scriptName,
-							AffectedService = scanName,
-							Timestamp = DateTime.Now,
-							ErrorCode = new ErrorCode
-							{
-								ConfigurationItem = scriptName + " Script",
-								ConfigurationType = ErrorCode.ConfigType.Automation,
-								Severity = ErrorCode.SeverityType.Warning,
-								Source = "VerifyScan()",
-							},
-						};
-
-						SharedMethods.TransitionToError(helper, status);
-						exceptionHelper.ProcessException(ex, log);
+						engine.GenerateInformation("Exception thrown while checking TAG Scan status: " + ex);
 						throw;
 					}
 				}
@@ -187,9 +172,10 @@ namespace Script
 					SharedMethods.TransitionToError(helper, status);
 					var log = new Log
 					{
-						AffectedItem = scriptName,
+						AffectedItem = tagElement,
 						AffectedService = scanner.ScanName,
 						Timestamp = DateTime.Now,
+						LogNotes = "Failed to verify scan completion before timeout time",
 						ErrorCode = new ErrorCode
 						{
 							ConfigurationItem = scriptName + " Script",
@@ -202,7 +188,6 @@ namespace Script
 					};
 					exceptionHelper.GenerateLog(log);
 
-					helper.Log($"Scan did not finish due to verify timeout. ScanName: {scanner.ScanName}", PaLogLevel.Error);
 					helper.SendFinishMessageToTokenHandler();
 				}
 			}
@@ -212,9 +197,10 @@ namespace Script
 				SharedMethods.TransitionToError(helper, status);
 				var log = new Log
 				{
-					AffectedItem = scriptName,
+					AffectedItem = tagElement,
 					AffectedService = scanName,
 					Timestamp = DateTime.Now,
+					LogNotes = ex.ToString(),
 					ErrorCode = new ErrorCode
 					{
 						ConfigurationItem = scriptName + " Script",
@@ -248,7 +234,24 @@ namespace Script
 					}
 					else
 					{
-						// error, channel instance not found
+						var log = new Log
+						{
+							AffectedItem = scanner.TagElement,
+							AffectedService = scanner.ScanName,
+							Timestamp = DateTime.Now,
+							LogNotes = "Did not find any channel instances to update for the layout position.",
+							ErrorCode = new ErrorCode
+							{
+								ConfigurationItem = "Monitor Scanner Progress Script",
+								ConfigurationType = ErrorCode.ConfigType.Automation,
+								Severity = ErrorCode.SeverityType.Minor,
+								Code = "NoChannelInstances",
+								Source = "UpdateChannelLayoutPositions()",
+								Description = "Did not find any channel instances to update for the layout position.",
+							},
+						};
+
+						exceptionHelper.GenerateLog(log);
 					}
 				}
 
@@ -262,22 +265,54 @@ namespace Script
 					var layoutNoneRows = allLayouts.QueryData(new List<ColumnFilter> { layoutFilter, zeroFilter, reservedFilter }).ToList();
 					if (layoutNoneRows.Any() && layoutNoneRows.Count() > update.Value.Count)
 					{
-						UpdateSequentialLayouts(update, layoutNoneRows);
+						UpdateSequentialLayouts(update, layoutNoneRows, scanner);
 					}
 					else
 					{
-						// error no layouts found
+						var log = new Log
+						{
+							AffectedItem = scanner.TagElement,
+							AffectedService = scanner.ScanName,
+							Timestamp = DateTime.Now,
+							LogNotes = $"Not enough free positions to set {layoutsToUpdate.Count} channels into {layout}",
+							ErrorCode = new ErrorCode
+							{
+								ConfigurationItem = "Monitor Scanner Progress Script",
+								ConfigurationType = ErrorCode.ConfigType.Automation,
+								Severity = ErrorCode.SeverityType.Minor,
+								Code = "NotEnoughSpaceInLayout",
+								Source = "UpdateChannelLayoutPositions()",
+								Description = "Insufficient space to insert channels into the given layout.",
+							},
+						};
+
+						exceptionHelper.GenerateLog(log);
 					}
 				}
 			}
 			catch (Exception ex)
 			{
 				engine.GenerateInformation("Failed to set channel layout positions due to exception: " + ex);
-				// error for channel layouts
+				var log = new Log
+				{
+					AffectedItem = scanner.TagElement,
+					AffectedService = scanner.ScanName,
+					Timestamp = DateTime.Now,
+					LogNotes = ex.ToString(),
+					ErrorCode = new ErrorCode
+					{
+						ConfigurationItem = "Monitor Scanner Progress Script",
+						ConfigurationType = ErrorCode.ConfigType.Automation,
+						Severity = ErrorCode.SeverityType.Minor,
+						Source = "UpdateChannelLayoutPositions()",
+					},
+				};
+
+				exceptionHelper.ProcessException(ex, log);
 			}
 		}
 
-		private static void UpdateSequentialLayouts(KeyValuePair<string, List<LayoutUpdate>> update, List<object[]> layoutNoneRows)
+		private void UpdateSequentialLayouts(KeyValuePair<string, List<LayoutUpdate>> update, List<object[]> layoutNoneRows, Scanner scanner)
 		{
 			List<string> sequenceKeys = new List<string>();
 			var expectedSequenceLength = update.Value.Count;
@@ -307,6 +342,24 @@ namespace Script
 			if (sequenceKeys.Count < expectedSequenceLength)
 			{
 				// error, not enough layouts found in a row
+				var log = new Log
+				{
+					AffectedItem = scanner.TagElement,
+					AffectedService = scanner.ScanName,
+					Timestamp = DateTime.Now,
+					LogNotes = $"Not enough free positions in a row to set {expectedSequenceLength} channels into {update.Key}.",
+					ErrorCode = new ErrorCode
+					{
+						ConfigurationItem = "Monitor Scanner Progress Script",
+						ConfigurationType = ErrorCode.ConfigType.Automation,
+						Severity = ErrorCode.SeverityType.Major,
+						Code = "NotEnoughSequentialSpaceInLayout",
+						Source = "UpdateSequentialLayouts()",
+						Description = "Insufficient space to insert channels into the given layout where all channels will be together.",
+					},
+				};
+
+				exceptionHelper.GenerateLog(log);
 				return;
 			}
 

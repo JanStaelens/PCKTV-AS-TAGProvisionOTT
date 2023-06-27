@@ -97,6 +97,7 @@ namespace Script
 			var tagInstanceId = helper.GetParameterValue<string>("InstanceId (TAG Provision)");
 
 			var status = String.Empty;
+			var scanNames = new Dictionary<Guid, string>();
 
 			try
 			{
@@ -110,14 +111,21 @@ namespace Script
 				Dictionary<Guid, bool> scannersComplete = new Dictionary<Guid, bool>();
 				double errorScan = 0;
 
+				var sharedMethods = new SharedMethods(helper, innerDomHelper);
+				scanNames = sharedMethods.GetScanNames(scanners);
+
+				var scansWithError = new List<string>();
+
 				bool CheckScanners()
 				{
 					try
 					{
+						scansWithError = new List<string>();
 						errorScan = 0;
 
 						foreach (var scanner in scanners)
 						{
+							var scanName = "N/A";
 							var scannerFilter = DomInstanceExposers.Id.Equal(new DomInstanceId(scanner));
 							var scannerInstance = this.innerDomHelper.DomInstances.Read(scannerFilter).First();
 
@@ -128,11 +136,15 @@ namespace Script
 							else if (scannerInstance.StatusId == "active_with_errors")
 							{
 								scannersComplete[scannerInstance.ID.Id] = true;
+								scanNames.TryGetValue(scannerInstance.ID.Id, out scanName);
+								scansWithError.Add(scanName);
 								errorScan += 0.5;
 							}
 							else if (scannerInstance.StatusId == "error")
 							{
 								scannersComplete[scannerInstance.ID.Id] = true;
+								scanNames.TryGetValue(scannerInstance.ID.Id, out scanName);
+								scansWithError.Add(scanName);
 								errorScan++;
 							}
 							else
@@ -151,30 +163,13 @@ namespace Script
 					catch (Exception ex)
 					{
 						engine.Log("Exception thrown while verifying the scan subprocess: " + ex);
-						SharedMethods.TransitionToError(helper, status);
-						var log = new Log
-						{
-							AffectedItem = this.scriptName,
-							AffectedService = this.channelName,
-							Timestamp = DateTime.Now,
-							ErrorCode = new ErrorCode
-							{
-								ConfigurationItem = this.scriptName + " Script",
-								ConfigurationType = ErrorCode.ConfigType.Automation,
-								Source = "CheckScanners()",
-								Severity = ErrorCode.SeverityType.Critical,
-							},
-						};
-
-						this.exceptionHelper.ProcessException(ex, log);
-						helper.SendFinishMessageToTokenHandler();
-						return false;
+						throw;
 					}
 				}
 
 				if (Retry(CheckScanners, new TimeSpan(0, 10, 0)))
 				{
-					this.PostActions(engine, helper, tagInstanceId, action, scannersComplete, errorScan);
+					this.PostActions(engine, helper, tagInstanceId, action, scannersComplete, errorScan, scansWithError);
 
 					helper.SendFinishMessageToTokenHandler();
 				}
@@ -183,9 +178,10 @@ namespace Script
 					SharedMethods.TransitionToError(helper, status);
 					var log = new Log
 					{
-						AffectedItem = this.scriptName,
+						AffectedItem = String.Join(", ", scansWithError) + " scans",
 						AffectedService = this.channelName,
 						Timestamp = DateTime.Now,
+						LogNotes = "It took more than 10 minutes to complete all scanners.",
 						ErrorCode = new ErrorCode
 						{
 							ConfigurationItem = this.scriptName + " Script",
@@ -207,9 +203,10 @@ namespace Script
 				engine.GenerateInformation($"ERROR in {this.scriptName} " + ex);
 				var log = new Log
 				{
-					AffectedItem = this.scriptName,
+					AffectedItem = String.Join(", ", scanNames.Values.ToList()) + " scans.",
 					AffectedService = this.channelName,
 					Timestamp = DateTime.Now,
+					LogNotes = ex.ToString(),
 					ErrorCode = new ErrorCode
 					{
 						ConfigurationItem = this.scriptName + " Script",
@@ -220,12 +217,11 @@ namespace Script
 				};
 				this.exceptionHelper.ProcessException(ex, log);
 
-				helper.Log($"An issue occurred while executing {this.scriptName} activity for {this.channelName}: {ex}", PaLogLevel.Error);
 				helper.SendFinishMessageToTokenHandler();
 			}
 		}
 
-		private void PostActions(Engine engine, PaProfileLoadDomHelper helper, string tagInstanceId, string action, Dictionary<Guid, bool> scannersComplete, double errorScan)
+		private void PostActions(Engine engine, PaProfileLoadDomHelper helper, string tagInstanceId, string action, Dictionary<Guid, bool> scannersComplete, double errorScan, List<string> scansWithError)
 		{
 			var allScannersCount = scannersComplete.Count;
 
@@ -237,17 +233,18 @@ namespace Script
 
 					var log = new Log
 					{
-						AffectedItem = this.scriptName,
+						AffectedItem = String.Join(", ", scansWithError) + " scans",
 						AffectedService = this.channelName,
 						Timestamp = DateTime.Now,
+						LogNotes = $"{String.Join(", ", scansWithError)} scans failed to provision as expected.",
 						ErrorCode = new ErrorCode
 						{
 							ConfigurationItem = this.scriptName + " Script",
 							ConfigurationType = ErrorCode.ConfigType.Automation,
-							Code = "PAErrorState",
+							Code = "AllScansFailedProvisioning",
 							Source = "PostActions method",
 							Severity = ErrorCode.SeverityType.Major,
-							Description = "All Scans were not provisioned.",
+							Description = "All Scans went into error state.",
 						},
 					};
 					this.exceptionHelper.GenerateLog(log);
@@ -258,17 +255,18 @@ namespace Script
 
 					var log = new Log
 					{
-						AffectedItem = this.scriptName,
+						AffectedItem = String.Join(", ", scansWithError) + " scans",
 						AffectedService = this.channelName,
 						Timestamp = DateTime.Now,
+						LogNotes = $"{String.Join(", ", scansWithError)} scans failed to provision as expected.",
 						ErrorCode = new ErrorCode
 						{
 							ConfigurationItem = this.scriptName + " Script",
 							ConfigurationType = ErrorCode.ConfigType.Automation,
-							Code = "PAActiveWithErrorState",
+							Code = "PartialScanProvisionError",
 							Source = "PostActions method",
 							Severity = ErrorCode.SeverityType.Major,
-							Description = "Some Scans were not provisioned.",
+							Description = "Some scans produced some errors.",
 						},
 					};
 					this.exceptionHelper.GenerateLog(log);
@@ -286,17 +284,18 @@ namespace Script
 
 					var log = new Log
 					{
-						AffectedItem = this.scriptName,
+						AffectedItem = String.Join(", ", scansWithError) + " scans",
 						AffectedService = this.channelName,
 						Timestamp = DateTime.Now,
+						LogNotes = $"{String.Join(", ", scansWithError)} scans failed to deactivate as expected.",
 						ErrorCode = new ErrorCode
 						{
 							ConfigurationItem = this.scriptName + " Script",
 							ConfigurationType = ErrorCode.ConfigType.Automation,
-							Code = "PAErrorState",
+							Code = "ScanDeactivationFailure",
 							Source = "PostActions method",
 							Severity = ErrorCode.SeverityType.Major,
-							Description = "Some Scans were not deactivated.",
+							Description = "Some Scans were not deactivated properly.",
 						},
 					};
 					this.exceptionHelper.GenerateLog(log);

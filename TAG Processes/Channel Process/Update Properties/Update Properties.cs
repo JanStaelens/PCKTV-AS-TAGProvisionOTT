@@ -88,12 +88,14 @@ namespace Script
 			var exceptionHelper = new ExceptionHelper(engine, this.innerDomHelper);
 
 			var status = String.Empty;
+			string channelMatch = String.Empty;
 
 			try
 			{
-				TagChannelInfo tagInfo = new TagChannelInfo(engine, helper, this.innerDomHelper);
+				TagChannelInfo tagInfo = new TagChannelInfo(engine, helper, this.innerDomHelper, exceptionHelper);
 				status = tagInfo.Status;
 				channelName = tagInfo.Channel;
+				channelMatch = tagInfo.ChannelMatch;
 				tagElementName = tagInfo.ElementName;
 				engine.GenerateInformation("START " + scriptName);
 
@@ -110,9 +112,10 @@ namespace Script
 
 					var log = new Log
 					{
-						AffectedItem = scriptName,
+						AffectedItem = channelMatch,
 						AffectedService = channelName,
 						Timestamp = DateTime.Now,
+						LogNotes = $"Failed to update some channel properties. Log: {successLog}",
 						ErrorCode = new ErrorCode
 						{
 							ConfigurationItem = scriptName + " Script",
@@ -120,7 +123,7 @@ namespace Script
 							Source = "Run()",
 							Code = "FailedChannelSets",
 							Severity = ErrorCode.SeverityType.Warning,
-							Description = $"Failed to update some channel properties. Log: {successLog}",
+							Description = $"Failed to update some channel properties.",
 						},
 					};
 
@@ -136,9 +139,10 @@ namespace Script
 				SharedMethods.TransitionToError(helper, status);
 				var log = new Log
 				{
-					AffectedItem = scriptName,
+					AffectedItem = channelMatch,
 					AffectedService = channelName,
 					Timestamp = DateTime.Now,
+					LogNotes = ex.ToString(),
 					ErrorCode = new ErrorCode
 					{
 						ConfigurationItem = scriptName + " Script",
@@ -150,7 +154,6 @@ namespace Script
 				};
 
 				exceptionHelper.ProcessException(ex, log);
-				helper.Log($"An issue occurred while executing {scriptName} activity for {channelName}: {ex}", PaLogLevel.Error);
 				helper.SendFinishMessageToTokenHandler();
 			}
 		}
@@ -163,7 +166,7 @@ namespace Script
 			{
 				var row = channelRows.First();
 				var key = Convert.ToString(row[0]);
-				
+
 				tagInfo.ThresholdSetSuccess = tagInfo.TryChannelSetRead(engine, 8004, tagInfo.Threshold, key);
 				tagInfo.NotificationSetSuccess = tagInfo.TryChannelSetRead(engine, 8005, tagInfo.Notification, key);
 				tagInfo.EncryptionSetSuccess = String.IsNullOrWhiteSpace(tagInfo.Encryption) ? true : tagInfo.TryChannelSetRead(engine, 8018, Convert.ToString(tagInfo.EncryptionValue[tagInfo.Encryption]), key);
@@ -178,9 +181,10 @@ namespace Script
 			{
 				var log = new Log
 				{
-					AffectedItem = scriptName,
+					AffectedItem = tagInfo.ChannelMatch,
 					AffectedService = channelName,
 					Timestamp = DateTime.Now,
+					LogNotes = $"Unable to find {tagInfo.ChannelMatch} in the Channel Status table for element: {tagInfo.ElementName}",
 					ErrorCode = new ErrorCode
 					{
 						ConfigurationItem = scriptName + " Script",
@@ -188,15 +192,14 @@ namespace Script
 						Source = "ExecuteChannelSets()",
 						Code = "ChannelNotFound",
 						Severity = ErrorCode.SeverityType.Warning,
-						Description = $"No channels found in All Channel Profiles table.",
+						Description = $"Channel not found in All Channel Profiles table.",
 					},
 				};
 
-				helper.Log($"No channels found in channel status with given name: {tagInfo.ChannelMatch}.", PaLogLevel.Error);
 				engine.GenerateInformation("Did not find any channels with match: " + tagInfo.ChannelMatch);
 				exceptionHelper.GenerateLog(log);
 
-				return "No channels found: False";
+				return "Channel found: False";
 			}
 		}
 
@@ -254,15 +257,16 @@ namespace Script
 					{
 						var log = new Log
 						{
-							AffectedItem = scriptName,
+							AffectedItem = tagInfo.ChannelMatch,
 							AffectedService = channelName,
 							Timestamp = DateTime.Now,
+							LogNotes = $"Failed to set channel {tagInfo.ChannelMatch} on {layout} layout: " + ex.ToString(),
 							ErrorCode = new ErrorCode
 							{
 								ConfigurationItem = scriptName + " Script",
 								ConfigurationType = ErrorCode.ConfigType.Automation,
 								Source = "UpdateLayouts()",
-								Code = "LayoutNotFound",
+								Code = "LayoutSetException",
 								Severity = ErrorCode.SeverityType.Warning,
 								Description = $"Failed to set channel on layout.",
 							},
@@ -299,30 +303,24 @@ namespace Script
 			else
 			{
 				engine.GenerateInformation("No layouts found to set");
-				try
+				var log = new Log
 				{
-					var log = new Log
+					AffectedItem = tagInfo.ChannelMatch,
+					AffectedService = channelName,
+					Timestamp = DateTime.Now,
+					LogNotes = $"Unable to find open positions in {layout} to set.",
+					ErrorCode = new ErrorCode
 					{
-						AffectedItem = scriptName,
-						AffectedService = channelName,
-						Timestamp = DateTime.Now,
-						ErrorCode = new ErrorCode
-						{
-							ConfigurationItem = scriptName + " Script",
-							ConfigurationType = ErrorCode.ConfigType.Automation,
-							Source = "CheckLayoutIndexes()",
-							Code = "LayoutNotFound",
-							Severity = ErrorCode.SeverityType.Warning,
-							Description = $"No layouts found to set.",
-						},
-					};
+						ConfigurationItem = scriptName + " Script",
+						ConfigurationType = ErrorCode.ConfigType.Automation,
+						Source = "CheckLayoutIndexes()",
+						Code = "LayoutNotFound",
+						Severity = ErrorCode.SeverityType.Warning,
+						Description = $"No layouts found to set.",
+					},
+				};
 
-					exceptionHelper.GenerateLog(log);
-				}
-				catch (Exception e)
-				{
-					engine.Log("QA|failed to generate exception log DOM (LayoutNotFound): " + e);
-				}
+				exceptionHelper.GenerateLog(log);
 			}
 
 			return String.Empty;
@@ -365,6 +363,8 @@ namespace Script
 			{ "Light", 5 },
 			{ "ExtraLight", 10 },
 		};
+
+		public ExceptionHelper ExceptionHelper { get; set; }
 
 		public string ElementName { get; set; }
 
@@ -416,11 +416,13 @@ namespace Script
 			Yes = 1,
 		}
 
-		public TagChannelInfo(Engine engine, PaProfileLoadDomHelper helper, DomHelper domHelper)
+		public TagChannelInfo(Engine engine, PaProfileLoadDomHelper helper, DomHelper domHelper, ExceptionHelper exceptionHelper)
 		{
 			this.ElementName = helper.GetParameterValue<string>("TAG Element (TAG Channel)");
 			this.Channel = helper.GetParameterValue<string>("Channel Name (TAG Channel)");
 			this.ChannelMatch = helper.GetParameterValue<string>("Channel Match (TAG Channel)");
+
+			this.ExceptionHelper = exceptionHelper;
 
 			IDms thisDms = engine.GetDms();
 			this.Element = thisDms.GetElement(this.ElementName);
@@ -486,6 +488,24 @@ namespace Script
 					catch (Exception e)
 					{
 						engine.GenerateInformation($"Exception checking channel set: {updatedValue}" + e);
+						var log = new Log
+						{
+							AffectedItem = ChannelMatch,
+							AffectedService = Channel,
+							Timestamp = DateTime.Now,
+							LogNotes = $"Exception while verifying set on key {key} on column {columnPid} with value: {updatedValue}. \n {e}",
+							ErrorCode = new ErrorCode
+							{
+								ConfigurationItem = "Update Properties Script",
+								ConfigurationType = ErrorCode.ConfigType.Automation,
+								Source = "VerifySet()",
+								Code = "VerifyChannelSetFailure",
+								Severity = ErrorCode.SeverityType.Warning,
+								Description = $"Exception occurred while verifying a channel set.",
+							},
+						};
+
+						ExceptionHelper.GenerateLog(log);
 						throw;
 					}
 				}
@@ -498,6 +518,24 @@ namespace Script
 			catch (Exception e)
 			{
 				engine.GenerateInformation($"Failed to perform set: {updatedValue} on {ChannelMatch}: " + e);
+				var log = new Log
+				{
+					AffectedItem = ChannelMatch,
+					AffectedService = Channel,
+					Timestamp = DateTime.Now,
+					LogNotes = $"Exception while performing set on key {key} on column {columnPid} with value: {updatedValue}. \n {e}",
+					ErrorCode = new ErrorCode
+					{
+						ConfigurationItem = "Update Properties Script",
+						ConfigurationType = ErrorCode.ConfigType.Automation,
+						Source = "TryChannelSet()",
+						Code = "ChannelSetFailure",
+						Severity = ErrorCode.SeverityType.Warning,
+						Description = $"Exception occurred while performing a channel set.",
+					},
+				};
+
+				ExceptionHelper.GenerateLog(log);
 			}
 
 			return false;
@@ -519,6 +557,24 @@ namespace Script
 			catch (Exception e)
 			{
 				engine.GenerateInformation($"Failed to perform set: {updatedValue} on {ChannelMatch}: " + e);
+				var log = new Log
+				{
+					AffectedItem = ChannelMatch,
+					AffectedService = Channel,
+					Timestamp = DateTime.Now,
+					LogNotes = $"Exception while performing set on key {key} on column {columnPid} with value: {updatedValue}. \n {e}",
+					ErrorCode = new ErrorCode
+					{
+						ConfigurationItem = "Update Properties Script",
+						ConfigurationType = ErrorCode.ConfigType.Automation,
+						Source = "TryChannelSetRead()",
+						Code = "ReadChannelSetFailure",
+						Severity = ErrorCode.SeverityType.Warning,
+						Description = $"Exception occurred while performing a channel set on a read.",
+					},
+				};
+
+				ExceptionHelper.GenerateLog(log);
 			}
 
 			return false;

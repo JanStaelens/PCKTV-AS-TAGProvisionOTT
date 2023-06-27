@@ -88,11 +88,13 @@ namespace Script
 			this.exceptionHelper = new ExceptionHelper(engine, innerDomHelper);
 
 			var status = String.Empty;
+			var channelMatch = String.Empty;
 
 			try
 			{
 				TagChannelInfo tagInfo = new TagChannelInfo(engine, this.helper, innerDomHelper);
 				status = tagInfo.Status;
+				channelMatch = tagInfo.ChannelMatch;
 				this.channelName = tagInfo.Channel;
 				tagElementName = tagInfo.ElementName;
 				engine.GenerateInformation("START " + this.scriptName);
@@ -112,9 +114,10 @@ namespace Script
 					engine.GenerateInformation("Did not find any channels with match: " + tagInfo.ChannelMatch);
 					var log = new Log
 					{
-						AffectedItem = this.scriptName,
+						AffectedItem = channelMatch,
 						AffectedService = this.channelName,
 						Timestamp = DateTime.Now,
+						LogNotes = $"{channelMatch} not found in the Channel Status table in {tagInfo.ElementName}",
 						ErrorCode = new ErrorCode
 						{
 							ConfigurationItem = this.scriptName + " Script",
@@ -122,7 +125,7 @@ namespace Script
 							Source = "Channel Status condition",
 							Code = "ChannelNotFound",
 							Severity = ErrorCode.SeverityType.Warning,
-							Description = $"No channels found in Channel Status Overview Table.",
+							Description = $"No matching channels found in Channel Status Overview Table.",
 						},
 					};
 
@@ -169,16 +172,17 @@ namespace Script
 
 				if (SharedMethods.Retry(VerifyMonitoredChannels, new TimeSpan(0, 3, 0)))
 				{
-					this.ExecuteDoneTransition(tagInfo.Status, tagElementName);
+					this.ExecuteDoneTransition(tagInfo.Status, tagElementName, channelMatch);
 				}
 				else
 				{
 					SharedMethods.TransitionToError(this.helper, status);
 					var log = new Log
 					{
-						AffectedItem = this.scriptName,
+						AffectedItem = channelMatch,
 						AffectedService = this.channelName,
 						Timestamp = DateTime.Now,
+						LogNotes = $"Missing channels to finish: {JsonConvert.SerializeObject(missingChannelsData)}",
 						ErrorCode = new ErrorCode
 						{
 							ConfigurationItem = this.scriptName + " Script",
@@ -186,7 +190,7 @@ namespace Script
 							Source = "Retry condition",
 							Code = "RetryTimeout",
 							Severity = ErrorCode.SeverityType.Warning,
-							Description = $"Monitor Channel did not finish due to timeout. Must be needed both values (Monitored and ResponseData) to execute next activity (channel sets).\n Missing channels to finish: {JsonConvert.SerializeObject(missingChannelsData)}",
+							Description = $"Monitor Channel did not finish due to timeout. Must be needed both values (Monitored and ResponseData) to execute next activity (channel sets).",
 						},
 					};
 
@@ -201,9 +205,10 @@ namespace Script
 				SharedMethods.TransitionToError(this.helper, status);
 				var log = new Log
 				{
-					AffectedItem = this.scriptName,
+					AffectedItem = channelMatch,
 					AffectedService = this.channelName,
 					Timestamp = DateTime.Now,
+					LogNotes = ex.ToString(),
 					ErrorCode = new ErrorCode
 					{
 						ConfigurationItem = this.scriptName + " Script",
@@ -215,12 +220,11 @@ namespace Script
 				};
 
 				this.exceptionHelper.ProcessException(ex, log);
-				this.helper.Log($"An issue occurred while executing {this.scriptName} activity for {this.channelName}: {ex}", PaLogLevel.Error);
 				this.helper.SendFinishMessageToTokenHandler();
 			}
 		}
 
-		private void ExecuteDoneTransition(string status, string tagElementName)
+		private void ExecuteDoneTransition(string status, string tagElementName, string channelMatch)
 		{
 			if (status.Equals("deactivating"))
 			{
@@ -241,9 +245,10 @@ namespace Script
 				SharedMethods.TransitionToError(this.helper, status);
 				var log = new Log
 				{
-					AffectedItem = this.scriptName,
+					AffectedItem = channelMatch,
 					AffectedService = this.channelName,
 					Timestamp = DateTime.Now,
+					LogNotes = $"Expected deactivating, ready, or in_progress statuses to transition, but current status is: {status}.",
 					ErrorCode = new ErrorCode
 					{
 						ConfigurationItem = this.scriptName + " Script",
@@ -255,7 +260,6 @@ namespace Script
 					},
 				};
 
-				this.helper.Log($"Cannot execute the transition as the status. Current status: {status}", PaLogLevel.Error);
 				this.exceptionHelper.GenerateLog(log);
 			}
 		}

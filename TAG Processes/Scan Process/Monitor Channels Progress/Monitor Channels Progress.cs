@@ -74,7 +74,6 @@ public class Script
 	public void Run(Engine engine)
 	{
 		var scriptName = "PA_TAG_Monitor Channels Progress";
-		var scanName = String.Empty;
 
 		var helper = new PaProfileLoadDomHelper(engine);
 		var domHelper = new DomHelper(engine.SendSLNetMessages, "process_automation");
@@ -84,7 +83,9 @@ public class Script
 
 		engine.GenerateInformation("START " + scriptName);
 
+		var scanName = helper.GetParameterValue<string>("Scan Name (TAG Scan)");
 		var instanceId = helper.GetParameterValue<string>("InstanceId (TAG Scan)");
+		var tagElement = helper.GetParameterValue<string>("TAG Element (TAG Scan)");
 		var instance = domHelper.DomInstances.Read(DomInstanceExposers.Id.Equal(new DomInstanceId(Guid.Parse(instanceId)))).First();
 		var status = instance.StatusId;
 
@@ -111,7 +112,6 @@ public class Script
 				Channels = helper.TryGetParameterValue("Channels (TAG Scan)", out List<Guid> channels) ? channels : new List<Guid>(),
 			};
 
-			scanName = scanner.ScanName;
 			var totalChannels = scanner.Channels.Count;
 			int errorChannelsCount = 0;
 
@@ -138,7 +138,6 @@ public class Script
 						}
 					}
 
-					engine.GenerateInformation($"finished channels: {finishedChannels + errorChannels} vs total: {totalChannels}");
 					bool areFinished = (finishedChannels + errorChannels) == totalChannels;
 					if (areFinished)
 					{
@@ -149,22 +148,7 @@ public class Script
 				}
 				catch (Exception ex)
 				{
-					SharedMethods.TransitionToError(helper, status);
-					var log = new Log
-					{
-						AffectedItem = scriptName,
-						AffectedService = scanner.ScanName,
-						Timestamp = DateTime.Now,
-						ErrorCode = new ErrorCode
-						{
-							ConfigurationItem = scriptName + " Script",
-							ConfigurationType = ErrorCode.ConfigType.Automation,
-							Source = "CheckStateChange()",
-							Severity = ErrorCode.SeverityType.Critical,
-						},
-					};
-					exceptionHelper.ProcessException(ex, log);
-					helper.Log("Exception thrown while verifying the subprocess: " + ex, PaLogLevel.Error);
+					engine.GenerateInformation("Exception while checking channel state change: " + ex);
 					throw;
 				}
 			}
@@ -192,9 +176,10 @@ public class Script
 				SharedMethods.TransitionToError(helper, status);
 				var log = new Log
 				{
-					AffectedItem = scriptName,
+					AffectedItem = tagElement,
 					AffectedService = scanner.ScanName,
 					Timestamp = DateTime.Now,
+					LogNotes = "Failed to verify channel completion before timeout.",
 					ErrorCode = new ErrorCode
 					{
 						ConfigurationItem = scriptName + " Script",
@@ -206,7 +191,6 @@ public class Script
 					},
 				};
 				exceptionHelper.GenerateLog(log);
-				helper.Log($"Channel subprocess didn't finish within the timeout time. ScanName: {scanner.ScanName}", PaLogLevel.Error);
 				helper.SendFinishMessageToTokenHandler();
 			}
 		}
@@ -215,9 +199,10 @@ public class Script
 			SharedMethods.TransitionToError(helper, status);
 			var log = new Log
 			{
-				AffectedItem = scriptName,
+				AffectedItem = tagElement,
 				AffectedService = scanName,
 				Timestamp = DateTime.Now,
+				LogNotes = ex.ToString(),
 				ErrorCode = new ErrorCode
 				{
 					ConfigurationItem = scriptName + " Script",

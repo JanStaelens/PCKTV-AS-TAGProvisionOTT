@@ -61,6 +61,8 @@ namespace Script
     using Skyline.DataMiner.Net.Apps.DataMinerObjectModel;
     using Skyline.DataMiner.Net.Messages.SLDataGateway;
     using Skyline.DataMiner.Net.Sections;
+    using TagHelperMethods;
+    using static Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.PaManagers;
 
     /// <summary>
     /// DataMiner Script Class.
@@ -83,11 +85,18 @@ namespace Script
             engine.GenerateInformation("START " + scriptName);
 
             var channelName = helper.GetParameterValue<string>("Provision Name (TAG Provision)");
+            var instanceId = helper.GetParameterValue<string>("InstanceId (TAG Provision)");
+            var instance = this.innerDomHelper.DomInstances.Read(DomInstanceExposers.Id.Equal(new DomInstanceId(Guid.Parse(instanceId)))).First();
+            var status = instance.StatusId;
+
+            var scanNames = new Dictionary<Guid, string>();
 
             try
             {
                 var action = helper.GetParameterValue<string>("Action (TAG Provision)");
                 var scanners = helper.GetParameterValue<List<Guid>>("TAG Scanners (TAG Provision)");
+                var sharedMethods = new SharedMethods(helper, innerDomHelper);
+                scanNames = sharedMethods.GetScanNames(scanners);
 
                 foreach (var scanner in scanners)
                 {
@@ -115,12 +124,13 @@ namespace Script
             catch (Exception ex)
             {
                 engine.GenerateInformation($"ERROR in {scriptName} " + ex);
-
+                SharedMethods.TransitionToError(helper, status);
                 var log = new Log
                 {
-                    AffectedItem = scriptName,
+                    AffectedItem = String.Join(", ", scanNames.Values.ToList()) + " scans",
                     AffectedService = channelName,
                     Timestamp = DateTime.Now,
+                    LogNotes = ex.ToString(),
                     ErrorCode = new ErrorCode
                     {
                         ConfigurationItem = scriptName + " Script",
@@ -129,9 +139,8 @@ namespace Script
                         Severity = ErrorCode.SeverityType.Critical,
                     },
                 };
-                exceptionHelper.ProcessException(ex, log);
 
-                helper.Log($"An issue occurred while executing {scriptName} activity for {channelName}: {ex}", PaLogLevel.Error);
+                exceptionHelper.ProcessException(ex, log);
                 helper.SendFinishMessageToTokenHandler();
             }
         }
@@ -151,7 +160,6 @@ namespace Script
                     instance.AddOrUpdateFieldValue(section.GetSectionDefinition(), fieldToUpdate, action);
                     this.innerDomHelper.DomInstances.Update(instance);
 
-                    //this.innerDomHelper.DomInstances.ExecuteAction(instance.ID, action);
                     if (statusId == "active" || statusId == "complete" || statusId == "draft")
                     {
                         this.innerDomHelper.DomInstances.ExecuteAction(instance.ID, action);

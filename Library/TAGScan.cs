@@ -142,6 +142,46 @@ namespace TagHelperMethods
             return success;
         }
 
+        public Dictionary<Guid, string> GetScanNames(List<Guid> scanners)
+        {
+            var scanNamesById = new Dictionary<Guid, string>();
+            foreach (var scanner in scanners)
+            {
+                var scannerFilter = DomInstanceExposers.Id.Equal(new DomInstanceId(scanner));
+                var scannerInstances = innerDomHelper.DomInstances.Read(scannerFilter);
+
+                if (scannerInstances.Count > 0)
+                {
+                    // scan not found
+                    continue;
+                }
+
+                var scannerInstance = scannerInstances.First();
+
+                foreach (var section in scannerInstance.Sections)
+                {
+                    Func<SectionDefinitionID, SectionDefinition> sectionDefinitionFunc = SetSectionDefinitionById;
+                    section.Stitch(sectionDefinitionFunc);
+
+                    var sectionDefinition = section.GetSectionDefinition();
+                    if (!sectionDefinition.GetName().Equals("Scanner"))
+                    {
+                        continue;
+                    }
+
+                    var fields = sectionDefinition.GetAllFieldDescriptors();
+                    var scanName = section.GetFieldValueById(fields.First(x => x.Name.Contains("Scan Name")).ID);
+                    var scanElement = section.GetFieldValueById(fields.First(x => x.Name.Contains("TAG Element")).ID);
+
+                    var scanFullName = $"{scanName.Value.Value}/{scanElement.Value.Value}";
+
+                    scanNamesById[scanner] = scanFullName;
+                }
+            }
+
+            return scanNamesById;
+        }
+
         public static void TransitionToError(PaProfileLoadDomHelper helper, string status)
         {
             switch (status)
@@ -223,7 +263,6 @@ namespace TagHelperMethods
                             break;
 
                         default:
-                            this.innerHelper.Log($"fieldName not found: {field.GetFieldDescriptor().Name}", PaLogLevel.Error);
                             break;
                     }
                 }

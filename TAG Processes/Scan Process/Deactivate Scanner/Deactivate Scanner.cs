@@ -54,6 +54,7 @@ namespace Script
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
+	using System.Runtime.Remoting.Metadata.W3cXsd2001;
 	using Newtonsoft.Json;
 	using Skyline.DataMiner.Automation;
 	using Skyline.DataMiner.Core.DataMinerSystem.Automation;
@@ -75,6 +76,7 @@ namespace Script
 		private DomHelper innerDomHelper;
 		private SharedMethods sharedMethods;
 		private Engine innerEngine;
+		private ExceptionHelper exceptionHelper;
 
 		/// <summary>
 		/// The Script entry point.
@@ -83,15 +85,16 @@ namespace Script
 		public void Run(Engine engine)
 		{
 			var scriptName = "PA_TAG_Deactivate Scanner";
-			var scanName = String.Empty;
 
 			this.innerEngine = engine;
 			var helper = new PaProfileLoadDomHelper(engine);
 			this.innerDomHelper = new DomHelper(engine.SendSLNetMessages, "process_automation");
 
-			var exceptionHelper = new ExceptionHelper(engine, this.innerDomHelper);
+			exceptionHelper = new ExceptionHelper(engine, this.innerDomHelper);
 			this.sharedMethods = new SharedMethods(helper, this.innerDomHelper);
+			var scanName = helper.GetParameterValue<string>("Scan Name (TAG Scan)");
 			var instanceId = helper.GetParameterValue<string>("InstanceId (TAG Scan)");
+			var tagElement = helper.GetParameterValue<string>("TAG Element (TAG Scan)");
 
 			var status = String.Empty;
 
@@ -114,13 +117,31 @@ namespace Script
 					Channels = helper.TryGetParameterValue("Channels (TAG Scan)", out List<Guid> channels) ? channels : new List<Guid>(),
 				};
 
-				scanName = scanner.ScanName;
 				var instanceFilter = DomInstanceExposers.Id.Equal(new DomInstanceId(Guid.Parse(instanceId)));
 				var scanInstances = this.innerDomHelper.DomInstances.Read(instanceFilter);
 				if (!scanInstances.Any())
 				{
 					engine.GenerateInformation("No TAG Scan Instance found with instanceId: " + instanceId);
-					helper.ReturnSuccess();
+					SharedMethods.TransitionToError(helper, status);
+					var log = new Log
+					{
+						AffectedItem = scanner.TagElement,
+						AffectedService = scanner.ScanName,
+						Timestamp = DateTime.Now,
+						LogNotes = $"No TAG Scan Instance found with instanceId: {instanceId}",
+						ErrorCode = new ErrorCode
+						{
+							ConfigurationItem = scriptName + " Script",
+							ConfigurationType = ErrorCode.ConfigType.Automation,
+							Severity = ErrorCode.SeverityType.Warning,
+							Code = "ScanInstanceNotFound",
+							Source = "Scan Instance check",
+							Description = $"Unable to find the associated scan DOM instance.",
+						},
+					};
+					exceptionHelper.GenerateLog(log);
+
+					helper.SendFinishMessageToTokenHandler();
 					return;
 				}
 
@@ -164,7 +185,7 @@ namespace Script
 					}
 					catch (Exception e)
 					{
-						engine.Log("Exception thrown while checking TAG Scan status: " + e);
+						engine.GenerateInformation("Exception thrown while checking TAG Scan status: " + e);
 						throw;
 					}
 				}
@@ -181,10 +202,10 @@ namespace Script
 
 					var log = new Log
 					{
-						AffectedItem = scriptName,
+						AffectedItem = scanner.TagElement,
 						AffectedService = scanner.ScanName,
 						Timestamp = DateTime.Now,
-						//SummaryFlag = false,
+						LogNotes = "Deactivate scanner was unable to verify scan deactivation before timeout.",
 						ErrorCode = new ErrorCode
 						{
 							ConfigurationItem = scriptName + " Script",
@@ -192,7 +213,7 @@ namespace Script
 							Severity = ErrorCode.SeverityType.Warning,
 							Code = "RetryTimeout",
 							Source = "Retry condition",
-							Description = $"Failed to deactivate the scanners/update channels within the timeout time. ScanName: {scanner.ScanName}. TAG Element: {scanner.TagElement}",
+							Description = $"Failed to deactivate the scanner within the timeout time.",
 						},
 					};
 					exceptionHelper.GenerateLog(log);
@@ -205,9 +226,10 @@ namespace Script
 				SharedMethods.TransitionToError(helper, status);
 				var log = new Log
 				{
-					AffectedItem = scriptName,
+					AffectedItem = tagElement,
 					AffectedService = scanName,
 					Timestamp = DateTime.Now,
+					LogNotes = ex.ToString(),
 					ErrorCode = new ErrorCode
 					{
 						ConfigurationItem = scriptName + " Script",
@@ -235,7 +257,7 @@ namespace Script
 
 			element.GetStandaloneParameter<string>(3).SetValue(JsonConvert.SerializeObject(tagDictionary));
 
-			this.ExecuteChannelsTransition(scanner.Channels, status);
+			this.ExecuteChannelsTransition(scanner, status);
 		}
 
 		private static void PostActions(string scriptName, PaProfileLoadDomHelper helper, ExceptionHelper exceptionHelper, Scanner scanner, string status)
@@ -258,6 +280,7 @@ namespace Script
 					AffectedItem = scriptName,
 					AffectedService = scanner.ScanName,
 					Timestamp = DateTime.Now,
+					LogNotes = $"Expected the DOM status to be deactivating or reprovision, but status is {status} so unable to perform a transition.",
 					ErrorCode = new ErrorCode
 					{
 						ConfigurationItem = scriptName + " Script",
@@ -265,7 +288,7 @@ namespace Script
 						Severity = ErrorCode.SeverityType.Warning,
 						Code = "InvalidStatusForTransition",
 						Source = "Status Transition condition",
-						Description = $"Failed to execute transition status. Current status: {status}",
+						Description = $"Failed to execute status transition due to unexpected status.",
 					},
 				};
 				exceptionHelper.GenerateLog(log);
@@ -273,32 +296,54 @@ namespace Script
 			}
 		}
 
-		private void ExecuteChannelsTransition(List<Guid> channels, string status)
+		private void ExecuteChannelsTransition(Scanner scanner, string status)
 		{
-			foreach (var channel in channels)
+			try
 			{
-				var subFilter = DomInstanceExposers.Id.Equal(new DomInstanceId(channel));
-				var subInstance = this.innerDomHelper.DomInstances.Read(subFilter).First();
-				var transition = String.Empty;
-
-				if (status.Equals("deactivating"))
+				foreach (var channel in scanner.Channels)
 				{
-					if (subInstance.StatusId == "complete" || subInstance.StatusId == "draft")
-					{
-						continue;
-					}
+					var subFilter = DomInstanceExposers.Id.Equal(new DomInstanceId(channel));
+					var subInstance = this.innerDomHelper.DomInstances.Read(subFilter).First();
+					var transition = String.Empty;
 
-					if (subInstance.StatusId == "error")
+					if (status.Equals("deactivating"))
 					{
-						transition = "error_to_complete";
-					}
-					else
-					{
-						transition = "active_to_complete";
-					}
+						if (subInstance.StatusId == "complete" || subInstance.StatusId == "draft")
+						{
+							continue;
+						}
 
-					this.innerDomHelper.DomInstances.DoStatusTransition(subInstance.ID, transition);
+						if (subInstance.StatusId == "error")
+						{
+							transition = "error_to_complete";
+						}
+						else
+						{
+							transition = "active_to_complete";
+						}
+
+						this.innerDomHelper.DomInstances.DoStatusTransition(subInstance.ID, transition);
+					}
 				}
+			}
+			catch (Exception ex)
+			{
+				var log = new Log
+				{
+					AffectedItem = scanner.TagElement,
+					AffectedService = scanner.ScanName,
+					Timestamp = DateTime.Now,
+					LogNotes = ex.ToString(),
+					ErrorCode = new ErrorCode
+					{
+						ConfigurationItem = "Deactivate Scanner Script",
+						ConfigurationType = ErrorCode.ConfigType.Automation,
+						Severity = ErrorCode.SeverityType.Warning,
+						Source = "ExecuteChannelsTransition()",
+					},
+				};
+
+				exceptionHelper.ProcessException(ex, log);
 			}
 		}
 

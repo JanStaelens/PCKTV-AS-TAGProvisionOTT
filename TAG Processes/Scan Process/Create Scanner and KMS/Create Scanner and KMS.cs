@@ -82,7 +82,6 @@ namespace Script
 		public void Run(Engine engine)
 		{
 			var scriptName = "PA_TAG_Create Scanner and KMS";
-			var scanName = String.Empty;
 
 			this.helper = new PaProfileLoadDomHelper(engine);
 			this.domHelper = new DomHelper(engine.SendSLNetMessages, "process_automation");
@@ -91,14 +90,34 @@ namespace Script
 			this.sharedMethods = new SharedMethods(helper, domHelper);
 
 			engine.GenerateInformation("START " + scriptName);
-
+			var scanName = helper.GetParameterValue<string>("Scan Name (TAG Scan)");
 			var instanceId = helper.GetParameterValue<string>("InstanceId (TAG Scan)");
+			var tagElement = helper.GetParameterValue<string>("TAG Element (TAG Scan)");
 			var instance = domHelper.DomInstances.Read(DomInstanceExposers.Id.Equal(new DomInstanceId(Guid.Parse(instanceId)))).First();
 			var status = instance.StatusId;
 
 			if (!status.Equals("ready") && !status.Equals("in_progress"))
 			{
 				engine.GenerateInformation("Failed to create scanner due to incorrect status: " + status);
+				SharedMethods.TransitionToError(helper, status);
+				var log = new Log
+				{
+					AffectedItem = tagElement,
+					AffectedService = scanName,
+					Timestamp = DateTime.Now,
+					LogNotes = $"Unable to start Create Scanner activity due to unexpected status: {status}",
+					ErrorCode = new ErrorCode
+					{
+						ConfigurationItem = scriptName + " Script",
+						ConfigurationType = ErrorCode.ConfigType.Automation,
+						Severity = ErrorCode.SeverityType.Warning,
+						Code = "IncorrectInitialStatus",
+						Source = "Run()",
+						Description = $"Incorrect initial status of the TAG Scan instance to run activity.",
+					},
+				};
+
+				exceptionHelper.GenerateLog(log);
 				helper.SendFinishMessageToTokenHandler();
 				return;
 			}
@@ -119,7 +138,6 @@ namespace Script
 					Action = helper.GetParameterValue<string>("Action (TAG Scan)"),
 					Channels = helper.TryGetParameterValue("Channels (TAG Scan)", out List<Guid> channels) ? channels : new List<Guid>(),
 				};
-				scanName = scanner.ScanName;
 
 				IDms dms = engine.GetDms();
 				IDmsElement element = dms.GetElement(scanner.TagElement);
@@ -148,44 +166,44 @@ namespace Script
 					}
 					catch (Exception e)
 					{
-						engine.Log("Exception thrown while checking TAG Scan status: " + e);
+						engine.GenerateInformation("Exception thrown while checking TAG Scan status: " + e);
 						throw;
 					}
 				}
 
 				if (SharedMethods.Retry(VerifyScanCreation, new TimeSpan(0, 5, 0)))
 				{
-					// successfully created filter
 					engine.GenerateInformation("Scan created for " + scanner.TagElement);
 					if (status == "ready")
 					{
 						helper.TransitionState("ready_to_inprogress");
 					}
 
-                    helper.ReturnSuccess();
-                }
-                else
-                {
-                    // failed to execute in time
+					helper.ReturnSuccess();
+				}
+				else
+				{
+					// failed to execute in time
 					SharedMethods.TransitionToError(helper, status);
 
-                    var log = new Log
-                    {
-                        AffectedItem = scriptName,
-                        AffectedService = scanName,
-                        Timestamp = DateTime.Now,
-                        ErrorCode = new ErrorCode
-                        {
-                            ConfigurationItem = scriptName + " Script",
-                            ConfigurationType = ErrorCode.ConfigType.Automation,
-                            Severity = ErrorCode.SeverityType.Warning,
-                            Code = "RetryTimeout",
-                            Source = "Retry condition",
-                            Description = $"Create Scan failed for event {scanName}. TAG Element: {scanner.TagElement}",
-                        },
-                    };
+					var log = new Log
+					{
+						AffectedItem = scanner.TagElement,
+						AffectedService = scanName,
+						Timestamp = DateTime.Now,
+						LogNotes = $"Create Scan did not execute before timeout for event {scanName}. TAG Element: {scanner.TagElement}",
+						ErrorCode = new ErrorCode
+						{
+							ConfigurationItem = scriptName + " Script",
+							ConfigurationType = ErrorCode.ConfigType.Automation,
+							Severity = ErrorCode.SeverityType.Warning,
+							Code = "RetryTimeout",
+							Source = "Retry condition",
+							Description = $"Failed to detect creation of the TAG Scan before timeout.",
+						},
+					};
 
-                    exceptionHelper.GenerateLog(log);
+					exceptionHelper.GenerateLog(log);
 					helper.SendFinishMessageToTokenHandler();
 				}
 			}
@@ -196,9 +214,10 @@ namespace Script
 
 				var log = new Log
 				{
-					AffectedItem = scriptName,
+					AffectedItem = tagElement,
 					AffectedService = scanName,
 					Timestamp = DateTime.Now,
+					LogNotes = ex.ToString(),
 					ErrorCode = new ErrorCode
 					{
 						ConfigurationItem = scriptName + " Script",
@@ -223,15 +242,16 @@ namespace Script
 				SharedMethods.TransitionToError(helper, status);
 				var log = new Log
 				{
-					AffectedItem = scriptName,
+					AffectedItem = scanner.TagElement,
 					AffectedService = scanner.ScanName,
 					Timestamp = DateTime.Now,
+					LogNotes = ex.ToString(),
 					ErrorCode = new ErrorCode
 					{
 						ConfigurationItem = scriptName + " Script",
 						ConfigurationType = ErrorCode.ConfigType.Automation,
 						Severity = ErrorCode.SeverityType.Warning,
-						Source = "SendJsonToTagDevice method",
+						Source = "SendJsonToTagDevice()",
 					},
 				};
 				exceptionHelper.ProcessException(ex, log);

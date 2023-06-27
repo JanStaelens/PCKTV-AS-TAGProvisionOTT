@@ -55,6 +55,7 @@ namespace Script
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
+	using System.Runtime.InteropServices;
 	using System.Threading;
 	using Skyline.DataMiner.Automation;
 	using Skyline.DataMiner.Core.DataMinerSystem.Automation;
@@ -90,12 +91,13 @@ namespace Script
 			var exceptionHelper = new ExceptionHelper(engine, this.innerDomHelper);
 
 			var status = String.Empty;
+			var channelMatch = String.Empty;
 
 			try
 			{
 				tagElementName = helper.GetParameterValue<string>("TAG Element (TAG Channel)");
 				channelName = helper.GetParameterValue<string>("Channel Name (TAG Channel)");
-				var channelMatch = helper.GetParameterValue<string>("Channel Match (TAG Channel)");
+				channelMatch = helper.GetParameterValue<string>("Channel Match (TAG Channel)");
 
 				var instanceId = helper.GetParameterValue<string>("InstanceId (TAG Channel)");
 				var instance = this.innerDomHelper.DomInstances.Read(DomInstanceExposers.Id.Equal(new DomInstanceId(Guid.Parse(instanceId)))).First();
@@ -138,9 +140,10 @@ namespace Script
 				{
 					var log = new Log
 					{
-						AffectedItem = scriptName,
+						AffectedItem = channelMatch,
 						AffectedService = channelName,
 						Timestamp = DateTime.Now,
+						LogNotes = $"Expected deactivate or reprovision statuses to transition, but current status is: {status}.",
 						ErrorCode = new ErrorCode
 						{
 							ConfigurationItem = scriptName + " Script",
@@ -148,11 +151,10 @@ namespace Script
 							Source = "Status transition condition",
 							Code = "InvalidStatusForTransition",
 							Severity = ErrorCode.SeverityType.Warning,
-							Description = $"Cannot execute the transition as the current status is unexpected. Current status: {status}",
+							Description = $"Cannot execute the transition as the current status is unexpected.",
 						},
 					};
 
-					helper.Log($"Cannot execute the transition as the status. Current status: {status}", PaLogLevel.Error);
 					exceptionHelper.GenerateLog(log);
 				}
 
@@ -167,18 +169,18 @@ namespace Script
 					AffectedItem = scriptName,
 					AffectedService = channelName,
 					Timestamp = DateTime.Now,
+					LogNotes = ex.ToString(),
 					ErrorCode = new ErrorCode
 					{
 						ConfigurationItem = scriptName + " Script",
 						ConfigurationType = ErrorCode.ConfigType.Automation,
 						Source = "Run()",
 						Severity = ErrorCode.SeverityType.Critical,
-						Description = "Exception while processing Clear Layout",
+						Description = "Exception while processing Clear Layout.",
 					},
 				};
 
 				exceptionHelper.ProcessException(ex, log);
-				helper.Log($"An issue occurred while executing {scriptName} activity for {channelName}: {ex}", PaLogLevel.Error);
 				
 				helper.SendFinishMessageToTokenHandler();
 			}
