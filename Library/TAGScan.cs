@@ -153,7 +153,7 @@ namespace TagHelperMethods
                 var scannerFilter = DomInstanceExposers.Id.Equal(new DomInstanceId(scanner));
                 var scannerInstances = innerDomHelper.DomInstances.Read(scannerFilter);
                 engine.GenerateInformation("scannerInstances.Count: " + scannerInstances.Count);
-                if (scannerInstances.Count > 0)
+                if (scannerInstances.Count == 0)
                 {
                     // scan not found
                     continue;
