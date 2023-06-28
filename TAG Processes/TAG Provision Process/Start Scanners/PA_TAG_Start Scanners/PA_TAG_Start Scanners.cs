@@ -55,14 +55,12 @@ namespace Script
 	using System.Collections.Generic;
 	using System.Linq;
 	using Skyline.DataMiner.Automation;
-	using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.Logging;
 	using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager;
 	using Skyline.DataMiner.ExceptionHelper;
 	using Skyline.DataMiner.Net.Apps.DataMinerObjectModel;
 	using Skyline.DataMiner.Net.Messages.SLDataGateway;
 	using Skyline.DataMiner.Net.Sections;
 	using TagHelperMethods;
-	using static Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager.PaManagers;
 
 	/// <summary>
 	/// DataMiner Script Class.
@@ -95,7 +93,7 @@ namespace Script
 			{
 				var action = helper.GetParameterValue<string>("Action (TAG Provision)");
 				var scanners = helper.GetParameterValue<List<Guid>>("TAG Scanners (TAG Provision)");
-				var sharedMethods = new SharedMethods(helper, innerDomHelper);
+				var sharedMethods = new SharedMethods(engine, helper, innerDomHelper);
 				scanNames = sharedMethods.GetScanNames(scanners);
 
 				foreach (var scanner in scanners)

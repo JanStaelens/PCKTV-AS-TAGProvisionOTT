@@ -51,11 +51,8 @@ dd/mm/2023  1.0.0.1     XXX, Skyline    Initial version
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Threading;
 using Skyline.DataMiner.Automation;
-using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.Logging;
 using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager;
 using Skyline.DataMiner.ExceptionHelper;
 using Skyline.DataMiner.Net.Apps.DataMinerObjectModel;
@@ -79,7 +76,7 @@ public class Script
 		var domHelper = new DomHelper(engine.SendSLNetMessages, "process_automation");
 
 		var exceptionHelper = new ExceptionHelper(engine, domHelper);
-		var sharedMethods = new SharedMethods(helper, domHelper);
+		var sharedMethods = new SharedMethods(engine, helper, domHelper);
 
 		engine.GenerateInformation("START " + scriptName);
 

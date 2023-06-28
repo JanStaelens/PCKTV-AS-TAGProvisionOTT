@@ -55,12 +55,10 @@ namespace Script
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
-	using System.Runtime.InteropServices;
 	using System.Threading;
 	using Skyline.DataMiner.Automation;
 	using Skyline.DataMiner.Core.DataMinerSystem.Automation;
 	using Skyline.DataMiner.Core.DataMinerSystem.Common;
-	using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.Logging;
 	using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager;
 	using Skyline.DataMiner.ExceptionHelper;
 	using Skyline.DataMiner.Net.Apps.DataMinerObjectModel;
@@ -181,7 +179,7 @@ namespace Script
 				};
 
 				exceptionHelper.ProcessException(ex, log);
-				
+
 				helper.SendFinishMessageToTokenHandler();
 			}
 		}

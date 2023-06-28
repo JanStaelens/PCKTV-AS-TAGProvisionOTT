@@ -49,6 +49,7 @@ DATE        VERSION     AUTHOR          COMMENTS
 
 ****************************************************************************
 */
+
 namespace Script
 {
 	using System;
@@ -58,7 +59,6 @@ namespace Script
 	using Skyline.DataMiner.Automation;
 	using Skyline.DataMiner.Core.DataMinerSystem.Automation;
 	using Skyline.DataMiner.Core.DataMinerSystem.Common;
-	using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.Logging;
 	using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager;
 	using Skyline.DataMiner.ExceptionHelper;
 	using Skyline.DataMiner.Net.Apps.DataMinerObjectModel;

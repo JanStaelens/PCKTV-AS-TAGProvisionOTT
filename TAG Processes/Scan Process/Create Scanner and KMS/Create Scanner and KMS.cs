@@ -87,7 +87,7 @@ namespace Script
 			this.domHelper = new DomHelper(engine.SendSLNetMessages, "process_automation");
 
 			this.exceptionHelper = new ExceptionHelper(engine, domHelper);
-			this.sharedMethods = new SharedMethods(helper, domHelper);
+			this.sharedMethods = new SharedMethods(engine, helper, domHelper);
 
 			engine.GenerateInformation("START " + scriptName);
 			var scanName = helper.GetParameterValue<string>("Scan Name (TAG Scan)");

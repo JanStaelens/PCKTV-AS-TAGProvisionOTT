@@ -54,12 +54,10 @@ namespace Script
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
-	using System.Runtime.Remoting.Metadata.W3cXsd2001;
 	using Newtonsoft.Json;
 	using Skyline.DataMiner.Automation;
 	using Skyline.DataMiner.Core.DataMinerSystem.Automation;
 	using Skyline.DataMiner.Core.DataMinerSystem.Common;
-	using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.Logging;
 	using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager;
 	using Skyline.DataMiner.ExceptionHelper;
 	using Skyline.DataMiner.Net.Apps.DataMinerObjectModel;
@@ -91,7 +89,7 @@ namespace Script
 			this.innerDomHelper = new DomHelper(engine.SendSLNetMessages, "process_automation");
 
 			exceptionHelper = new ExceptionHelper(engine, this.innerDomHelper);
-			this.sharedMethods = new SharedMethods(helper, this.innerDomHelper);
+			this.sharedMethods = new SharedMethods(engine, helper, this.innerDomHelper);
 			var scanName = helper.GetParameterValue<string>("Scan Name (TAG Scan)");
 			var instanceId = helper.GetParameterValue<string>("InstanceId (TAG Scan)");
 			var tagElement = helper.GetParameterValue<string>("TAG Element (TAG Scan)");

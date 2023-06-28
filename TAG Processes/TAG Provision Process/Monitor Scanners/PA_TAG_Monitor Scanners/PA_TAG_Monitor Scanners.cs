@@ -60,7 +60,6 @@ namespace Script
 	using Newtonsoft.Json;
 	using Skyline.DataMiner.Automation;
 	using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Common.Objects.Exceptions;
-	using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.Logging;
 	using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager;
 	using Skyline.DataMiner.ExceptionHelper;
 	using Skyline.DataMiner.Net.Apps.DataMinerObjectModel;
@@ -111,7 +110,7 @@ namespace Script
 				Dictionary<Guid, bool> scannersComplete = new Dictionary<Guid, bool>();
 				double errorScan = 0;
 
-				var sharedMethods = new SharedMethods(helper, innerDomHelper);
+				var sharedMethods = new SharedMethods(engine, helper, innerDomHelper);
 				scanNames = sharedMethods.GetScanNames(scanners);
 
 				var scansWithError = new List<string>();
