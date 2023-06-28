@@ -147,11 +147,12 @@ namespace TagHelperMethods
         public Dictionary<Guid, string> GetScanNames(List<Guid> scanners)
         {
             var scanNamesById = new Dictionary<Guid, string>();
+            engine.GenerateInformation("# of scanners: " + scanners.Count);
             foreach (var scanner in scanners)
             {
                 var scannerFilter = DomInstanceExposers.Id.Equal(new DomInstanceId(scanner));
                 var scannerInstances = innerDomHelper.DomInstances.Read(scannerFilter);
-
+                engine.GenerateInformation("scannerInstances.Count: " + scannerInstances.Count);
                 if (scannerInstances.Count > 0)
                 {
                     // scan not found
