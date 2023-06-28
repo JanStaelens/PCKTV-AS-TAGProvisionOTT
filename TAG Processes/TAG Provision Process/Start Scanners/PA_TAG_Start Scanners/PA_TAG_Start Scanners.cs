@@ -125,7 +125,7 @@ namespace Script
 				SharedMethods.TransitionToError(helper, status);
 				var log = new Log
 				{
-					AffectedItem = String.Join(", ", scanNames.Values.ToList()) + " scans",
+					AffectedItem = String.Join(", ", scanNames.Values.ToList()) + " scan(s)",
 					AffectedService = channelName,
 					Timestamp = DateTime.Now,
 					LogNotes = ex.ToString(),

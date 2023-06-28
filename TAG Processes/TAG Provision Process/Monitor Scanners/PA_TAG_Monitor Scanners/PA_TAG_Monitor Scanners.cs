@@ -202,7 +202,7 @@ namespace Script
 				engine.GenerateInformation($"ERROR in {this.scriptName} " + ex);
 				var log = new Log
 				{
-					AffectedItem = String.Join(", ", scanNames.Values.ToList()) + " scans.",
+					AffectedItem = String.Join(", ", scanNames.Values.ToList()) + " scan(s).",
 					AffectedService = this.channelName,
 					Timestamp = DateTime.Now,
 					LogNotes = ex.ToString(),
@@ -235,7 +235,7 @@ namespace Script
 						AffectedItem = String.Join(", ", scansWithError) + " scans",
 						AffectedService = this.channelName,
 						Timestamp = DateTime.Now,
-						LogNotes = $"{String.Join(", ", scansWithError)} scans failed to provision as expected.",
+						LogNotes = $"{String.Join(", ", scansWithError)} scan(s) failed to provision as expected.",
 						ErrorCode = new ErrorCode
 						{
 							ConfigurationItem = this.scriptName + " Script",
@@ -257,7 +257,7 @@ namespace Script
 						AffectedItem = String.Join(", ", scansWithError) + " scans",
 						AffectedService = this.channelName,
 						Timestamp = DateTime.Now,
-						LogNotes = $"{String.Join(", ", scansWithError)} scans failed to provision as expected.",
+						LogNotes = $"{String.Join(", ", scansWithError)} scan(s) failed to provision as expected.",
 						ErrorCode = new ErrorCode
 						{
 							ConfigurationItem = this.scriptName + " Script",
@@ -286,7 +286,7 @@ namespace Script
 						AffectedItem = String.Join(", ", scansWithError) + " scans",
 						AffectedService = this.channelName,
 						Timestamp = DateTime.Now,
-						LogNotes = $"{String.Join(", ", scansWithError)} scans failed to deactivate as expected.",
+						LogNotes = $"{String.Join(", ", scansWithError)} scan(s) failed to deactivate as expected.",
 						ErrorCode = new ErrorCode
 						{
 							ConfigurationItem = this.scriptName + " Script",
