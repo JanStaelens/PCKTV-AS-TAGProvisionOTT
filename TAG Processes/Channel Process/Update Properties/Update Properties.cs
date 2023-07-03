@@ -55,6 +55,7 @@ namespace Script
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
+	using Newtonsoft.Json;
 	using Skyline.DataMiner.Automation;
 	using Skyline.DataMiner.Core.DataMinerSystem.Automation;
 	using Skyline.DataMiner.Core.DataMinerSystem.Common;
@@ -509,6 +510,27 @@ namespace Script
 				{
 					return true;
 				}
+				else
+				{
+					var log = new Log
+					{
+						AffectedItem = ChannelMatch,
+						AffectedService = Channel,
+						Timestamp = DateTime.Now,
+						LogNotes = $"Failed to verify the channel set on key {key} on column {columnPid} with value: {updatedValue} within the timeout time.",
+						ErrorCode = new ErrorCode
+						{
+							ConfigurationItem = "Update Properties Script",
+							ConfigurationType = ErrorCode.ConfigType.Automation,
+							Source = "Retry condition",
+							Code = "ChannelSetTimeout",
+							Severity = ErrorCode.SeverityType.Warning,
+							Description = $"Failed to verify channel set within the timeout time.",
+						},
+					};
+
+					ExceptionHelper.GenerateLog(log);
+				}
 			}
 			catch (Exception e)
 			{
@@ -551,7 +573,7 @@ namespace Script
 			}
 			catch (Exception e)
 			{
-				engine.GenerateInformation($"Failed to perform set: {updatedValue} on {ChannelMatch}: " + e);
+				engine.GenerateInformation($"Failed to perform set on read: {updatedValue} on {ChannelMatch}: " + e);
 				var log = new Log
 				{
 					AffectedItem = ChannelMatch,

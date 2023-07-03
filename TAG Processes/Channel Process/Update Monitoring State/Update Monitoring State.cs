@@ -182,7 +182,7 @@ namespace Script
 						AffectedItem = channelMatch,
 						AffectedService = this.channelName,
 						Timestamp = DateTime.Now,
-						LogNotes = $"Missing channels to finish: {JsonConvert.SerializeObject(missingChannelsData)}",
+						LogNotes = $"Missing channels to finish: {JsonConvert.SerializeObject(missingChannelsData)}. Must have both values (Monitored and ResponseData in TAG) to execute next activity.",
 						ErrorCode = new ErrorCode
 						{
 							ConfigurationItem = this.scriptName + " Script",
@@ -190,7 +190,7 @@ namespace Script
 							Source = "Retry condition",
 							Code = "RetryTimeout",
 							Severity = ErrorCode.SeverityType.Warning,
-							Description = $"Monitor Channel did not finish due to timeout. Must be needed both values (Monitored and ResponseData) to execute next activity (channel sets).",
+							Description = $"Monitor Channel did not finish due to timeout.",
 						},
 					};
 
