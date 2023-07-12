@@ -54,6 +54,7 @@ namespace Script
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
+	using System.Text;
 	using Newtonsoft.Json;
 	using Skyline.DataMiner.Automation;
 	using Skyline.DataMiner.Core.DataMinerSystem.Automation;
@@ -298,7 +299,9 @@ namespace Script
 		{
 			foreach (var row in scanChannelsRows)
 			{
-				if (titles.Contains(Convert.ToString(row[13 /*Title*/])))
+				var text = Convert.ToString(row[13 /*Title*/]);
+				var encodeStringCheck = System.Net.WebUtility.HtmlDecode(text);
+				if (titles.Contains(encodeStringCheck))
 				{
 					return true;
 				}
