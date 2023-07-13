@@ -206,7 +206,7 @@ namespace Script
 		{
 			foreach (var section in tagInfo.Instance.Sections)
 			{
-				string layout = "Empty";
+				string layout = String.Empty;
 				try
 				{
 					Func<SectionDefinitionID, SectionDefinition> sectionDefinitionFunc = this.SetSectionDefinitionById;
@@ -222,19 +222,24 @@ namespace Script
 					var layoutMatchField = layoutSectionFields.First(x => x.Name.Contains("Match"));
 					var layoutPostionField = layoutSectionFields.First(x => x.Name.Contains("Position"));
 
-					layout = Convert.ToString(section.GetFieldValueById(layoutMatchField.ID).Value.Value);
-					var position = Convert.ToString(section.GetFieldValueById(layoutPostionField.ID).Value.Value);
-					engine.GenerateInformation("position: " + position);
-					if (!String.IsNullOrWhiteSpace(position))
+					var layoutFieldValue = section.GetFieldValueById(layoutMatchField.ID);
+					var positionFieldValue = section.GetFieldValueById(layoutPostionField.ID);
+					
+					if (layoutFieldValue != null &&  positionFieldValue != null)
 					{
-						tagInfo.EngineElement.SetParameterByPrimaryKey(10353, position, tagInfo.ChannelMatch);
-					}
-					else
-					{
+						layout = Convert.ToString(layoutFieldValue.Value.Value);
 						if (String.IsNullOrWhiteSpace(layout))
 						{
 							return true;
 						}
+
+						var position = Convert.ToString(positionFieldValue.Value.Value);
+						engine.GenerateInformation("position: " + position);
+						tagInfo.EngineElement.SetParameterByPrimaryKey(10353, position, tagInfo.ChannelMatch);
+					}
+					else
+					{
+						return true;
 
 						// layout position wasn't set, so we're using any position in the multiviewer (first available)
 
