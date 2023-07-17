@@ -234,6 +234,10 @@ namespace Script
 						}
 
 						var position = Convert.ToString(positionFieldValue.Value.Value);
+						if (String.IsNullOrWhiteSpace(position))
+						{
+							// error
+						}
 						engine.GenerateInformation("position: " + position);
 						tagInfo.EngineElement.SetParameterByPrimaryKey(10353, position, tagInfo.ChannelMatch);
 					}
