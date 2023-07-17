@@ -157,8 +157,6 @@ namespace Script
 
 		private string ExecuteChannelSets(Engine engine, string scriptName, PaProfileLoadDomHelper helper, ExceptionHelper exceptionHelper, TagChannelInfo tagInfo)
 		{
-			var text = Convert.ToString(tagInfo.ChannelMatch);
-			var encodeStringCheck = text.Replace("&", "&#38;");
 			var filterColumn = new ColumnFilter { ComparisonOperator = ComparisonOperator.Equal, Value = tagInfo.ChannelMatch, Pid = 8010 };
 			var channelRows = tagInfo.ChannelProfileTable.QueryData(new List<ColumnFilter> { filterColumn });
 			if (channelRows.Any())
