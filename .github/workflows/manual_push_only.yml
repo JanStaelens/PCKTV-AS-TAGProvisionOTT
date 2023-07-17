@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
        - uses: actions/checkout@v3
-
+         if: github.ref_type == 'branch'
        - name: Skyline DataMiner Deploy Action Development
          uses: SkylineCommunications/Skyline-DataMiner-Deploy-Action@v1
          with:
@@ -36,6 +36,7 @@ jobs:
            build-number: ${{ github.run_number }}
            
        - name: Skyline DataMiner Deploy Action Release
+         if: github.ref_type == 'tag'
          uses: SkylineCommunications/Skyline-DataMiner-Deploy-Action@v1
          with:
            # Stage deploy
