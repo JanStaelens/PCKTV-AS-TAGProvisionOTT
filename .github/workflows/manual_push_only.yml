@@ -30,19 +30,18 @@ jobs:
            # Stage deploy
            stage: All
            # The API-key: generated in the DCP Admin app (https://admin.dataminer.services/) as authentication for a certain DataMiner System.
-           api-key: ${{ secrets.PROD_DEPLOY_KEY }}
+           api-key: ${{ secrets.LAB_DEPLOY_KEY }}
            solution-path: ./AutomationScript.sln
            artifact-name: ${{ github.repository }} ${{ github.ref_name }}_B${{ github.run_number }}
            build-number: ${{ github.run_number }}
            
        - name: Skyline DataMiner Deploy Action Release
-         if: github.ref_type == 'tag'
          uses: SkylineCommunications/Skyline-DataMiner-Deploy-Action@v1
          with:
            # Stage deploy
            stage: All
            # The API-key: generated in the DCP Admin app (https://admin.dataminer.services/) as authentication for a certain DataMiner System.
-           api-key: ${{ secrets.PROD_DEPLOY_KEY }}
+           api-key: ${{ secrets.LAB_DEPLOY_KEY }}
            solution-path: ./AutomationScript.sln
            artifact-name: ${{ github.repository }} ${{ github.ref_name }}
            version: ${{ github.ref_name }}
